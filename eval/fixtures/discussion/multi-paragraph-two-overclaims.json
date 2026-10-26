@@ -1,0 +1,19 @@
+{
+  "section": "discussion",
+  "synthetic": true,
+  "id": "multi-paragraph-two-overclaims",
+  "text": "We conducted a randomised online experiment (N = 412) in which participants used a fitness app that either displayed or concealed how their location data were shared with insurers. Participants in the disclosure condition reported lower intention to continue using the app than those in the concealment condition (β = −0.31, p < .001).\n\nThe effect was larger among participants who reported higher general privacy concern (interaction β = −0.12, p = .02).\n\nThese results demonstrate that perceived surveillance is the psychological mechanism through which transparency reduces continued use. They also establish that privacy calculus theory is the correct account of continuance decisions in mobile health.",
+  "expect": {
+    "outcome": "overclaim_detected",
+    "finding_quotes": [
+      [
+        "demonstrate that perceived surveillance is the psychological mechanism through which transparency reduces continued use",
+        "perceived surveillance is the psychological mechanism through which transparency reduces continued use"
+      ],
+      [
+        "establish that privacy calculus theory is the correct account of continuance decisions in mobile health",
+        "privacy calculus theory is the correct account of continuance decisions in mobile health"
+      ]
+    ]
+  }
+}

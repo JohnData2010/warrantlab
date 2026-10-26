@@ -10,7 +10,9 @@
     "test": "vitest run",
     "check:model": "tsx --env-file=.env.local scripts/check-model.ts",
     "list:models": "tsx --env-file=.env.local scripts/list-models.mts",
-    "try": "tsx --env-file=.env.local scripts/try-analyse.ts"
+    "try": "tsx --env-file=.env.local scripts/try-analyse.ts",
+    "eval": "tsx --env-file=.env.local eval/run.ts",
+    "eval:extract": "tsx --env-file=.env.local eval/check-extract.ts"
   },
   "dependencies": {
     "@google/genai": "^2.31.0",

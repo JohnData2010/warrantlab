@@ -1,0 +1,16 @@
+{
+  "section": "discussion",
+  "synthetic": true,
+  "id": "tam-theory-validation-overclaim",
+  "text": "Survey responses from 230 hospital nurses showed that perceived usefulness was positively associated with intention to use the electronic medication system (r = .48, p < .001). This confirms that the Technology Acceptance Model fully explains nurses’ adoption of clinical information systems.",
+  "expect": {
+    "outcome": "overclaim_detected",
+    "finding_quotes": [
+      [
+        "confirms that the Technology Acceptance Model fully explains nurses’ adoption of clinical information systems",
+        "the Technology Acceptance Model fully explains nurses’ adoption of clinical information systems"
+      ]
+    ],
+    "category": "theoretical_overclaim"
+  }
+}

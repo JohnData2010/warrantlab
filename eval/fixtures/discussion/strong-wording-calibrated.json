@@ -1,0 +1,9 @@
+{
+  "section": "discussion",
+  "synthetic": true,
+  "id": "strong-wording-calibrated",
+  "text": "Participants exposed to an external data-sharing policy reported higher privacy concerns than those exposed to an internal-sharing policy (p = .01). This difference clearly and strongly supports the prediction that external sharing is associated with higher privacy concerns in this sample, although it does not by itself establish why.",
+  "expect": {
+    "outcome": "no_overclaim_identified"
+  }
+}

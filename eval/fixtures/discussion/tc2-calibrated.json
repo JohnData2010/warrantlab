@@ -1,0 +1,10 @@
+{
+  "section": "discussion",
+  "synthetic": true,
+  "id": "tc2-calibrated",
+  "gate": "calibrated",
+  "text": "Participants exposed to an external data-sharing policy reported higher privacy concerns than those exposed to an internal-sharing policy (p = .01). This difference is consistent with contextual integrity theory, but the comparison alone does not establish the underlying mechanism.",
+  "expect": {
+    "outcome": "no_overclaim_identified"
+  }
+}

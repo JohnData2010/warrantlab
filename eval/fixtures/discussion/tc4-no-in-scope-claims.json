@@ -1,0 +1,10 @@
+{
+  "section": "discussion",
+  "synthetic": true,
+  "id": "tc4-no-in-scope-claims",
+  "text": "Section 2 reviews prior research on privacy concerns. Section 3 describes the experimental design, and Section 4 reports the results.",
+  "expect": {
+    "outcome": "no_overclaim_identified",
+    "reason": "no_in_scope_claims"
+  }
+}

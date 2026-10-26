@@ -1,0 +1,14 @@
+{
+  "section": "discussion",
+  "synthetic": true,
+  "id": "tc1-irrelevant-edit",
+  "variant_of": "tc1-theoretical-overclaim",
+  "text": "Respondents exposed to an external data-sharing policy reported higher privacy concerns than those exposed to an internal-sharing policy (p = .01). These findings prove that violations of contextual integrity are the mechanism driving privacy concerns.",
+  "expect": {
+    "outcome": "overclaim_detected",
+    "finding_quotes": [
+      "prove that violations of contextual integrity are the mechanism driving privacy concerns"
+    ],
+    "category": "theoretical_overclaim"
+  }
+}

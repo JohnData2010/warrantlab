@@ -1,0 +1,17 @@
+{
+  "section": "discussion",
+  "synthetic": true,
+  "id": "causal-development-check",
+  "development_only": true,
+  "text": "Higher perceived data sharing was associated with greater privacy concerns (r = .32). This association proves that data sharing causes privacy concerns.",
+  "expect": {
+    "outcome": "overclaim_detected",
+    "finding_quotes": [
+      [
+        "proves that data sharing causes privacy concerns",
+        "data sharing causes privacy concerns"
+      ]
+    ],
+    "category": "causal_overclaim"
+  }
+}

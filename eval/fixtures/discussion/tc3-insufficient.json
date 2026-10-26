@@ -1,0 +1,10 @@
+{
+  "section": "discussion",
+  "synthetic": true,
+  "id": "tc3-insufficient",
+  "gate": "insufficient",
+  "text": "External data sharing increases privacy concerns through violations of contextual integrity. Our research provides strong evidence for this mechanism.",
+  "expect": {
+    "outcome": "insufficient_evidence"
+  }
+}

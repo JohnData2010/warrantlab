@@ -1,0 +1,9 @@
+{
+  "section": "discussion",
+  "synthetic": true,
+  "id": "cross-paragraph-calibrated",
+  "text": "In a randomised field experiment with 1,184 users of a peer-to-peer lending platform, borrowers randomly assigned to display a verified-identity badge received loan offers 2.1 days faster than borrowers without the badge (p < .001).\n\nThe platform did not change any other feature of the listings during the study period.\n\nGiven the random assignment, this suggests that displaying the badge reduced time to funding on this platform, although the study does not identify why lenders responded to it.",
+  "expect": {
+    "outcome": "no_overclaim_identified"
+  }
+}

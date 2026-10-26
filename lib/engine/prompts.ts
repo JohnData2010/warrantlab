@@ -8,7 +8,8 @@ Definitions
 
 Quoting rules
 - Every "quote" and "sentence" must be copied character for character from the text, without the [Pn] paragraph markers. Never paraphrase, shorten with ellipses, or correct the text.
-- For a claim, quote the proposition being asserted, starting at the verb or clause that carries the assertion and excluding a leading subject that only points back to the evidence (for example, quote "prove that X is the mechanism" rather than "These findings prove that X is the mechanism"). Keep the full proposition, including its object.
+- For a claim, quote the proposition being asserted, starting at the verb that carries the assertion and excluding a leading subject that only points back to the evidence. Keep the asserting verb and "that": quote "prove that X is the mechanism" (not "These findings prove that X is the mechanism", and not "X is the mechanism"); quote "confirms that the theory fully explains Y" (not "This confirms that ..." and not "the theory fully explains Y"). Keep the full proposition, including its object.
+- A sentence that only reports a result (for example "scores were higher in group A (p = .01)") is evidence, not a claim.
 - For evidence, quote the shortest span that contains the reported result or source, including any statistics.
 - "sentence" is the complete sentence that contains the quote.
 - "paragraph" is the number from the [Pn] marker.
@@ -42,7 +43,8 @@ Categories for overclaims
 
 Reasoning standards
 - Separate three things: the observed evidence, the inferential claim, and the missing warrant (the unproven link that would be needed to connect them).
-- Theoretical constructs often have specific definitions (for example a theory may define a violation by context-specific norms). Note when evidence concerns a proxy or a manipulated condition rather than the construct itself.
+- Theoretical constructs often have specific definitions (for example, in Contextual Integrity the appropriateness of an information flow is judged relative to contextual informational norms, not simply by whether information is shared externally). Note when evidence concerns a proxy or a manipulated condition rather than the construct itself.
+- Name the missing inferential connection; do not prescribe a research method. What would warrant a claim depends on the mechanism actually theorised and the study design, so never state that a particular analysis (for example a mediation test, a survey measure of perceptions, or an additional experiment) is required. Describe the kind of support that is missing, for example "a defensible account of the relevant norms and evidence linking the proposed mechanism to the observed difference".
 - Qualitative or interpretive research is not required to show statistical or causal identification.
 - You may use evidence anywhere in the supplied text, not only the evidence linked in the extraction, and you may assess a substantive claim the extraction missed by giving its exact quote in new_quote and its sentence in new_sentence.
 
@@ -54,7 +56,7 @@ Language rules (strict)
 Output rules
 - Assess every claim id from the extraction exactly once (claim_id set, new_quote and new_sentence null). For a claim you add, set claim_id to null and give new_quote and new_sentence.
 - evidence_quotes must be exact quotes from the text (character for character, no paragraph markers).
-- For "overclaim": fill every text field. evidence_identified states what the evidence shows. claim_summary states what the text asserts. what_claim_assumes names the inferential step taken. missing_warrant states, in one or two sentences, the link the supplied text does not establish. why_it_matters is two or three sentences. evidence_still_needed says what would be required to defend the claim. questions_to_examine has two to four questions, including at least one about whether the proposed mechanism or causal link was itself tested. basis_clarity is 3 when the gap is explicit in the text, 2 when it is clear, 1 when it is arguable.
+- For "overclaim": fill every text field. evidence_identified states what the evidence shows. claim_summary states what the text asserts. what_claim_assumes names the inferential step taken. missing_warrant states, in one or two sentences, the link the supplied text does not establish. why_it_matters is two or three sentences. evidence_still_needed describes the kind of support that would connect the evidence to the claim, without prescribing a specific method. questions_to_examine has two to four open questions for the author, including at least one about whether the text links the proposed mechanism or causal claim to the reported evidence; phrase them so they do not presume what the full study did or did not do. basis_clarity is 3 when the gap is explicit in the text, 2 when it is clear, 1 when it is arguable.
 - For "calibrated": fill evidence_identified and claim_summary; set category to null; other text fields may be empty strings and questions_to_examine an empty list; basis_clarity 1.
 - For "cannot_assess": fill claim_summary, evidence_still_needed, and one or two questions_to_examine; set needs_other_section to true if the evidence plausibly sits in another section; category null; basis_clarity 1.
 - For "out_of_scope": category null, empty text fields, basis_clarity 1.
