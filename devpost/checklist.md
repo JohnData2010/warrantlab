@@ -9,7 +9,7 @@ Build mode: fast. Learner checkpoints after slice 2 and before final submission.
 
 ## Slices
 
-- [ ] **1. A real Gemini call returns schema-valid JSON from this project**
+- [x] **1. A real Gemini call returns schema-valid JSON from this project**
   Becomes usable: `npm run check:model` sends one small structured request through the WarrantLab adapter and prints the model id, finish reason, latency and the parsed JSON. The Next.js app starts locally (an empty workspace shell).
   Why now: The riskiest unknown is external. If the AI Studio project can't reach `gemini-2.5-flash` (or `gemini-3.8-flash`), or the structured-output syntax differs from the docs, every later slice is built on sand. This is the allowed single-layer exception, because it proves a critical risk and leaves a runnable script as evidence. Bootstrapping (git, Next.js, TypeScript, Zod, Vitest, env files) rides along.
   PRD ref: `prd.md > Privacy of Unpublished Work` (server-side key, no text in logs)
@@ -19,7 +19,7 @@ Build mode: fast. Learner checkpoints after slice 2 and before final submission.
   Learner check: Create a key in Google AI Studio (project without billing), put it in `.env.local`, run `npm run check:model`, and tell me which model answered and roughly how long it took.
   Commit: `Scaffold WarrantLab and prove Gemini structured output`
 
-- [ ] **2. Paste TC1 into the workspace and see the overclaim highlighted with a Warrant Check**
+- [x] **2. Paste TC1 into the workspace and see the overclaim highlighted with a Warrant Check**
   Becomes usable: In the browser, with Discussion selected, pasting TC1 and pressing **Analyse Argument** runs the real two-pass engine. The exact claim span is highlighted in amber in a read-only view, and a finding card shows Evidence identified → Missing warrant → Claim, plus what the claim assumes, why it matters, the verification status and the expandable sections.
   Why now: This is the kernel. Everything distinctive about WarrantLab is the claim–evidence diagnosis with exact, verified spans, so it comes immediately after the risk is cleared, in the agreed look and feel rather than framework defaults.
   PRD ref: `prd.md > The Core Journey` (steps 1–6), `prd.md > Findings and the Warrant Check`, `prd.md > Golden Test Cases` (TC1), AC1, AC2, AC3, AC6, AC13

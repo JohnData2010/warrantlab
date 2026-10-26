@@ -1,8 +1,10 @@
+import Workspace from "../components/Workspace";
+import { getConfig } from "../lib/config";
+import { getSectionOptions } from "../lib/sections";
+
+export const dynamic = "force-dynamic";
+
 export default function Home() {
-  return (
-    <main style={{ maxWidth: 1180, margin: "0 auto", padding: "32px 16px" }}>
-      <h1 style={{ fontFamily: "var(--font-serif-stack)", fontWeight: 600, margin: 0 }}>WarrantLab</h1>
-      <p style={{ color: "var(--ink-muted)", marginTop: 4 }}>Scholarly Argument Intelligence</p>
-    </main>
-  );
+  const config = getConfig();
+  return <Workspace sections={getSectionOptions(config.devPreview)} maxWords={config.maxWords} />;
 }
