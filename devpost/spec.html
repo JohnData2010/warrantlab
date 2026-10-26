@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WarrantLab Spec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root {
+    --canvas: #F7F6F2; --paper: #FFFFFF; --ink: #243746; --muted: #5d6b77;
+    --line: #dcd8cd; --navy: #315675; --navy-soft: #e6edf3;
+    --amber: #B17B36; --amber-soft: #f6ead9; --ok: #3d6b4f; --ok-soft: #e4efe7;
+    --neutral-soft: #eef0ee;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --sans: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --canvas: #14191e; --paper: #1c232a; --ink: #e3e8ec; --muted: #9aa7b2; --line: #313b45;
+      --navy: #8fb4d4; --navy-soft: #1f2d3a; --amber: #d9a663; --amber-soft: #3a2e1d;
+      --ok: #8fc9a3; --ok-soft: #1d2f24; --neutral-soft: #232b31;
+    }
+  }
+  :root[data-theme="dark"] {
+    --canvas: #14191e; --paper: #1c232a; --ink: #e3e8ec; --muted: #9aa7b2; --line: #313b45;
+    --navy: #8fb4d4; --navy-soft: #1f2d3a; --amber: #d9a663; --amber-soft: #3a2e1d;
+    --ok: #8fc9a3; --ok-soft: #1d2f24; --neutral-soft: #232b31;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--canvas); color: var(--ink); font: 15px/1.6 var(--sans); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 32px 16px 72px; }
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  h1 { font: 600 2.2rem/1.15 var(--serif); margin: .3em 0 .1em; }
+  .desc { font: italic 1.05rem var(--serif); color: var(--muted); margin: 0; }
+  h2 { font: 600 1.35rem var(--serif); margin: 2.4em 0 .7em; padding-bottom: .35em; border-bottom: 1px solid var(--line); }
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 4px 8px; border-radius: 3px; background: var(--amber-soft); color: var(--amber); }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 18px 20px; margin: 12px 0; }
+  .note { font-size: 13px; color: var(--muted); }
+  code, .mono { font-family: var(--mono); font-size: 12.5px; }
+  code { background: var(--neutral-soft); padding: 1px 4px; border-radius: 3px; }
+  svg.dg { width: 100%; height: auto; display: block; }
+  svg.dg text { font-family: var(--sans); fill: var(--ink); }
+  svg.dg .sub { fill: var(--muted); font-size: 10.5px; }
+  svg.dg .box { fill: var(--paper); stroke: var(--line); stroke-width: 1.5; }
+  svg.dg .model { fill: var(--navy-soft); stroke: var(--navy); stroke-width: 2; }
+  svg.dg .det { fill: var(--ok-soft); stroke: var(--ok); stroke-width: 1.5; }
+  svg.dg .zone { fill: none; stroke: var(--line); stroke-dasharray: 4 4; }
+  svg.dg .ar { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+  svg.dg .fail { stroke: var(--amber); stroke-width: 1.3; fill: none; stroke-dasharray: 4 3; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+  .legend span::before { content: ""; display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; border: 1.5px solid; }
+  .lg-model::before { background: var(--navy-soft); border-color: var(--navy) !important; }
+  .lg-det::before { background: var(--ok-soft); border-color: var(--ok) !important; }
+  .lg-fail::before { background: transparent; border-color: var(--amber) !important; border-style: dashed !important; }
+  .fallback { font-size: 13px; color: var(--muted); }
+  .stepper { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .stepnav { display: flex; gap: 6px; flex-wrap: wrap; }
+  .stepnav button, .tabs button { font: 600 13px var(--sans); padding: 8px 12px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 4px; cursor: pointer; }
+  .stepnav button[aria-current="true"], .tabs button[aria-selected="true"] { background: var(--navy); color: var(--paper); border-color: var(--navy); }
+  button:focus-visible, summary:focus-visible, input:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+  .step { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; }
+  .step h3 { margin: 0 0 6px; font-size: 1rem; }
+  .step .files { margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+  .step .prd { margin-top: 4px; font-size: 12.5px; color: var(--navy); }
+  .agg { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 720px) { .agg { grid-template-columns: 1fr; } }
+  .agg label { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--line); cursor: pointer; font-size: 14px; }
+  .agg input { margin-top: 4px; accent-color: var(--navy); }
+  .result { border-radius: 6px; padding: 16px; border: 1px solid var(--line); background: var(--paper); }
+  .result .o { font: 600 1.1rem var(--serif); }
+  .result.amber { border-left: 4px solid var(--amber); }
+  .result.ok { border-left: 4px solid var(--ok); }
+  .result.neutral { border-left: 4px solid var(--navy); }
+  details { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; margin: 8px 0; }
+  summary { cursor: pointer; padding: 12px 16px; font-weight: 600; list-style: none; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "▸"; color: var(--muted); transition: transform .15s; }
+  details[open] summary::before { transform: rotate(90deg); }
+  summary small { font-weight: 400; color: var(--muted); font-family: var(--mono); font-size: 12px; }
+  details > div { padding: 0 16px 14px; font-size: 14px; }
+  details ul { margin: 0; padding-left: 20px; }
+  pre.tree { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; overflow-x: auto; font: 12.5px/1.55 var(--mono); margin: 0; }
+  pre.tree b { color: var(--navy); font-weight: 600; }
+  pre.tree i { color: var(--muted); font-style: normal; }
+  .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--paper); }
+  th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .checks { counter-reset: c; list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); }
+  .checks li { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; font-size: 13.5px; }
+  .checks li::before { counter-increment: c; content: counter(c); display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; background: var(--navy-soft); color: var(--navy); font-weight: 700; font-size: 12px; margin-right: 8px; }
+  .cmd { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; font: 13px/1.7 var(--mono); overflow-x: auto; white-space: pre; }
+  footer { text-align: center; font-size: 12px; color: var(--muted); margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Spec review · companion to spec.md</div>
+  <h1>WarrantLab — Technical Spec</h1>
+  <p class="desc">How the Claim–Evidence Alignment Engine makes academic feedback traceable and abstains when it should</p>
+  <p style="margin-top:12px"><span class="badge" style="background:var(--ok-soft);color:var(--ok)">Status: approved</span></p>
+  <div class="card" style="border-left:4px solid var(--navy)"><strong>Budget constraint: $0 in additional paid services.</strong> Inference runs on the Gemini API Free Tier, with billing off and no paid fallbacks. One adapter file keeps the provider swappable. Because free-tier content may be used by Google to improve its products, the demo uses fictional excerpts only and the app says so.</div>
+</header>
+
+<h2>The engine at a glance</h2>
+<div class="card">
+  <svg class="dg" viewBox="0 0 940 330" role="img" aria-labelledby="at ad">
+    <title id="at">WarrantLab architecture</title>
+    <desc id="ad">The browser sends text and section to a server route. The engine prepares paragraphs, runs Pass 1 Extract, verifies deterministically, runs Pass 2 Judge with the full text, verifies again, and aggregates into one outcome or analysis incomplete.</desc>
+    <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+    <rect class="zone" x="4" y="14" width="168" height="300" rx="8"/>
+    <text x="16" y="34" class="sub" style="font-weight:600">BROWSER (memory only)</text>
+    <rect class="box" x="18" y="50" width="140" height="56" rx="5"/><text x="88" y="74" text-anchor="middle" font-size="12.5" font-weight="600">Workspace</text><text x="88" y="92" text-anchor="middle" class="sub">text · section · key</text>
+    <rect class="box" x="18" y="230" width="140" height="64" rx="5"/><text x="88" y="254" text-anchor="middle" font-size="12.5" font-weight="600">Annotated text</text><text x="88" y="270" text-anchor="middle" class="sub">+ diagnostic panel</text><text x="88" y="285" text-anchor="middle" class="sub">stale responses dropped</text>
+    <rect class="zone" x="190" y="14" width="744" height="300" rx="8"/>
+    <text x="202" y="34" class="sub" style="font-weight:600">SERVER · POST /api/analyse (API key lives here)</text>
+    <rect class="det" x="206" y="50" width="110" height="56" rx="5"/><text x="261" y="74" text-anchor="middle" font-size="12.5" font-weight="600">Prepare</text><text x="261" y="92" text-anchor="middle" class="sub">limits · [Pn] · offsets</text>
+    <rect class="model" x="340" y="50" width="130" height="56" rx="5"/><text x="405" y="74" text-anchor="middle" font-size="12.5" font-weight="600">Pass 1 Extract</text><text x="405" y="92" text-anchor="middle" class="sub">Gemini free tier</text>
+    <rect class="det" x="494" y="50" width="120" height="56" rx="5"/><text x="554" y="74" text-anchor="middle" font-size="12.5" font-weight="600">Verify</text><text x="554" y="92" text-anchor="middle" class="sub">schema · spans · coverage</text>
+    <rect class="model" x="638" y="50" width="140" height="56" rx="5"/><text x="708" y="74" text-anchor="middle" font-size="12.5" font-weight="600">Pass 2 Judge</text><text x="708" y="92" text-anchor="middle" class="sub">Gemini · full text</text>
+    <rect class="det" x="800" y="50" width="120" height="56" rx="5"/><text x="860" y="74" text-anchor="middle" font-size="12.5" font-weight="600">Verify again</text><text x="860" y="92" text-anchor="middle" class="sub">new spans · all claims</text>
+    <rect class="det" x="760" y="160" width="160" height="70" rx="5"/><text x="840" y="186" text-anchor="middle" font-size="12.5" font-weight="600">Aggregate</text><text x="840" y="204" text-anchor="middle" class="sub">1 of 3 outcomes</text><text x="840" y="218" text-anchor="middle" class="sub">≤ 3 findings · unassessed</text>
+    <rect class="box" x="470" y="240" width="190" height="56" rx="5" style="stroke:var(--amber)"/><text x="565" y="264" text-anchor="middle" font-size="12.5" font-weight="600">analysis_incomplete</text><text x="565" y="282" text-anchor="middle" class="sub">never a clean result</text>
+    <path class="ar" marker-end="url(#a)" d="M158,78 L204,78"/>
+    <path class="ar" marker-end="url(#a)" d="M316,78 L338,78"/>
+    <path class="ar" marker-end="url(#a)" d="M470,78 L492,78"/>
+    <path class="ar" marker-end="url(#a)" d="M614,78 L636,78"/>
+    <path class="ar" marker-end="url(#a)" d="M778,78 L798,78"/>
+    <path class="ar" marker-end="url(#a)" d="M860,106 L860,158"/>
+    <path class="ar" marker-end="url(#a)" d="M760,200 C500,200 300,200 160,250"/>
+    <path class="ar" d="M261,106 C261,140 640,140 680,108" style="stroke-dasharray:2 4"/>
+    <text x="420" y="134" class="sub">original text also goes straight to the Judge</text>
+    <path class="fail" marker-end="url(#a)" d="M554,106 L560,238"/>
+    <path class="fail" marker-end="url(#a)" d="M860,106 C860,150 700,170 640,238"/>
+    <path class="ar" marker-end="url(#a)" d="M470,268 C330,268 250,268 160,268"/>
+  </svg>
+  <div class="legend"><span class="lg-model">Model call</span><span class="lg-det">Deterministic code</span><span class="lg-fail">Failure path → incomplete</span></div>
+  <p class="fallback">In words: the browser sends text and section to the server. Prepare checks the limits and numbers the paragraphs. Pass 1 extracts claims and evidence as verbatim quotes. Code verifies them. Pass 2 judges with the full original text and may add evidence. Code verifies again. Aggregate produces exactly one outcome. Any failure produces "analysis incomplete" instead.</p>
+</div>
+
+<h2>The journey through the system</h2>
+<div class="stepper">
+  <div class="stepnav" id="nav"></div>
+  <div class="step" id="step" aria-live="polite"></div>
+</div>
+
+<h2>Aggregation rule · try it</h2>
+<div class="agg">
+  <div class="card" style="margin:0">
+    <p style="margin-top:0"><strong>After both passes, what's true?</strong></p>
+    <label><input type="checkbox" id="fail"> <span>A pass failed, was truncated or refused, a paragraph wasn't covered, or evidence was fabricated</span></label>
+    <label><input type="checkbox" id="over"> <span>At least one <strong>verified</strong> overclaim (theoretical, or causal if enabled)</span></label>
+    <label><input type="checkbox" id="unass"> <span>Some substantive claims <strong>couldn't be assessed</strong> from the supplied text</span></label>
+    <label><input type="checkbox" id="many"> <span>More than 3 overclaims were found</span></label>
+    <label><input type="checkbox" id="located" checked> <span>Every unassessed claim has a located quote</span></label>
+    <label style="border-bottom:0"><input type="checkbox" id="noclaims"> <span>The text contains <strong>no in-scope claims at all</strong> (e.g. it only describes the paper’s structure)</span></label>
+  </div>
+  <div class="result" id="aggOut" aria-live="polite"></div>
+</div>
+
+<h2>Components</h2>
+<details open><summary>Workspace <small>components/Workspace.tsx</small></summary><div>Owns <code>section</code>, <code>text</code>, <code>mode</code>, <code>request</code>, <code>result</code> and <code>analysisKey</code>. A section change or edit clears the result, returns to editing and aborts the request. Responses with a stale key are dropped. Receives <code>maxWords</code> and the section flags as props from the server. <div class="note">prd › Annotated View and Revision Loop · States and Boundaries</div></div></details>
+<details><summary>SectionSelector · ManuscriptEditor <small>components/</small></summary><div>8 sections, where unsupported ones are disabled and marked <em>In development</em>. A plain serif textarea with a live word count, which blocks text over the limit and never transforms it. <div class="note">prd › Section Selector and Availability · Text Input and Limits</div></div></details>
+<details><summary>AnnotatedText <small>components/AnnotatedText.tsx</small></summary><div>Renders the original string split at verified offsets. Findings are amber <code>&lt;mark&gt;</code> elements and unassessed claims are never marked. No raw HTML injection. Includes "Original text preserved" and <strong>Edit text</strong>. <div class="note">prd › AC1 · AC2</div></div></details>
+<details><summary>DiagnosticPanel <small>components/DiagnosticPanel.tsx</small></summary><div><ul><li><strong>OutcomeNotice</strong>: the outcome and the neutral or incomplete notices, with Try again</li><li><strong>FindingCard</strong>: the Warrant Check (Evidence → Missing warrant → Claim), assumptions, why it matters, verification status, and expandable "evidence still needed" and "what to examine"</li><li><strong>UnassessedSummary</strong>: neutral, with a count only when every quote is located</li><li><strong>PanelFooter</strong>: scope limits and the privacy disclosure</li></ul><div class="note">prd › Findings and the Warrant Check · Privacy of Unpublished Work</div></div></details>
+<details><summary>Analysis route <small>app/api/analyse/route.ts</small></summary><div>Zod-validated <code>POST {text, section}</code>, checked against the limits again with the shared <code>countWords</code>. Returns <code>AnalysisResponse</code> with <code>no-store</code>. Logs only the id, duration, token usage, outcome and failure stage. <strong>Never text.</strong></div></details>
+<details><summary>Pass 1 · Extract <small>lib/engine/extract.ts</small></summary><div>The full marked text goes in, and claims (including those with no linked evidence), evidence, and <code>paragraphs_covered</code> come out, all as verbatim quotes. No judging.</div></details>
+<details><summary>Verify <small>lib/engine/verify.ts · lib/text/spans.ts</small></summary><div>Checks the schema, then <code>stop_reason = end_turn</code>, then that every paragraph was covered, then <code>locateQuote</code> (exact first, then tolerant of whitespace and quote style only, mapped to original offsets, then disambiguated by sentence). A missing evidence quote counts as fabricated: retry once, then incomplete. An unlocatable claim is kept without a highlight.</div></details>
+<details><summary>Pass 2 · Judge <small>lib/engine/judge.ts</small></summary><div>Gets the full original text and the verified extraction. Decides per claim: overclaim, calibrated, cannot_assess or out_of_scope. May re-link evidence or quote new passages, which are all re-verified. Must name the inferential step, separate evidence, claim and warrant, and abstain when information is missing. Never says a study is wrong or didn't test something.</div></details>
+<details><summary>Aggregate <small>lib/engine/aggregate.ts</small></summary><div>A pure function with the outcome rules above. Up to 3 findings are chosen by clarity of basis and displayed in text order. Causal verdicts are out of scope while the flag is off. This is the main unit-test target.</div></details>
+<details><summary>Section guidance <small>lib/sections.ts</small></summary><div>For each section: id, label, P0/P1, a <code>supported</code> flag set by hand only after the gate passes (with a report link), and 2–4 sentences of guidance fed to both passes. Discussion is enabled first.</div></details>
+
+<h2>Epistemic reliability tests</h2>
+<p class="note">Run with <code>npm run eval -- --section discussion --runs 3</code>. This uses the real model and consumes Free Tier quota (no charge while billing is off). Reports go to <code>eval/reports/</code>. Fixtures are fictional and labelled synthetic.</p>
+<ol class="checks">
+  <li><strong>Outcome match</strong> with the expected outcome</li>
+  <li><strong>Exact span</strong> at the correct offsets</li>
+  <li><strong>No fabrication:</strong> every statistic quoted (p, r, n) appears in the input, and every quote is located</li>
+  <li><strong>Strong wording ≠ overclaim</strong> (TC3 and a strongly worded calibrated variant)</li>
+  <li><strong>No "untested" claims:</strong> banned phrases like "never tested" or "is invalid" don't appear</li>
+  <li><strong>Irrelevant-edit stability:</strong> the same outcome and spans after unrelated wording changes</li>
+  <li><strong>Repeat consistency</strong> across N runs, with an agreement rate reported</li>
+  <li><strong>Revision pair:</strong> TC1 gives an overclaim and TC2 gives none</li>
+  <li><strong>Cross-paragraph evidence</strong> isn't misread as insufficient</li>
+  <li><strong>No claims ≠ no evidence:</strong> a descriptive passage (TC4) gives "no in-scope claims", while a claim without evidence (TC3) stays insufficient</li>
+  <li><strong>Incomplete processing:</strong> a mocked truncated or malformed response gives incomplete</li>
+</ol>
+<div class="card"><strong>Gate:</strong> a section becomes <code>supported</code> only when its overclaim, calibrated and insufficient fixtures pass checks 1–5 and 7 in <strong>3 of 3</strong> runs. <span class="note">Optional: <code>--single-pass</code> baseline comparison.</span></div>
+
+<h2>Stack</h2>
+<div class="tablewrap"><table>
+  <tr><th>Piece</th><th>Choice</th><th>Note</th></tr>
+  <tr><td>App</td><td>Next.js (App Router) + TypeScript</td><td>UI and server route in one project</td></tr>
+  <tr><td>Validation</td><td>Zod</td><td>Schema-valid ≠ correct</td></tr>
+  <tr><td>LLM</td><td>Google Gen AI SDK (<code>@google/genai</code>)</td><td>JSON structured output, <code>temperature: 0</code>, behind <code>lib/engine/llm.ts</code></td></tr>
+  <tr><td>Model</td><td><code>gemini-2.5-flash</code> for both passes</td><td>Free Tier, configured per pass through env. Check availability and limits in AI Studio.</td></tr>
+  <tr><td>Cost</td><td>$0, billing off</td><td>Over quota gives a 429 (no charge), which shows as Analysis incomplete</td></tr>
+  <tr><td>Tests</td><td>Vitest · tsx</td><td>Unit tests use no API. The eval consumes Free Tier quota.</td></tr>
+  <tr><td>Look</td><td>CSS Modules · Source Serif 4 + Inter</td><td>The PRD palette as tokens</td></tr>
+</table></div>
+
+<h2>Run it</h2>
+<div class="cmd">npm install
+cp .env.example .env.local    # set GEMINI_API_KEY (AI Studio, no billing)
+npm run dev                   # http://localhost:3000
+npm test                      # deterministic unit tests
+npm run eval -- --section discussion --runs 3 --delay-ms 5000</div>
+<p class="note">Local-first. Vercel Hobby is optional and only behind Deployment Protection. Disclosure: "This demonstration sends your text to Google's Gemini API free tier. Google may have human reviewers read free-tier inputs and outputs, and may use them to improve its products. Please do not paste unpublished or confidential research."</p>
+
+<h2>File structure</h2>
+<pre class="tree"><b>app/</b>             layout.tsx · page.tsx · globals.css
+  <b>api/analyse/</b>   route.ts            <i># validate → analyse() → JSON</i>
+<b>components/</b>      Workspace · SectionSelector · ManuscriptEditor · AnnotatedText · DiagnosticPanel
+<b>lib/</b>             config.ts · sections.ts · types.ts
+  <b>text/</b>          wordCount · paragraphs · spans   <i># shared, deterministic</i>
+  <b>engine/</b>        client · prompts · schemas · extract · judge · verify · aggregate · analyse
+<b>eval/</b>            fixtures/&lt;section&gt;/ · checks.ts · run.ts · reports/
+<b>tests/</b>           Vitest: spans, paragraphs, wordCount, verify, aggregate
+.env.example · README.md · package.json · <b>devpost/</b></pre>
+
+<h2>Failure modes</h2>
+<div class="tablewrap"><table>
+  <tr><th>What breaks</th><th>What the user sees</th></tr>
+  <tr><td>Free quota used up (429)</td><td>Analysis incomplete plus a quota hint, with no auto-retry. In eval it's reported as "not run (quota)", never as a pass.</td></tr>
+  <tr><td>Slow model (two passes, perhaps 10–40 s)</td><td>"Analysing…" with the two-step explanation. Past the timeout: Analysis incomplete and Try again, with the text kept.</td></tr>
+  <tr><td>Invented quote, skipped paragraph, truncation, refusal</td><td>Caught by Verify. One retry for fabrication, otherwise Analysis incomplete.</td></tr>
+  <tr><td>Highlight can't be located</td><td>The finding is shown without a mark, with the note "Location could not be marked".</td></tr>
+  <tr><td>Missing API key</td><td>Analysis incomplete. A configuration hint goes to the server console with no manuscript text.</td></tr>
+  <tr><td>Edit mid-analysis</td><td>The request is aborted and the late response is dropped.</td></tr>
+</table></div>
+
+<h2>Decisions and open issues</h2>
+<details open><summary>One useful unknown</summary><div>Does two-pass actually <em>reason</em> better than single-pass, or only make results more traceable? And is a free Flash-class model good enough at academic inference at all? If it fails the gate, Discussion stays unsupported and the demo says so. <strong>Investigation:</strong> keep two-pass as the default. If time allows, run the Discussion fixtures with <code>--single-pass</code> and compare false positives, missed cross-paragraph evidence, latency and cost. Also clarified: determinism can't be set, so consistency is measured.</div></details>
+<details><summary>Open issues</summary><div><ol style="margin:0;padding-left:20px">
+  <li>Fixtures to write: multi-paragraph, cross-paragraph, perturbation variants, Results and Introduction.</li>
+  <li>First build step: confirm the <code>@google/genai</code> structured-output call and schema subset, that <code>gemini-2.5-flash</code> is still on the Free Tier, and this project's rate limits.</li>
+  <li>Quota risk while recording the demo: run the flow once beforehand and keep a spare day of quota.</li>
+  <li>The PRD privacy disclosure was amended for the free tier, so it must be approved with this spec.</li>
+  <li>Git isn't initialised yet. <code>5-build</code> sets it up and checks the ignore rules.</li>
+  <li><strong>Resolved:</strong> no in-scope claims gives <code>no_overclaim_identified</code> with <code>reason: "no_in_scope_claims"</code>, shown neutrally and never as a verified argument. Model-reported coverage is a structural check only.</li>
+  <li>If the project can't access <code>gemini-2.5-flash</code>, switch manually to <code>gemini-3.8-flash</code> (Free Tier). The gate re-opens on any model change.</li>
+</ol></div></details>
+
+<footer>Companion view · <code>spec.md</code> is the canonical plan.</footer>
+</div>
+
+<script>
+  const steps = [
+    { t: "1 · Arrive", d: "The page renders the Workspace in its editing state. The text is empty, Analyse is disabled, and the panel shows the empty state with the privacy disclosure.", f: "app/page.tsx · components/Workspace.tsx · DiagnosticPanel", p: "prd › The Core Journey 1" },
+    { t: "2 · Choose a section", d: "The selector reads the support flags passed from the server. Unsupported sections are disabled. Changing the section clears any result and keeps the text.", f: "components/SectionSelector.tsx · lib/sections.ts", p: "prd › Section Selector and Availability" },
+    { t: "3 · Paste text", d: "The textarea updates the text held in memory. The shared countWords drives the counter. Over the limit, Analyse is blocked and the text is kept.", f: "components/ManuscriptEditor.tsx · lib/text/wordCount.ts", p: "prd › Text Input and Limits" },
+    { t: "4 · Analyse", d: "The Workspace computes analysisKey = section + hash(text), then POSTs {text, section} with an AbortController. The panel shows Analysing… and the button is disabled.", f: "components/Workspace.tsx", p: "prd › States and Boundaries · Analysing" },
+    { t: "5 · Server", d: "The route re-validates, then runs Prepare → Extract → Verify → Judge (full text) → Verify → Aggregate. No manuscript text is logged.", f: "app/api/analyse/route.ts · lib/engine/*", p: "prd › Analysis and the Three Outcomes" },
+    { t: "6 · Result", d: "The client accepts the result only if the key still matches. AnnotatedText splits the original string at verified offsets, and the panel shows the outcome, findings and unassessed summary.", f: "components/AnnotatedText.tsx · DiagnosticPanel", p: "prd › Findings and the Warrant Check" },
+    { t: "7 · Explore", d: "Clicking a finding scrolls to its mark, and clicking a mark opens its finding. They're linked by findingId.", f: "AnnotatedText · FindingCard", p: "prd › The Core Journey 6" },
+    { t: "8 · Revise and re-analyse", d: "Edit text returns the original text, unchanged. Any edit clears the result. TC1 revised into TC2 should now give no overclaim identified.", f: "components/Workspace.tsx", p: "prd › AC18" }
+  ];
+  const nav = document.getElementById('nav'), step = document.getElementById('step');
+  function show(i) {
+    nav.querySelectorAll('button').forEach((b, j) => b.setAttribute('aria-current', String(i === j)));
+    const s = steps[i];
+    step.innerHTML = '<h3>' + s.t + '</h3><div>' + s.d + '</div><div class="files">Files: <span class="mono">' + s.f + '</span></div><div class="prd">' + s.p + '</div>';
+  }
+  steps.forEach((s, i) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = String(i + 1); b.setAttribute('aria-label', s.t); b.onclick = () => show(i); nav.appendChild(b); });
+  show(0);
+
+  const ids = ['fail', 'over', 'unass', 'many', 'located', 'noclaims'];
+  const out = document.getElementById('aggOut');
+  function agg() {
+    const v = Object.fromEntries(ids.map(k => [k, document.getElementById(k).checked]));
+    let cls, o, body;
+    if (v.fail) { cls = 'neutral'; o = 'Analysis incomplete'; body = 'A processing state, not an academic outcome. No outcome is claimed, the text is kept, and Try again is offered.'; }
+    else if (v.noclaims && !v.over && !v.unass) { cls = 'neutral'; o = 'no_overclaim_identified · no_in_scope_claims'; body = '"No in-scope claims identified. The supplied text does not contain a substantive claim that can be assessed for claim–evidence alignment. This is not an assessment of the wider manuscript." Neutral, with no success styling.'; }
+    else if (v.over) {
+      cls = 'amber'; o = 'overclaim_detected';
+      body = (v.many ? 'The 3 findings with the clearest basis are shown in text order, with the note "Showing selected findings… not an exhaustive review".' : 'Each verified overclaim is shown as a Warrant Check card with an amber highlight.');
+      if (v.unass) body += ' Below them, a neutral unassessed summary: ' + (v.located ? '"N claims could not be assessed" with their quotes.' : '"Some claims may need evidence not available in the supplied text" (no count).');
+    } else if (v.unass) { cls = 'neutral'; o = 'insufficient_evidence'; body = 'A neutral notice with no amber. ' + (v.located ? 'The unassessed claims are listed with a count.' : 'A generic message with no count.'); }
+    else { cls = 'ok'; o = 'no_overclaim_identified'; body = 'Every in-scope claim was assessed as calibrated across the whole text. Neutral confirmation: "This is not a verification of the wider study."'; }
+    out.className = 'result ' + cls;
+    out.innerHTML = '<div class="note">Outcome</div><div class="o">' + o + '</div><p style="margin-bottom:0">' + body + '</p>';
+  }
+  ids.forEach(k => document.getElementById(k).addEventListener('change', agg));
+  agg();
+</script>
+</body>
+</html>

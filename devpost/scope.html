@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scope Review</title>
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --surface: #ffffff;
+    --ink: #1f2328;
+    --muted: #5b6168;
+    --line: #d9d4c7;
+    --accent: #1f4e79;
+    --accent-soft: #e3ecf5;
+    --warn: #9a4b00;
+    --warn-soft: #fbeedd;
+    --ok: #2f6b3a;
+    --ok-soft: #e4f1e6;
+    --cut: #8a2b2b;
+    --cut-soft: #f6e3e3;
+    --mark: #ffe7a3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15181c;
+      --surface: #1e2227;
+      --ink: #e6e8eb;
+      --muted: #a0a7b0;
+      --line: #343a42;
+      --accent: #8fb8e0;
+      --accent-soft: #22303f;
+      --warn: #f0b36b;
+      --warn-soft: #3a2c1a;
+      --ok: #8fd19e;
+      --ok-soft: #1f3324;
+      --cut: #f09a9a;
+      --cut-soft: #3a2222;
+      --mark: #5a4a1a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #15181c; --surface: #1e2227; --ink: #e6e8eb; --muted: #a0a7b0; --line: #343a42;
+    --accent: #8fb8e0; --accent-soft: #22303f; --warn: #f0b36b; --warn-soft: #3a2c1a;
+    --ok: #8fd19e; --ok-soft: #1f3324; --cut: #f09a9a; --cut-soft: #3a2222; --mark: #5a4a1a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 Georgia, "Times New Roman", serif;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 32px 16px 64px; }
+  .sans { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header .eyebrow { font: 600 12px/1 system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  h1 { font-size: 2rem; line-height: 1.2; margin: .4em 0 .2em; }
+  h2 { font-size: 1.25rem; margin: 2.2em 0 .6em; padding-bottom: .3em; border-bottom: 1px solid var(--line); }
+  .lede { color: var(--muted); font-size: 1.05rem; margin: 0; }
+  .badge { display: inline-block; font: 600 11px/1 system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; padding: 5px 8px; border-radius: 4px; background: var(--warn-soft); color: var(--warn); }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 18px 20px; margin: 14px 0; }
+  .kernel { border-left: 4px solid var(--accent); }
+  .rule { background: var(--accent-soft); border-radius: 6px; padding: 12px 14px; margin-top: 12px; font-size: .97rem; }
+  .diagram { width: 100%; height: auto; display: block; }
+  .diagram text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: var(--ink); }
+  .diagram .sub { fill: var(--muted); font-size: 11px; }
+  .diagram .box { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+  .diagram .box.key { stroke: var(--accent); stroke-width: 2; fill: var(--accent-soft); }
+  .diagram .arrow { stroke: var(--muted); stroke-width: 1.5; fill: none; marker-end: url(#ah); }
+  .diagram .loop { stroke: var(--accent); stroke-dasharray: 5 4; }
+  .fallback { font-size: .9rem; color: var(--muted); }
+  blockquote { margin: 0; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; font-style: italic; }
+  mark { background: var(--mark); color: inherit; padding: 0 2px; border-radius: 2px; }
+  .diag { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: .93rem; }
+  .diag .head { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+  .diag .loc { color: var(--muted); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+  .diag h4 { margin: 12px 0 4px; font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+  .diag p, .diag ol { margin: 0 0 6px; }
+  .diag .status { margin-top: 12px; padding: 8px 10px; border-radius: 4px; background: var(--warn-soft); color: var(--warn); font-size: .88rem; }
+  .diag .foot { margin-top: 10px; color: var(--muted); font-size: .85rem; font-style: italic; }
+  .steps { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .steps button { font: 600 13px/1 system-ui, sans-serif; padding: 9px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+  .steps button[aria-pressed="true"] { background: var(--accent); color: var(--surface); border-color: var(--accent); }
+  .step-panel { font-family: system-ui, sans-serif; font-size: .95rem; min-height: 3em; }
+  .tests { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .tests .card { margin: 0; font-family: system-ui, sans-serif; font-size: .93rem; }
+  .tests .n { font-weight: 700; color: var(--accent); }
+  details { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; margin: 10px 0; }
+  summary { cursor: pointer; padding: 14px 18px; font: 600 1rem system-ui, sans-serif; list-style: none; display: flex; align-items: center; gap: 10px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "▸"; color: var(--muted); transition: transform .15s; }
+  details[open] summary::before { transform: rotate(90deg); }
+  .pill { font: 600 11px/1 system-ui, sans-serif; padding: 4px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: .06em; }
+  .pill.now { background: var(--ok-soft); color: var(--ok); }
+  .pill.later { background: var(--accent-soft); color: var(--accent); }
+  .pill.cut { background: var(--cut-soft); color: var(--cut); }
+  details ul { margin: 0; padding: 0 18px 16px 40px; font-family: system-ui, sans-serif; font-size: .95rem; }
+  details li { margin: 6px 0; }
+  .note { font-family: system-ui, sans-serif; font-size: .88rem; color: var(--muted); }
+  footer { margin-top: 48px; font: 13px system-ui, sans-serif; color: var(--muted); text-align: center; }
+  .tagline { font-size: 1.3rem; text-align: center; margin: 2em 0 .5em; font-style: italic; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Scope review · companion to scope.md</div>
+  <h1>Scholarly Writing Intelligence</h1>
+  <p class="lede">A browser-based writing companion that checks whether an academic claim is backed by the evidence in the same paragraph. Its explanations are informed by how published Information Systems research calibrates claims, and it never rewrites the author's text.</p>
+  <p style="margin-top:12px"><span class="badge" style="background:var(--ok-soft);color:var(--ok)">Status: approved</span></p>
+</header>
+
+<h2>The unique kernel</h2>
+<div class="card kernel">
+  <strong>Claim–Evidence Alignment.</strong> It finds passages that <em>sound</em> academic but don't do the academic work they claim to do. Grammar and style checkers miss this. The tool sets what the evidence shows against what the claim asserts, names the inferential step that overreaches, and says what evidence would be needed to defend it. A forcefully worded claim is not automatically an overclaim. An overclaim is flagged only when the tool can name the specific inferential step that goes beyond the evidence. Otherwise the result is "insufficient evidence".
+  <div class="rule sans"><strong>Every diagnostic separates:</strong> the <em>observed evidence</em>, the <em>inferential claim</em> and the <em>missing warrant</em> (the unproven logic connecting the two).</div>
+  <div class="rule sans"><strong>Rule 1:</strong> "unsupported by the supplied text" is not the same as "scientifically incorrect". The tool may only say a paragraph doesn't provide evidence for a claim. It must never conclude that the study itself is wrong.</div>
+  <div class="rule sans"><strong>Rule 2:</strong> the user's evidence and published scholarship never blend. Only the user's paragraph decides whether a claim is overclaimed. Published IS sources may explain norms, but they can't supply missing evidence or prove the user wrong.</div>
+</div>
+
+<h2>Disciplinary grounding</h2>
+<div class="card sans" style="font-size:.95rem">
+  <p style="margin-top:0">The audience writes for premier IS journals, so the tool's reasoning should reflect how published IS research builds arguments, uses evidence and limits conclusions. Publication is a <strong>reference for practice</strong>, not proof that every claim in a paper is correct.</p>
+  <ul style="margin:0;padding-left:20px">
+    <li><strong>Source universe:</strong> the AIS Senior Scholars' List of Premier Journals (11 journals). AIS status and ABDC rating are recorded separately.</li>
+    <li><strong>POC seed:</strong> <code>devpost/sources/is-source-seed.csv</code>, eight JAIS records.</li>
+    <li><strong>Verified by the learner:</strong> the 11-journal AIS list, and the title, authors and DOI for 8 of 8 articles. <strong>Not completed:</strong> full-text methodological review and expert-labelled examples. Metadata verification is not methodological review.</li>
+    <li><strong>In the app:</strong> 3–5 curated methodological notes, each traceable to a DOI, and only if the learner has actually reviewed the source. Otherwise the sources stay in documentation only, with no grounding claim at runtime.</li>
+  </ul>
+</div>
+
+<h2>Who it's for and the core loop</h2>
+<div class="card">
+  <svg class="diagram" viewBox="0 0 800 300" role="img" aria-labelledby="dgTitle dgDesc">
+    <title id="dgTitle">Core loop</title>
+    <desc id="dgDesc">A PhD student in Information Systems chooses a section, pastes a paragraph, selects Analyse Argument, sees the highlighted claim and a diagnostic panel, then revises in their own words and checks again.</desc>
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="currentColor" style="fill: var(--muted)"/>
+      </marker>
+    </defs>
+    <rect class="box" x="10" y="20" width="170" height="70" rx="8"/>
+    <text x="95" y="50" text-anchor="middle" font-weight="600" font-size="14">PhD student (IS)</text>
+    <text x="95" y="70" text-anchor="middle" class="sub">writing a Discussion</text>
+
+    <rect class="box" x="220" y="20" width="170" height="70" rx="8"/>
+    <text x="305" y="50" text-anchor="middle" font-weight="600" font-size="14">Paste paragraph</text>
+    <text x="305" y="70" text-anchor="middle" class="sub">+ choose section type</text>
+
+    <rect class="box key" x="430" y="20" width="170" height="70" rx="8"/>
+    <text x="515" y="50" text-anchor="middle" font-weight="600" font-size="14">Analyse Argument</text>
+    <text x="515" y="70" text-anchor="middle" class="sub">claim vs evidence</text>
+
+    <rect class="box key" x="620" y="120" width="170" height="80" rx="8"/>
+    <text x="705" y="150" text-anchor="middle" font-weight="600" font-size="14">One of 3 outcomes</text>
+    <text x="705" y="170" text-anchor="middle" class="sub">overclaim → highlight + panel</text>
+    <text x="705" y="186" text-anchor="middle" class="sub">none · insufficient evidence</text>
+
+    <rect class="box" x="320" y="210" width="200" height="70" rx="8"/>
+    <text x="420" y="240" text-anchor="middle" font-weight="600" font-size="14">Revise in own words</text>
+    <text x="420" y="260" text-anchor="middle" class="sub">no rewritten text, ever</text>
+
+    <path class="arrow" d="M180,55 L218,55"/>
+    <path class="arrow" d="M390,55 L428,55"/>
+    <path class="arrow" d="M600,55 C680,55 705,80 705,118"/>
+    <path class="arrow" d="M705,200 C705,245 600,245 522,245"/>
+    <path class="arrow loop" d="M320,245 C250,245 305,140 305,92"/>
+    <text x="232" y="170" class="sub">check again</text>
+  </svg>
+  <p class="fallback">In words: a PhD student in Information Systems chooses the section type, pastes a paragraph and selects <strong>Analyse Argument</strong>. The tool returns one of three outcomes: an overclaim (the claim is highlighted and a diagnostic panel opens), no overclaim (no warning), or insufficient evidence (a neutral notice). The student revises in their own words and checks again.</p>
+</div>
+
+<h2>The demo moment</h2>
+<p class="note">Illustrative, fictional paragraph. It isn't real research data. The cross-platform clause was removed to keep one diagnostic target.</p>
+<blockquote>Participants exposed to an external data-sharing policy reported higher privacy concerns than those exposed to an internal-sharing policy (p = .01). These findings <mark>prove that violations of contextual integrity are the mechanism driving privacy concerns</mark>.</blockquote>
+
+<div class="card diag" aria-label="Example diagnostic">
+  <div class="head"><span class="badge">Overclaim</span><span class="loc">Discussion · Claim–evidence alignment</span></div>
+  <h4>Why this matters</h4>
+  <p>The reported difference in privacy concerns is consistent with the theoretical perspective, but it doesn't establish that a contextual-integrity violation was the underlying mechanism. The paragraph doesn't say whether that mechanism was measured or tested.</p>
+  <h4>Evidence identified</h4>
+  <p>A statistically significant difference in reported privacy concerns between two experimental conditions.</p>
+  <h4>What the claim assumes</h4>
+  <p>That the group difference identifies contextual-integrity violations as the explanatory mechanism.</p>
+  <h4>Evidence still needed</h4>
+  <p>How contextual-integrity violations were operationalised, and whether an appropriate mechanism test was conducted.</p>
+  <h4>What to examine</h4>
+  <ol>
+    <li>Did the study measure or manipulate the proposed mechanism directly?</li>
+    <li>Could alternative explanations account for the observed difference?</li>
+    <li>Does the paragraph report a test of the mechanism itself, rather than only the difference between conditions?</li>
+  </ol>
+  <div class="status">Verification status: the supplied paragraph doesn't establish the theoretical mechanism. The full manuscript hasn't been examined.</div>
+  <div class="foot">Your argument, your decision. No rewritten text.</div>
+</div>
+
+<h2>The 60-second video</h2>
+<div class="card">
+  <div class="steps sans" role="group" aria-label="Demo timeline">
+    <button type="button" data-step="0" aria-pressed="true">0–10s</button>
+    <button type="button" data-step="1" aria-pressed="false">10–20s</button>
+    <button type="button" data-step="2" aria-pressed="false">20–35s</button>
+    <button type="button" data-step="3" aria-pressed="false">35–45s</button>
+    <button type="button" data-step="4" aria-pressed="false">45–55s</button>
+    <button type="button" data-step="5" aria-pressed="false">55–60s</button>
+  </div>
+  <div class="step-panel" id="stepPanel" aria-live="polite">The user chooses <strong>Discussion</strong> and pastes the paragraph into a calm, research-style browser interface.</div>
+</div>
+
+<h2>Finish line: three tests must pass</h2>
+<div class="tests">
+  <div class="card"><div class="n">1 · Overclaim</div>A paragraph whose conclusion goes beyond the evidence. Expected result: it <strong>highlights the exact claim</strong> and explains the mismatch.</div>
+  <div class="card"><div class="n">2 · Well-calibrated</div>A cautious paragraph whose claim fits the evidence. Expected result: <strong>no warning</strong>. It doesn't invent problems to look useful.</div>
+  <div class="card"><div class="n">3 · Not enough to judge</div>A paragraph without enough evidence to judge. Expected result: a <strong>neutral "insufficient evidence" notice</strong>. It doesn't invent evidence or make up a problem with the research.</div>
+</div>
+<p class="note">These cases run through the real analysis flow, not hard-coded answers. They're a smoke test, not proof of accuracy. Run them repeatedly; any failure blocks the demo.</p>
+
+<h2>Boundary</h2>
+<details open>
+  <summary><span class="pill now">Now</span> In the proof of concept</summary>
+  <ul>
+    <li>One paragraph in, a section-type selector, and an <strong>Analyse Argument</strong> action</li>
+    <li><strong>Theoretical overclaim</strong> is the committed category</li>
+    <li><strong>Causal overclaim</strong> is conditional: it's in only if the development check passes reliably, otherwise it's deferred</li>
+    <li>Three outcomes: overclaim detected, no overclaim identified, insufficient evidence</li>
+    <li>Highlights only spans that exactly match the original text. The original is never altered.</li>
+    <li>A diagnostic panel with what the evidence shows, what the claim assumes, the evidence still needed, questions to examine and the verification status</li>
+    <li>An LLM does the analysis. The choice of model, prompt and schema is for the spec.</li>
+    <li>IS grounding: the seed file plus 3–5 methodological notes, only if the learner has reviewed the sources. Otherwise documentation only.</li>
+  </ul>
+</details>
+<details>
+  <summary><span class="pill later">Later</span> Worth doing, just not now</summary>
+  <ul>
+    <li>A rights-cleared full-text corpus from premier IS journals, with section segmentation, expert-annotated claim–evidence units and retrieval (RAG) with citations</li>
+    <li>Expert-labelled contrast pairs, with synthetic variants clearly marked</li>
+    <li>Calibration by research method (qualitative work isn't judged by causal standards)</li>
+    <li>A "Disciplinary context" card showing a verified source and DOI</li>
+    <li>External-validity and generalisation diagnostics</li>
+    <li>Writing-pattern diagnostics ("delve into", stacked hedges): an optional add-on, kept out of the main demo</li>
+    <li>Gap-spotting and problematisation checks for Introductions (these need the Literature Review)</li>
+    <li>Multi-paragraph and whole-manuscript consistency</li>
+    <li>Evidence uploads (results tables, Methods)</li>
+    <li>A journal lens and AI-use policy display (e.g. ISJ)</li>
+    <li>Adaptive mentorship and tracking learning transfer</li>
+    <li>An argument map visualisation</li>
+    <li>A benchmark study with IS researchers: the real test of novelty</li>
+  </ul>
+</details>
+<details>
+  <summary><span class="pill cut">Cut</span> Named, each with a reason</summary>
+  <ul>
+    <li><strong>AI-detection score:</strong> unreliable, with false positives that fall hardest on non-native English writers. The learner decided: no detector.</li>
+    <li><strong>Rewriting or replacement sentences:</strong> the core principle. It teaches, and the author decides.</li>
+    <li><strong>Bulk PDF scraping or fine-tuning in the POC:</strong> rights haven't been checked, and it isn't needed to prove the kernel.</li>
+    <li><strong>Treating publication as proof:</strong> a published paper is a reference for practice, not an answer key.</li>
+    <li><strong>"Big platform" polish</strong> (dashboards, integrations, multiple models or agents): not needed to prove the kernel in 2–4 hours.</li>
+  </ul>
+</details>
+
+<h2>Notes</h2>
+<div class="card sans" style="font-size:.93rem">
+  <p style="margin-top:0"><strong>Market context:</strong> Thesify (reviewer-style feedback without rewriting), Trinka, Writefull and Paperpal (academic language tools that mostly edit). The edge isn't "feedback without rewriting". It's argument-level diagnosis that is evidence-calibrated and grounded in IS scholarship.</p>
+  <p style="margin-bottom:0"><strong>Citations are unverified.</strong> Check the DOI, metadata and content before citing any academic source from the earlier research draft in the app or the Devpost submission.</p>
+</div>
+
+<p class="tagline">Stronger arguments. Your own words.</p>
+
+<footer>Companion view. <code>scope.md</code> is the canonical plan.</footer>
+</div>
+
+<script>
+  const steps = [
+    "The user chooses <strong>Discussion</strong> and pastes the paragraph into a calm, research-style browser interface.",
+    "They select <strong>Analyse Argument</strong>. The tool identifies the claim and the evidence.",
+    "<em>\"prove that violations…\"</em> is highlighted and the diagnostic panel appears.",
+    "The panel shows <strong>what the evidence shows</strong> and <strong>what the claim assumes</strong>.",
+    "The user opens <strong>What to examine</strong> to see questions for judging their own argument.",
+    "Closing message: <strong>\"Stronger arguments. Your own words.\"</strong>"
+  ];
+  const panel = document.getElementById("stepPanel");
+  document.querySelectorAll(".steps button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".steps button").forEach(b => b.setAttribute("aria-pressed", "false"));
+      btn.setAttribute("aria-pressed", "true");
+      panel.innerHTML = steps[Number(btn.dataset.step)];
+    });
+  });
+</script>
+</body>
+</html>

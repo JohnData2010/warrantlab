@@ -1,0 +1,29 @@
+{
+  "name": "warrantlab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "WarrantLab — find the missing reasoning between your evidence and your claims.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "vitest run",
+    "check:model": "tsx --env-file=.env.local scripts/check-model.ts",
+    "list:models": "tsx --env-file=.env.local scripts/list-models.mts"
+  },
+  "dependencies": {
+    "@google/genai": "^2.31.0",
+    "next": "^16.4.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5"
+  }
+}

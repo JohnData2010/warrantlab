@@ -1,0 +1,48 @@
+:root {
+  --canvas: #f7f6f2;
+  --paper: #ffffff;
+  --ink: #243746;
+  --ink-muted: #5d6b77;
+  --navy: #315675;
+  --navy-soft: #e6edf3;
+  --amber: #b17b36;
+  --amber-soft: #f6ead9;
+  --ok: #3d6b4f;
+  --ok-soft: #e7efe9;
+  --line: #dcd8cd;
+  --font-serif-stack: var(--font-serif), Georgia, "Times New Roman", serif;
+  --font-sans-stack: var(--font-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans-stack);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

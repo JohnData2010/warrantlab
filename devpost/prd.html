@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WarrantLab PRD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  :root {
+    --canvas: #F7F6F2; --paper: #FFFFFF; --ink: #243746; --muted: #5d6b77;
+    --line: #dcd8cd; --navy: #315675; --navy-soft: #e6edf3;
+    --amber: #B17B36; --amber-soft: #f6ead9; --mark: #f3dfc1;
+    --neutral-soft: #eef0ee; --ok: #3d6b4f; --ok-soft: #e4efe7;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --sans: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --canvas: #14191e; --paper: #1c232a; --ink: #e3e8ec; --muted: #9aa7b2;
+      --line: #313b45; --navy: #8fb4d4; --navy-soft: #1f2d3a;
+      --amber: #d9a663; --amber-soft: #3a2e1d; --mark: #5a4526;
+      --neutral-soft: #232b31; --ok: #8fc9a3; --ok-soft: #1d2f24;
+    }
+  }
+  :root[data-theme="dark"] {
+    --canvas: #14191e; --paper: #1c232a; --ink: #e3e8ec; --muted: #9aa7b2;
+    --line: #313b45; --navy: #8fb4d4; --navy-soft: #1f2d3a;
+    --amber: #d9a663; --amber-soft: #3a2e1d; --mark: #5a4526;
+    --neutral-soft: #232b31; --ok: #8fc9a3; --ok-soft: #1d2f24;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--canvas); color: var(--ink); font: 15px/1.6 var(--sans); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 32px 16px 72px; }
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  h1 { font: 600 2.3rem/1.15 var(--serif); margin: .3em 0 .1em; }
+  .desc { font: italic 1.1rem var(--serif); color: var(--muted); margin: 0; }
+  .promise { margin: 14px 0 0; font-size: 1rem; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 4px 8px; border-radius: 3px; background: var(--amber-soft); color: var(--amber); }
+  h2 { font: 600 1.35rem var(--serif); margin: 2.4em 0 .7em; padding-bottom: .35em; border-bottom: 1px solid var(--line); }
+  h3 { font-size: .95rem; margin: 1.4em 0 .4em; }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 18px 20px; margin: 12px 0; }
+  .grow { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .grow .card { margin: 0; }
+  .was { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .was s { color: var(--muted); }
+  .now { margin-top: 4px; }
+  svg.dg { width: 100%; height: auto; display: block; }
+  svg.dg text { font-family: var(--sans); fill: var(--ink); }
+  svg.dg .sub { fill: var(--muted); font-size: 11px; }
+  svg.dg .box { fill: var(--paper); stroke: var(--line); stroke-width: 1.5; }
+  svg.dg .key { stroke: var(--navy); stroke-width: 2; fill: var(--navy-soft); }
+  svg.dg .amb { stroke: var(--amber); stroke-width: 2; fill: var(--amber-soft); }
+  svg.dg .ar { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+  svg.dg .loop { stroke: var(--navy); stroke-dasharray: 5 4; }
+  .fallback { font-size: 13px; color: var(--muted); }
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 12px; }
+  .tabs button { font: 600 13px var(--sans); padding: 8px 12px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 4px; cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--navy); color: var(--paper); border-color: var(--navy); }
+  .tabs button:focus-visible, summary:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+  /* mock workspace */
+  .ws { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--canvas); }
+  .ws-head { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--paper); border-bottom: 1px solid var(--line); }
+  .wm { font: 600 1.05rem var(--serif); }
+  .wm small { font: 500 11px var(--sans); color: var(--muted); margin-left: 6px; letter-spacing: .04em; }
+  .ctrls { display: flex; gap: 8px; align-items: center; font-size: 13px; }
+  .sel { border: 1px solid var(--line); border-radius: 3px; padding: 5px 9px; background: var(--paper); }
+  .btn { background: var(--navy); color: var(--paper); border-radius: 3px; padding: 6px 12px; font-weight: 600; font-size: 13px; }
+  .btn.off { opacity: .45; }
+  .ws-body { display: grid; grid-template-columns: 58fr 42fr; }
+  @media (max-width: 720px) { .ws-body { grid-template-columns: 1fr; } }
+  .ms { background: var(--paper); padding: 16px 18px; border-right: 1px solid var(--line); }
+  @media (max-width: 720px) { .ms { border-right: 0; border-bottom: 1px solid var(--line); } }
+  .ms .lbl, .dp .lbl { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .ms p { font: 1rem/1.7 var(--serif); margin: 0 0 10px; }
+  .ms .hl { background: var(--mark); border-bottom: 2px solid var(--amber); padding: 0 1px; }
+  .ms .meta { font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .ms .edit { color: var(--navy); font-weight: 600; }
+  .dp { padding: 16px 18px; font-size: 13.5px; }
+  .finding { background: var(--paper); border: 1px solid var(--line); border-left: 3px solid var(--amber); border-radius: 4px; padding: 12px 14px; }
+  .finding .cat { font-weight: 700; color: var(--amber); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  .wc { display: grid; gap: 6px; margin: 10px 0; }
+  .wc div { padding: 7px 10px; border-radius: 3px; background: var(--neutral-soft); }
+  .wc .mw { background: var(--amber-soft); }
+  .wc b { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .status { font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; margin-top: 8px; }
+  .neutral { background: var(--paper); border: 1px solid var(--line); border-left: 3px solid var(--navy); border-radius: 4px; padding: 12px 14px; }
+  .neutral.ok { border-left-color: var(--ok); }
+  .foot { margin-top: 12px; font-size: 12px; color: var(--muted); font-style: italic; }
+  .exp { margin-top: 8px; font-size: 12.5px; color: var(--navy); font-weight: 600; }
+  .note { font-size: 13px; color: var(--muted); }
+  blockquote { margin: 8px 0; padding: 12px 14px; background: var(--paper); border: 1px solid var(--line); border-radius: 4px; font: italic 1rem/1.6 var(--serif); }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--paper); }
+  th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
+  code { font-size: 12.5px; background: var(--neutral-soft); padding: 1px 4px; border-radius: 3px; }
+  details { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; margin: 8px 0; }
+  summary { cursor: pointer; padding: 12px 16px; font-weight: 600; list-style: none; display: flex; gap: 10px; align-items: center; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "▸"; color: var(--muted); transition: transform .15s; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details > div { padding: 0 16px 14px; }
+  details ul { margin: 0; padding-left: 20px; }
+  .pill { font-size: 10.5px; font-weight: 700; padding: 3px 7px; border-radius: 999px; text-transform: uppercase; letter-spacing: .06em; }
+  .p0 { background: var(--navy-soft); color: var(--navy); }
+  .p1 { background: var(--neutral-soft); color: var(--muted); }
+  .gate label { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .gate label:last-of-type { border-bottom: 0; }
+  .gate input { margin-top: 4px; accent-color: var(--navy); }
+  .gate-count { font-weight: 600; color: var(--navy); }
+  .timeline { display: grid; gap: 0; }
+  .tl { display: grid; grid-template-columns: 80px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+  .tl b { color: var(--navy); font-variant-numeric: tabular-nums; }
+  .tag { text-align: center; font: italic 1.35rem var(--serif); margin: 2.4em 0 .4em; }
+  footer { text-align: center; font-size: 12px; color: var(--muted); margin-top: 32px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">PRD review · companion to prd.md</div>
+  <h1>WarrantLab</h1>
+  <p class="desc">Scholarly Argument Intelligence</p>
+  <p class="promise">Find the missing reasoning between your evidence and your claims. A browser workspace for PhD and research students writing Information Systems papers. It never rewrites their text.</p>
+  <p style="margin-top:12px"><span class="badge" style="background:var(--ok-soft);color:var(--ok)">Status: approved</span> <span class="note">· "WarrantLab" is a provisional working name</span></p>
+</header>
+
+<h2>What the PRD made concrete</h2>
+<div class="grow">
+  <div class="card"><div class="was">Scope said <s>"Analyse Argument"</s></div><div class="now">Now we know it returns <strong>exactly one of three outcomes</strong>, plus a separate <em>Analysis incomplete</em> state so a failure is never reported as a clean result.</div></div>
+  <div class="card"><div class="was">Scope said <s>"a diagnostic panel"</s></div><div class="now">Now each finding is a <strong>Warrant Check</strong> (Evidence → Missing warrant → Claim), with at most three findings in text order and no severity ranking.</div></div>
+  <div class="card"><div class="was">Scope said <s>"one paragraph in"</s></div><div class="now">Now it accepts <strong>up to 3,000 words</strong>. Longer text is rejected, never truncated, and the limit drops if long-input tests aren't stable.</div></div>
+  <div class="card"><div class="was">Scope said <s>"a section selector"</s></div><div class="now">Now there are <strong>8 planned sections</strong>, each enabled only after it passes a four-part validation gate.</div></div>
+</div>
+
+<h2>The core journey</h2>
+<div class="card">
+  <svg class="dg" viewBox="0 0 900 260" role="img" aria-labelledby="jt jd">
+    <title id="jt">WarrantLab core journey</title>
+    <desc id="jd">Choose a section, paste up to 3,000 words, analyse, read one of three outcomes, select Edit text, revise in your own words, then analyse again.</desc>
+    <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+    <rect class="box" x="10" y="30" width="150" height="64" rx="5"/><text x="85" y="58" text-anchor="middle" font-weight="600" font-size="13">Choose section</text><text x="85" y="77" text-anchor="middle" class="sub">gate-passed only</text>
+    <rect class="box" x="190" y="30" width="150" height="64" rx="5"/><text x="265" y="58" text-anchor="middle" font-weight="600" font-size="13">Paste text</text><text x="265" y="77" text-anchor="middle" class="sub">≤ 3,000 words</text>
+    <rect class="box key" x="370" y="30" width="150" height="64" rx="5"/><text x="445" y="58" text-anchor="middle" font-weight="600" font-size="13">Analyse Argument</text><text x="445" y="77" text-anchor="middle" class="sub">real model, verified spans</text>
+    <rect class="box amb" x="560" y="4" width="180" height="40" rx="5"/><text x="650" y="29" text-anchor="middle" font-size="12.5" font-weight="600">Overclaim detected (≤ 3)</text>
+    <rect class="box" x="560" y="54" width="180" height="40" rx="5"/><text x="650" y="79" text-anchor="middle" font-size="12.5" font-weight="600">No overclaim identified</text>
+    <rect class="box" x="560" y="104" width="180" height="40" rx="5"/><text x="650" y="129" text-anchor="middle" font-size="12.5" font-weight="600">Insufficient evidence</text>
+    <rect class="box key" x="370" y="180" width="200" height="64" rx="5"/><text x="470" y="208" text-anchor="middle" font-weight="600" font-size="13">Edit text</text><text x="470" y="227" text-anchor="middle" class="sub">original text, revise yourself</text>
+    <path class="ar" marker-end="url(#a)" d="M160,62 L188,62"/>
+    <path class="ar" marker-end="url(#a)" d="M340,62 L368,62"/>
+    <path class="ar" marker-end="url(#a)" d="M520,55 L558,26"/>
+    <path class="ar" marker-end="url(#a)" d="M520,62 L558,74"/>
+    <path class="ar" marker-end="url(#a)" d="M520,70 L558,122"/>
+    <path class="ar" marker-end="url(#a)" d="M740,24 C820,24 820,212 572,212"/>
+    <path class="ar loop" marker-end="url(#a)" d="M370,212 C300,212 445,150 445,96"/>
+    <text x="300" y="170" class="sub">re-analyse</text>
+    <text x="790" y="150" class="sub">revise</text>
+  </svg>
+  <p class="fallback">In words: choose a supported section, then paste up to 3,000 words. Analyse returns one of three outcomes. Edit text returns the original text to revise in your own words, then you analyse again. Success is TC1 revised into TC2, moving from overclaim to no overclaim.</p>
+</div>
+
+<h2>The workspace, state by state</h2>
+<p class="note">Click a state to see what the screen shows. These are illustrative mock-ups of the PRD behaviour, not the built app. The text is fictional.</p>
+<div class="tabs" role="tablist" aria-label="Workspace states" id="stateTabs">
+  <button role="tab" aria-selected="true" data-s="empty">Empty</button>
+  <button role="tab" aria-selected="false" data-s="over">Overclaim detected</button>
+  <button role="tab" aria-selected="false" data-s="none">No overclaim</button>
+  <button role="tab" aria-selected="false" data-s="insuff">Insufficient evidence</button>
+  <button role="tab" aria-selected="false" data-s="limit">Over limit</button>
+  <button role="tab" aria-selected="false" data-s="fail">Analysis incomplete</button>
+</div>
+<div class="ws" aria-live="polite">
+  <div class="ws-head">
+    <div class="wm">WarrantLab<small>Scholarly Argument Intelligence</small></div>
+    <div class="ctrls"><span class="sel">Discussion ▾</span><span class="btn" id="mockBtn">Analyse Argument</span></div>
+  </div>
+  <div class="ws-body">
+    <div class="ms" id="mockMs"></div>
+    <div class="dp" id="mockDp"></div>
+  </div>
+</div>
+<p class="note" id="stateNote" style="margin-top:8px"></p>
+
+<h2>Golden test cases</h2>
+<div class="tabs" role="tablist" aria-label="Test cases" id="tcTabs">
+  <button role="tab" aria-selected="true" data-t="0">TC1 · Overclaim</button>
+  <button role="tab" aria-selected="false" data-t="1">TC2 · Calibrated</button>
+  <button role="tab" aria-selected="false" data-t="2">TC3 · Insufficient</button>
+  <button role="tab" aria-selected="false" data-t="3">Causal check</button>
+</div>
+<div class="card" id="tcPanel" aria-live="polite"></div>
+<p class="note">Still to be written: a multi-paragraph case with two overclaims, plus overclaim, calibrated and insufficient fixtures for Results and Introduction (Open Question 1).</p>
+
+<h2>Section validation gate</h2>
+<div class="grow">
+  <div class="card gate">
+    <p style="margin-top:0"><strong>A section becomes selectable only when all four pass.</strong> <span class="gate-count" id="gateCount">0 / 4</span></p>
+    <label><input type="checkbox"> <span><strong>Overclaim case:</strong> the unsupported inference is identified and the exact span is highlighted.</span></label>
+    <label><input type="checkbox"> <span><strong>Well-calibrated case:</strong> no false warning.</span></label>
+    <label><input type="checkbox"> <span><strong>Insufficient-evidence case:</strong> abstains without inventing study details.</span></label>
+    <label><input type="checkbox"> <span><strong>Section awareness:</strong> the explanation fits the section, the text is preserved, and each case passes at least 3 times through the real flow.</span></label>
+    <p class="note" id="gateMsg" style="margin-bottom:0">Section shown as <em>In development</em>, disabled.</p>
+  </div>
+  <div class="card">
+    <p style="margin-top:0"><strong>Eight planned sections</strong></p>
+    <div class="tablewrap" style="border:0">
+    <table>
+      <tr><th>Section</th><th>Priority</th></tr>
+      <tr><td>Discussion</td><td><span class="pill p0">P0</span></td></tr>
+      <tr><td>Results / Findings</td><td><span class="pill p0">P0</span></td></tr>
+      <tr><td>Introduction</td><td><span class="pill p0">P0</span></td></tr>
+      <tr><td>Hypotheses / Theory Development</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>Conclusion</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>Literature Review</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>Methodology</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>Abstract</td><td><span class="pill p1">P1</span></td></tr>
+    </table>
+    </div>
+    <p class="note" style="margin-bottom:0">These are build priorities, not test status. The selector is section-aware, not methodology-aware.</p>
+  </div>
+</div>
+
+<h2>Acceptance criteria</h2>
+<details open>
+  <summary>Core behaviour (AC1–AC8)</summary>
+  <div><div class="tablewrap"><table>
+    <tr><th>ID</th><th>Pass condition</th></tr>
+    <tr><td>AC1</td><td>The input is unchanged byte for byte. Only the user edits it.</td></tr>
+    <tr><td>AC2</td><td>Highlights are exact substrings at verified positions. Ambiguous matches suppress the highlight and show a neutral note.</td></tr>
+    <tr><td>AC3</td><td>TC1 highlights the exact span, and the Warrant Check separates the group difference from evidence of a mechanism.</td></tr>
+    <tr><td>AC4</td><td>TC2 shows no finding, highlight or warning.</td></tr>
+    <tr><td>AC5</td><td>TC3 is neutral <code>insufficient_evidence</code>, with no invented evidence or verdict.</td></tr>
+    <tr><td>AC6</td><td>No replacement sentence, rewrite, "apply fix" or one-click correction anywhere.</td></tr>
+    <tr><td>AC7</td><td>Empty input is blocked and failures are recoverable. Edits or section changes clear old results but keep the text, and a superseded response is never shown.</td></tr>
+    <tr><td>AC8</td><td>The UI says analysis is limited to the supplied text and isn't peer review.</td></tr>
+  </table></div></div>
+</details>
+<details>
+  <summary>Grounding and evidence (AC9–AC12)</summary>
+  <div><div class="tablewrap"><table>
+    <tr><th>ID</th><th>Pass condition</th></tr>
+    <tr><td>AC9</td><td>Any source shown links to a verified publisher page or DOI and states the document type.</td></tr>
+    <tr><td>AC10</td><td>Published sources never replace missing user evidence or force an overclaim.</td></tr>
+    <tr><td>AC11</td><td>No full-text passages are used at runtime without a version-specific permission check.</td></tr>
+    <tr><td>AC12</td><td>Qualitative work isn't required to show causal identification by default.</td></tr>
+  </table></div></div>
+</details>
+<details>
+  <summary>New in this PRD (AC13–AC20)</summary>
+  <div><div class="tablewrap"><table>
+    <tr><th>ID</th><th>Pass condition</th></tr>
+    <tr><td>AC13</td><td>Every finding shows Evidence identified, Missing warrant and Claim, plus What the claim assumes and the Verification status.</td></tr>
+    <tr><td>AC14</td><td>At most 3 findings in text order, no severity labels, and a "not an exhaustive review" note when findings were limited.</td></tr>
+    <tr><td>AC15</td><td>Over-limit text isn't analysed or truncated. A message appears and the text is kept.</td></tr>
+    <tr><td>AC16</td><td>Partial failure shows "Analysis incomplete" with Try again, never a clean result.</td></tr>
+    <tr><td>AC17</td><td>Only gate-passed sections can be selected. Others show <em>In development</em>.</td></tr>
+    <tr><td>AC18</td><td>TC1 revised into TC2 moves from overclaim to no overclaim.</td></tr>
+    <tr><td>AC19</td><td>Neutral states never use amber or warning styling.</td></tr>
+    <tr><td>AC20</td><td>The agreed disclosure is shown, and manuscript text isn’t written to browser storage, logs or analytics.</td></tr>
+  </table></div></div>
+</details>
+
+<h2>Demo script · about 2:20</h2>
+<div class="card timeline">
+  <div class="tl"><b>0–15s</b><span>The problem: academic-sounding text can claim more than its evidence shows. Who it's for.</span></div>
+  <div class="tl"><b>15–35s</b><span>Open WarrantLab, choose Discussion, paste TC1.</span></div>
+  <div class="tl"><b>35–65s</b><span>Analyse. The exact span is highlighted and the Warrant Check appears.</span></div>
+  <div class="tl"><b>65–95s</b><span>Open the finding: why it matters, evidence still needed, questions to examine.</span></div>
+  <div class="tl"><b>95–115s</b><span>Edit text, revise into TC2 in your own words, re-analyse: <em>No overclaim identified</em>.</span></div>
+  <div class="tl"><b>115–130s</b><span>Paste TC3 and show the neutral <em>Insufficient evidence</em> state.</span></div>
+  <div class="tl" style="border-bottom:0"><b>130–140s</b><span>A brief look at scope, PRD and spec. Close on the tagline.</span></div>
+</div>
+
+<h2>Scope amendments</h2>
+<div class="tablewrap"><table>
+  <tr><th>Approved scope said</th><th>PRD now says</th><th>Why</th></tr>
+  <tr><td>One paragraph in</td><td>Up to 3,000 words, subject to the length gate</td><td>A real section is the normal use</td></tr>
+  <tr><td>Discussion by default</td><td>8 planned sections, gate-enabled. P0: Discussion, Results, Introduction.</td><td>IS papers need alignment across sections</td></tr>
+  <tr><td>One highlight</td><td>Up to 3 findings</td><td>Multi-paragraph input</td></tr>
+  <tr><td>60-second demo</td><td>Under 3 minutes, about 2:20, with the revision loop</td><td>The rules allow it, and the revision moment is the strongest proof</td></tr>
+  <tr><td>Scholarly Writing Intelligence</td><td>WarrantLab</td><td>Names the missing warrant</td></tr>
+</table></div>
+
+<h2>Boundaries</h2>
+<details>
+  <summary>Deferred from the POC</summary>
+  <div><ul>
+    <li>Sections that haven't passed the gate (shown as <em>In development</em>)</li>
+    <li>Causal overclaim, unless the development check passes</li>
+    <li>Runtime IS grounding and source cards, until verified methodological notes exist</li>
+    <li>Reliable full 3,000-word analysis, subject to the length gate</li>
+    <li>Copy feedback (only if time allows)</li>
+    <li>Cross-section consistency</li>
+  </ul></div>
+</details>
+<details>
+  <summary>Non-goals</summary>
+  <div><ul>
+    <li>AI-content detection</li>
+    <li>Rewriting or replacement wording</li>
+    <li>Grammar, style or citation checking</li>
+    <li>Peer-review or publication-readiness scores</li>
+    <li>Judging methodological rigour or validating literature gaps</li>
+    <li>Accounts, saved history, dashboards, integrations</li>
+    <li>Bulk scraping or fine-tuning on journal articles</li>
+  </ul></div>
+</details>
+
+<h2>Open questions</h2>
+<div class="card">
+  <ol style="margin:0;padding-left:20px">
+    <li><strong>Fixtures still to write:</strong> the multi-paragraph case, plus Results and Introduction. Doesn't block the spec.</li>
+    <li><strong>Interface font:</strong> Inter or IBM Plex Sans. Can be decided in the spec.</li>
+    <li><strong>Resolved:</strong> a section change clears results but keeps the text, and late responses are ignored. Operation is in memory only, with no absolute deletion promise.</li>
+    <li><strong>The AI provider’s retention policy</strong> must be verified before any specific privacy claim. To investigate in the spec.</li>
+  </ol>
+</div>
+
+<p class="tag">Stronger arguments. Your own words.</p>
+<footer>Companion view · <code>prd.md</code> is the canonical plan.</footer>
+</div>
+
+<script>
+  const TC1 = 'Participants exposed to an external data-sharing policy reported higher privacy concerns than those exposed to an internal-sharing policy (p = .01). These findings <span class="hl">prove that violations of contextual integrity are the mechanism driving privacy concerns</span>.';
+  const TC1plain = TC1.replace(/<[^>]+>/g, '');
+  const TC2 = 'Participants exposed to an external data-sharing policy reported higher privacy concerns than those exposed to an internal-sharing policy (p = .01). This difference is consistent with contextual integrity theory, but the comparison alone does not establish the underlying mechanism.';
+  const TC3 = 'External data sharing increases privacy concerns through violations of contextual integrity. Our research provides strong evidence for this mechanism.';
+  const foot = '<div class="foot">Assessment limited to the supplied text. No manuscript-wide verification.</div>';
+  const states = {
+    empty: {
+      btn: false,
+      ms: '<div class="lbl">Manuscript</div><p style="color:var(--muted)">Paste one or more paragraphs from your Discussion…</p><div class="meta"><span>0 / 3,000 words</span></div>',
+      dp: '<div class="lbl">Diagnostics</div><div class="neutral"><strong>Check whether your claims go beyond your evidence.</strong><p style="margin:6px 0 0">WarrantLab highlights the claim, names the missing warrant and asks questions. It never rewrites your text.</p><p style="margin:8px 0 0;font-size:12.5px;color:var(--muted)">WarrantLab does not save your manuscript or analysis history. This demonstration sends your text to Google’s Gemini API free tier. Google may have human reviewers read free-tier inputs and outputs, and may use them to improve its products. Please do not paste unpublished or confidential research.</p></div>' + foot,
+      note: 'Empty: Analyse is disabled, with the agreed privacy disclosure and the tool’s limits visible. Session-only and in memory, with no browser storage.'
+    },
+    over: {
+      btn: true,
+      ms: '<div class="lbl">Manuscript · read-only</div><p>' + TC1 + '</p><div class="meta"><span>Original text preserved</span><span class="edit">Edit text</span></div>',
+      dp: '<div class="lbl">1 finding</div><div class="finding"><div class="cat">Theoretical overclaim</div><div class="wc"><div><b>Evidence identified</b>A difference in privacy concerns between two sharing conditions (p = .01).</div><div class="mw"><b>Missing warrant</b>The supplied text doesn’t show the difference identifies contextual-integrity violation as the mechanism. External sharing isn’t automatically a violation, because that depends on contextual norms.</div><div><b>Claim</b>The findings prove the theoretical mechanism.</div></div><div class="exp">▸ Evidence still needed</div><div class="exp">▸ What to examine</div><div class="status">Verification status: mismatch identifiable within the supplied text. Full study not assessed.</div><div class="foot" style="margin-top:6px">Your argument, your decision. No rewritten text.</div></div>' + foot,
+      note: 'Overclaim detected: the only state that uses amber. There are up to 3 findings, in text order.'
+    },
+    none: {
+      btn: true,
+      ms: '<div class="lbl">Manuscript · read-only</div><p>' + TC2 + '</p><div class="meta"><span>Original text preserved</span><span class="edit">Edit text</span></div>',
+      dp: '<div class="lbl">Result</div><div class="neutral ok"><strong>No claim–evidence mismatch identified in the supplied text.</strong><p style="margin:6px 0 0">This is not a verification of the wider study.</p></div>' + foot,
+      note: 'No overclaim identified: neutral, with no highlight and no suggestions. This is TC2 and the end of the revision loop.'
+    },
+    insuff: {
+      btn: true,
+      ms: '<div class="lbl">Manuscript · read-only</div><p>' + TC3 + '</p><div class="meta"><span>Original text preserved</span><span class="edit">Edit text</span></div>',
+      dp: '<div class="lbl">Result</div><div class="neutral"><strong>Not enough information to verify this claim.</strong><p style="margin:6px 0 0">This text doesn’t include findings or methodological information that would allow the mechanism claim to be checked. It may require evidence from another section.</p><div class="exp">▸ What to examine: which result supports this mechanism, and where is the test reported?</div></div>' + foot,
+      note: 'Insufficient evidence: neutral and not a softer warning. "Strong evidence" alone doesn’t make it an overclaim.'
+    },
+    limit: {
+      btn: false,
+      ms: '<div class="lbl">Manuscript</div><p style="color:var(--muted)">' + TC1plain + ' …</p><div class="meta"><span style="color:var(--amber);font-weight:600">3,412 / 3,000 words</span></div>',
+      dp: '<div class="lbl">Diagnostics</div><div class="neutral"><strong>This passage is longer than 3,000 words.</strong><p style="margin:6px 0 0">Choose a shorter passage to analyse. Your text hasn’t been changed or truncated.</p></div>' + foot,
+      note: 'Over limit: no analysis and no truncation. If long-input tests aren’t stable, the enabled limit is lowered and shown here.'
+    },
+    fail: {
+      btn: true,
+      ms: '<div class="lbl">Manuscript</div><p>' + TC1plain + '</p><div class="meta"><span>Your text is unchanged</span></div>',
+      dp: '<div class="lbl">Diagnostics</div><div class="neutral"><strong>Analysis incomplete.</strong><p style="margin:6px 0 0">Part of the text couldn’t be analysed, so no result is shown. <span style="color:var(--navy);font-weight:600">Try again</span></p></div>' + foot,
+      note: 'Analysis incomplete: a processing state, not an academic outcome. It never reports "no overclaim" after a partial failure.'
+    }
+  };
+  const tcs = [
+    '<p style="margin-top:0"><span class="badge">overclaim_detected</span></p><blockquote>' + TC1 + '</blockquote><p><strong>Missing warrant:</strong> the condition difference isn’t shown to identify contextual-integrity violation as the mechanism, and external sharing isn’t automatically a violation (Nissenbaum).</p><p><strong>What to examine:</strong> (1) Was the mechanism measured or manipulated? (2) Does the text report a test of the mechanism itself? (3) Could another explanation account for the result?</p><p style="margin-bottom:0"><strong>Must not say:</strong> "never tested", "theory invalid", "no causal effect".</p>',
+    '<p style="margin-top:0"><span class="badge" style="background:var(--ok-soft);color:var(--ok)">no_overclaim_identified</span></p><blockquote>' + TC2 + '</blockquote><p style="margin-bottom:0">No highlight and zero warnings. It must not flag "consistent with" or a missing mediation analysis. This is the revised form of TC1 in the demo.</p>',
+    '<p style="margin-top:0"><span class="badge" style="background:var(--navy-soft);color:var(--navy)">insufficient_evidence</span></p><blockquote>' + TC3 + '</blockquote><p style="margin-bottom:0">Neutral notice: there are no findings or methods to check against. It must not invent data or a test, or say the mechanism was never tested.</p>',
+    '<p style="margin-top:0"><span class="badge">causal_overclaim · conditional</span></p><blockquote>Higher perceived data sharing was associated with greater privacy concerns (r = .32). This association <span style="background:var(--mark);border-bottom:2px solid var(--amber)">proves that data sharing causes privacy concerns</span>.</blockquote><p style="margin-bottom:0">A development check, not a demo scenario. If it isn’t reliable across repeated runs, causal overclaim is deferred and not advertised. Randomised manipulations aren’t flagged automatically.</p>'
+  ];
+  function selectTab(group, btn) {
+    group.querySelectorAll('button').forEach(b => b.setAttribute('aria-selected', String(b === btn)));
+  }
+  const stateTabs = document.getElementById('stateTabs');
+  function showState(k) {
+    const s = states[k];
+    document.getElementById('mockMs').innerHTML = s.ms;
+    document.getElementById('mockDp').innerHTML = s.dp;
+    document.getElementById('mockBtn').className = 'btn' + (s.btn ? '' : ' off');
+    document.getElementById('stateNote').textContent = s.note;
+  }
+  stateTabs.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    selectTab(stateTabs, b); showState(b.dataset.s);
+  });
+  showState('empty');
+  const tcTabs = document.getElementById('tcTabs');
+  const tcPanel = document.getElementById('tcPanel');
+  tcTabs.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    selectTab(tcTabs, b); tcPanel.innerHTML = tcs[Number(b.dataset.t)];
+  });
+  tcPanel.innerHTML = tcs[0];
+  const boxes = document.querySelectorAll('.gate input');
+  boxes.forEach(cb => cb.addEventListener('change', () => {
+    const n = [...boxes].filter(x => x.checked).length;
+    document.getElementById('gateCount').textContent = n + ' / 4';
+    document.getElementById('gateMsg').innerHTML = n === 4 ? '<strong style="color:var(--ok)">Supported</strong>: the section becomes selectable.' : 'Section shown as <em>In development</em>, disabled.';
+  }));
+</script>
+</body>
+</html>
