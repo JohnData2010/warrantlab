@@ -21,8 +21,14 @@ describe("classifyFinish", () => {
 });
 
 describe("classifyError", () => {
-  it("maps 429 to quota without retry", () => {
+  it("maps a daily 429 to quota without retry", () => {
+    const daily = new ApiError({ message: '{"quotaId":"GenerateRequestsPerDayPerProjectPerModel-FreeTier"}', status: 429 });
+    expect(classifyError(daily)).toEqual({ reason: "quota", retryable: false });
     expect(classifyError(new ApiError({ message: "quota", status: 429 }))).toEqual({ reason: "quota", retryable: false });
+  });
+  it("maps a per-minute 429 to rate_limited without retry", () => {
+    const perMinute = new ApiError({ message: '{"quotaId":"GenerateRequestsPerMinutePerProjectPerModel-FreeTier"}', status: 429 });
+    expect(classifyError(perMinute)).toEqual({ reason: "rate_limited", retryable: false });
   });
   it("retries server errors once", () => {
     expect(classifyError(new ApiError({ message: "unavailable", status: 503 }))).toEqual({ reason: "model_error", retryable: true });

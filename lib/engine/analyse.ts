@@ -16,7 +16,7 @@ export interface AnalyseDeps {
 
 export interface AnalyseMeta {
   stage: "extract" | "judge" | "aggregate";
-  calls: { stage: "extract" | "judge"; model: string; ok: boolean; latencyMs: number; reason?: string }[];
+  calls: { stage: "extract" | "judge"; model: string; ok: boolean; latencyMs: number; attempts: number; reason?: string }[];
   failureDetail?: string;
 }
 
@@ -32,7 +32,7 @@ async function runStage<T extends { ok: true }>(
 ): Promise<T | VerifyFailure> {
   for (let attempt = 0; attempt < 2; attempt++) {
     const result = await call();
-    meta.calls.push({ stage, model: result.model, ok: result.ok, latencyMs: result.latencyMs, reason: result.ok ? undefined : result.reason });
+    meta.calls.push({ stage, model: result.model, ok: result.ok, latencyMs: result.latencyMs, attempts: result.attempts ?? 1, reason: result.ok ? undefined : result.reason });
     if (!result.ok) return { ok: false, reason: result.reason, detail: result.detail ?? result.reason };
     const verified = verify(result.json);
     if (verified.ok || verified.reason !== "fabricated_span" || attempt === 1) return verified;
@@ -57,6 +57,10 @@ export async function analyse(
         system: EXTRACT_SYSTEM,
         user: extractUser(section.label, section.guidance, marked),
         jsonSchema: EXTRACTION_JSON_SCHEMA,
+        thinkingLevel: "low",
+        // Extract normally answers in 2–8 s but occasionally stalls; its quota is plentiful, so fail fast and retry once.
+        timeoutMs: 30_000,
+        retryOnTimeout: true,
       }),
     (json) => verifyExtraction(input.text, paragraphs, json),
     meta,

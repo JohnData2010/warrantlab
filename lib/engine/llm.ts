@@ -1,10 +1,11 @@
 import { z } from "zod";
 
-export type LlmFailure = "quota" | "blocked" | "truncated" | "model_error" | "timeout" | "invalid_output";
+// "quota" = daily request limit reached; "rate_limited" = per-minute limit reached. Neither is retried automatically.
+export type LlmFailure = "quota" | "rate_limited" | "blocked" | "truncated" | "model_error" | "timeout" | "invalid_output";
 
 export type LlmResult =
-  | { ok: true; json: unknown; model: string; latencyMs: number }
-  | { ok: false; reason: LlmFailure; model: string; latencyMs: number; detail?: string };
+  | { ok: true; json: unknown; model: string; latencyMs: number; attempts?: number }
+  | { ok: false; reason: LlmFailure; model: string; latencyMs: number; detail?: string; attempts?: number };
 
 export interface StructuredRequest {
   model: string;
@@ -13,6 +14,9 @@ export interface StructuredRequest {
   jsonSchema: Record<string, unknown>;
   maxOutputTokens?: number;
   timeoutMs?: number;
+  thinkingLevel?: "minimal" | "low" | "medium" | "high";
+  // Only for calls whose quota is plentiful: a timed-out attempt is retried once.
+  retryOnTimeout?: boolean;
 }
 
 export type GenerateStructured = (request: StructuredRequest) => Promise<LlmResult>;

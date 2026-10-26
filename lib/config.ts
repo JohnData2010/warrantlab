@@ -16,7 +16,7 @@ export function getConfig(): WarrantLabConfig {
   const maxWords = Number.parseInt(process.env.WARRANTLAB_MAX_WORDS ?? "", 10);
   return {
     apiKey: process.env.GEMINI_API_KEY || undefined,
-    extractModel: process.env.WARRANTLAB_EXTRACT_MODEL || "gemini-3-flash-preview",
+    extractModel: process.env.WARRANTLAB_EXTRACT_MODEL || "gemini-3.1-flash-lite",
     judgeModel: process.env.WARRANTLAB_JUDGE_MODEL || "gemini-3-flash-preview",
     maxWords: Number.isFinite(maxWords) && maxWords > 0 ? maxWords : 3000,
     causalEnabled: readBool(process.env.WARRANTLAB_CAUSAL_ENABLED),

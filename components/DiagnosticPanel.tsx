@@ -131,7 +131,8 @@ function Body(props: Props) {
       <div className={styles.neutral} role="status">
         <h3 className={styles.noticeTitle}>Analysis incomplete</h3>
         <p>Part of the text could not be analysed, so no result is shown. Your text has not been changed.</p>
-        {result.reason === "quota" && <p className={styles.hint}>The free analysis quota may be temporarily used up. Please try again later.</p>}
+        {result.reason === "quota" && <p className={styles.hint}>The free daily analysis quota may be used up. Please try again later.</p>}
+        {result.reason === "rate_limited" && <p className={styles.hint}>Too many analyses in a short time. Please wait a minute, then try again.</p>}
         <button type="button" className={styles.secondary} onClick={onRetry}>
           Try again
         </button>

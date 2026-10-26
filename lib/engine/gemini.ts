@@ -1,9 +1,11 @@
-import { ApiError, FinishReason, GoogleGenAI } from "@google/genai";
+import { ApiError, FinishReason, GoogleGenAI, ThinkingLevel } from "@google/genai";
 import type { GenerateStructured, LlmFailure, StructuredRequest } from "./llm";
 
 const DEFAULT_TIMEOUT_MS = 90_000;
-const DEFAULT_MAX_OUTPUT_TOKENS = 16_000;
+// Gemini 3 thinking tokens count against this limit; 16k truncated a three-paragraph judgement.
+const DEFAULT_MAX_OUTPUT_TOKENS = 32_768;
 const SEED = 7;
+const THINKING_LEVEL = { minimal: ThinkingLevel.MINIMAL, low: ThinkingLevel.LOW, medium: ThinkingLevel.MEDIUM, high: ThinkingLevel.HIGH } as const;
 
 export function classifyFinish(finishReason: string | undefined, blockReason: string | undefined): LlmFailure | null {
   if (blockReason) return "blocked";
@@ -14,7 +16,10 @@ export function classifyFinish(finishReason: string | undefined, blockReason: st
 
 export function classifyError(error: unknown): { reason: LlmFailure; retryable: boolean } {
   if (error instanceof ApiError) {
-    if (error.status === 429) return { reason: "quota", retryable: false };
+    if (error.status === 429) {
+      const perMinute = /PerMinute/i.test(error.message) && !/PerDay/i.test(error.message);
+      return { reason: perMinute ? "rate_limited" : "quota", retryable: false };
+    }
     if (error.status >= 500) return { reason: "model_error", retryable: true };
     return { reason: "model_error", retryable: false };
   }
@@ -47,26 +52,27 @@ export function createGeminiGenerator(apiKey: string | undefined): GenerateStruc
             maxOutputTokens: request.maxOutputTokens ?? DEFAULT_MAX_OUTPUT_TOKENS,
             responseMimeType: "application/json",
             responseJsonSchema: request.jsonSchema,
+            ...(request.thinkingLevel ? { thinkingConfig: { thinkingLevel: THINKING_LEVEL[request.thinkingLevel] } } : {}),
           },
         });
         const failure = classifyFinish(response.candidates?.[0]?.finishReason, response.promptFeedback?.blockReason);
         if (failure) {
-          return { ok: false, reason: failure, model: request.model, latencyMs: elapsed(), detail: `finish=${response.candidates?.[0]?.finishReason ?? "none"}` };
+          return { ok: false, reason: failure, model: request.model, latencyMs: elapsed(), attempts: attempt + 1, detail: `finish=${response.candidates?.[0]?.finishReason ?? "none"}` };
         }
         const text = response.text;
-        if (!text) return { ok: false, reason: "invalid_output", model: request.model, latencyMs: elapsed(), detail: "empty response" };
+        if (!text) return { ok: false, reason: "invalid_output", model: request.model, latencyMs: elapsed(), attempts: attempt + 1, detail: "empty response" };
         try {
-          return { ok: true, json: JSON.parse(text), model: request.model, latencyMs: elapsed() };
+          return { ok: true, json: JSON.parse(text), model: request.model, latencyMs: elapsed(), attempts: attempt + 1 };
         } catch {
-          return { ok: false, reason: "invalid_output", model: request.model, latencyMs: elapsed(), detail: "response was not valid JSON" };
+          return { ok: false, reason: "invalid_output", model: request.model, latencyMs: elapsed(), attempts: attempt + 1, detail: "response was not valid JSON" };
         }
       } catch (error) {
         const { reason, retryable } = classifyError(error);
-        if (retryable && attempt === 0) continue;
+        if ((retryable || (reason === "timeout" && request.retryOnTimeout)) && attempt === 0) continue;
         const detail = error instanceof ApiError ? `status=${error.status}` : error instanceof Error ? error.name : "unknown";
-        return { ok: false, reason, model: request.model, latencyMs: elapsed(), detail };
+        return { ok: false, reason, model: request.model, latencyMs: elapsed(), attempts: attempt + 1, detail };
       }
     }
-    return { ok: false, reason: "model_error", model: request.model, latencyMs: elapsed() };
+    return { ok: false, reason: "model_error", model: request.model, latencyMs: elapsed(), attempts: 2 };
   };
 }

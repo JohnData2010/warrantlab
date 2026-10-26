@@ -22,6 +22,7 @@ export type Outcome = "overclaim_detected" | "no_overclaim_identified" | "insuff
 
 export type IncompleteReason =
   | "quota"
+  | "rate_limited"
   | "blocked"
   | "truncated"
   | "model_error"
