@@ -15,7 +15,7 @@ It **never rewrites your text**, it is **not an AI detector**, and it does not g
 1. You choose a manuscript section and paste up to 3,000 words.
 2. **Pass 1 — Extract** (`gemini-3.1-flash-lite`) lists every claim and piece of evidence as exact quotes.
 3. Deterministic code checks every quote exists in your text, every paragraph was covered, and the output matches the schema.
-4. **Pass 2 — Judge** (`gemini-3-flash-preview`) reads the whole text plus the verified extraction and decides, claim by claim, whether the claim overreaches its evidence, fits it, or cannot be assessed from what you supplied.
+4. **Pass 2 — Judge** (also `gemini-3.1-flash-lite`, in a separate call) reads the whole text plus the verified extraction and decides, claim by claim, whether the claim overreaches its evidence, fits it, or cannot be assessed from what you supplied.
 5. Code verifies again and aggregates one outcome:
    - **Overclaim detected:** up to three findings, highlighted in amber
    - **No overclaim identified:** neutral, not a verification of the wider study
@@ -44,7 +44,7 @@ To try Discussion before it has passed its validation gate, set `WARRANTLAB_DEV_
 npm test                                                   # deterministic unit tests (no API calls)
 npm run eval -- --section=discussion --runs=3              # real-model evaluation (uses free-tier quota)
 npm run list:models                                        # models your key can call
-npm run check:model -- --model=gemini-3-flash-preview     # one structured-output probe
+npm run check:model -- --model=gemini-3.1-flash-lite      # one structured-output probe
 ```
 
 Evaluation fixtures in `eval/fixtures/` are fictional and marked synthetic. Reports land in `eval/reports/`. A section becomes selectable only when its overclaim, calibrated and insufficient-evidence fixtures pass every check in 3 of 3 real-model runs.

@@ -5,6 +5,7 @@ const DEFAULT_TIMEOUT_MS = 90_000;
 // Gemini 3 thinking tokens count against this limit; 16k truncated a three-paragraph judgement.
 const DEFAULT_MAX_OUTPUT_TOKENS = 32_768;
 const SEED = 7;
+const RETRY_BACKOFF_MS = 3_000;
 const THINKING_LEVEL = { minimal: ThinkingLevel.MINIMAL, low: ThinkingLevel.LOW, medium: ThinkingLevel.MEDIUM, high: ThinkingLevel.HIGH } as const;
 
 export function classifyFinish(finishReason: string | undefined, blockReason: string | undefined): LlmFailure | null {
@@ -40,7 +41,8 @@ export function createGeminiGenerator(apiKey: string | undefined): GenerateStruc
     }
     const client = new GoogleGenAI({ apiKey, httpOptions: { timeout: request.timeoutMs ?? DEFAULT_TIMEOUT_MS } });
 
-    for (let attempt = 0; attempt < 2; attempt++) {
+    const maxAttempts = Math.max(1, request.maxAttempts ?? 2);
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
         const response = await client.models.generateContent({
           model: request.model,
@@ -68,11 +70,15 @@ export function createGeminiGenerator(apiKey: string | undefined): GenerateStruc
         }
       } catch (error) {
         const { reason, retryable } = classifyError(error);
-        if (((retryable && request.retryOnServerError !== false) || (reason === "timeout" && request.retryOnTimeout)) && attempt === 0) continue;
+        if (((retryable && request.retryOnServerError !== false) || (reason === "timeout" && request.retryOnTimeout)) && attempt < maxAttempts - 1) {
+          // 503s from an overloaded model usually clear within seconds.
+          await new Promise((r) => setTimeout(r, RETRY_BACKOFF_MS * 3 ** attempt));
+          continue;
+        }
         const detail = error instanceof ApiError ? `status=${error.status}` : error instanceof Error ? error.name : "unknown";
         return { ok: false, reason, model: request.model, latencyMs: elapsed(), attempts: attempt + 1, detail };
       }
     }
-    return { ok: false, reason: "model_error", model: request.model, latencyMs: elapsed(), attempts: 2 };
+    return { ok: false, reason: "model_error", model: request.model, latencyMs: elapsed(), attempts: maxAttempts };
   };
 }

@@ -12,6 +12,7 @@ export interface AnalyseDeps {
   extractModel: string;
   judgeModel: string;
   causalEnabled: boolean;
+  judgeRetryOnServerError?: boolean;
 }
 
 export interface AnalyseMeta {
@@ -61,6 +62,7 @@ export async function analyse(
         // Extract normally answers in 2–8 s but occasionally stalls; its quota is plentiful, so fail fast and retry once.
         timeoutMs: 30_000,
         retryOnTimeout: true,
+        maxAttempts: 3,
       }),
     (json) => verifyExtraction(input.text, paragraphs, json),
     meta,
@@ -80,8 +82,8 @@ export async function analyse(
         system: JUDGE_SYSTEM,
         user: judgeUser(section.label, section.guidance, marked, extraction.extraction, unlocated),
         jsonSchema: JUDGEMENT_JSON_SCHEMA,
-        // Judge quota is 20 requests/day; a 5xx may still be counted, so never spend a second request automatically.
-        retryOnServerError: false,
+        retryOnServerError: deps.judgeRetryOnServerError ?? true,
+        maxAttempts: deps.judgeRetryOnServerError === false ? 1 : 3,
       }),
     (json) => verifyJudgement(input.text, extraction, json),
     meta,

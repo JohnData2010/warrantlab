@@ -75,7 +75,7 @@ async function main() {
       const started = Date.now();
       const { response, meta } = await analyse(
         { text: fixture.text, section },
-        { generate, extractModel: config.extractModel, judgeModel: config.judgeModel, causalEnabled: fixture.development_only ? true : config.causalEnabled },
+        { generate, extractModel: config.extractModel, judgeModel: config.judgeModel, causalEnabled: fixture.development_only ? true : config.causalEnabled, judgeRetryOnServerError: config.judgeRetryOnServerError },
       );
       const notRun = response.status === "incomplete" && (response.reason === "quota" || response.reason === "rate_limited");
       const judgeHttp = meta.calls.filter((c) => c.stage === "judge").reduce((s, c) => s + c.attempts, 0);

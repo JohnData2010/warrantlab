@@ -16,7 +16,7 @@ async function main() {
   const config = getConfig();
   const { response, meta } = await analyse(
     { text, section: section as SectionId },
-    { generate: createGeminiGenerator(config.apiKey), extractModel: config.extractModel, judgeModel: config.judgeModel, causalEnabled: config.causalEnabled },
+    { generate: createGeminiGenerator(config.apiKey), extractModel: config.extractModel, judgeModel: config.judgeModel, causalEnabled: config.causalEnabled, judgeRetryOnServerError: config.judgeRetryOnServerError },
   );
   console.log(JSON.stringify({ meta, response }, null, 2));
   if (response.status === "complete") {

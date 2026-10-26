@@ -39,6 +39,7 @@ export async function POST(request: Request) {
       extractModel: config.extractModel,
       judgeModel: config.judgeModel,
       causalEnabled: config.causalEnabled,
+      judgeRetryOnServerError: config.judgeRetryOnServerError,
     },
   );
 

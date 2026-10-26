@@ -6,6 +6,7 @@ export interface WarrantLabConfig {
   maxWords: number;
   causalEnabled: boolean;
   devPreview: boolean;
+  judgeRetryOnServerError: boolean;
 }
 
 function readBool(value: string | undefined): boolean {
@@ -17,9 +18,11 @@ export function getConfig(): WarrantLabConfig {
   return {
     apiKey: process.env.GEMINI_API_KEY || undefined,
     extractModel: process.env.WARRANTLAB_EXTRACT_MODEL || "gemini-3.1-flash-lite",
-    judgeModel: process.env.WARRANTLAB_JUDGE_MODEL || "gemini-3-flash-preview",
+    judgeModel: process.env.WARRANTLAB_JUDGE_MODEL || "gemini-3.1-flash-lite",
     maxWords: Number.isFinite(maxWords) && maxWords > 0 ? maxWords : 3000,
     causalEnabled: readBool(process.env.WARRANTLAB_CAUSAL_ENABLED),
     devPreview: process.env.NODE_ENV !== "production" && readBool(process.env.WARRANTLAB_DEV_PREVIEW),
+    // Set false when the Judge model has a tiny daily quota (e.g. 20 RPD), since a failed request may still count.
+    judgeRetryOnServerError: process.env.WARRANTLAB_JUDGE_RETRY_5XX?.trim().toLowerCase() !== "false",
   };
 }
