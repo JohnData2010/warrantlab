@@ -6,6 +6,10 @@ WarrantLab is a proof of concept built for the Devpost *Build With AI: Basics* h
 
 It **never rewrites your text**, it is **not an AI detector**, and it does not grade grammar or style.
 
+> **Status:** Discussion analysis is implemented and runs as a *development preview*. It is not yet marked supported, because it has not yet passed its real-model validation gate (see [Tests and evaluation](#tests-and-evaluation)). Other manuscript sections are planned but disabled.
+
+**Planning documents:** [scope](devpost/scope.md) · [product requirements (PRD)](devpost/prd.md) · [technical spec](devpost/spec.md) · [build checklist](devpost/checklist.md)
+
 ## How it works
 
 1. You choose a manuscript section and paste up to 3,000 words.
@@ -59,4 +63,13 @@ WarrantLab does not save your manuscript or analysis history, and it never write
 
 ## Planning documents
 
-The scope, product requirements, technical spec and build checklist are in [`devpost/`](devpost/).
+WarrantLab was planned and built with the Devpost Learn Skill Pack, working plan-first:
+
+- [`devpost/scope.md`](devpost/scope.md): the kernel, the user and the proof-of-concept boundary
+- [`devpost/prd.md`](devpost/prd.md): journeys, decision rules, golden test cases and acceptance criteria
+- [`devpost/spec.md`](devpost/spec.md): architecture, the two-pass engine, verification and the evaluation harness
+- [`devpost/checklist.md`](devpost/checklist.md): build slices and every revision the build forced
+
+## Licence
+
+The original WarrantLab code in this repository is released under the [MIT License](LICENSE). Third-party dependencies keep their own licences.
