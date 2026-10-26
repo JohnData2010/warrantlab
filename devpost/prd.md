@@ -71,7 +71,7 @@ P0 and P1 are build priorities, not implementation or test status.
 
 - A section can be selected only after it passes the **Section Validation Gate**. Before that it's shown as *In development* and is disabled.
 - Section awareness is **not** methodological awareness. The POC doesn't judge causal validity, construct validity, or methodological rigour from the pasted text. When the methodological context needed to judge a claim is missing, the result is a request for more evidence or *Insufficient evidence*.
-- **Changing the section** keeps all of the user's text, clears the old highlights, findings, and verification status, returns to the editing state, and requires a new **Analyse Argument** for the new section. If an analysis is still running when the section changes, its response is cancelled or ignored. A Discussion result must never appear under a Results label.
+- **Changing the section** keeps all of the user's text, clears the old highlights, findings, and verification status, returns to the editing state, and requires a new **Analyse Argument** for the new section. While an analysis is running, the section selector is disabled, so the section can't change mid-analysis *(amended during build)*. Every result stays keyed to the exact text and section it analysed, and a response that doesn't match the current text and section is ignored. A Discussion result must never appear under a Results label.
 - Each section is analysed on its own. The POC must not claim consistency checks across sections.
 
 ### Text Input and Limits
@@ -230,7 +230,7 @@ Passing the gate confirms that the smoke tests are stable on the chosen examples
 | AC4 | TC2 negative | No finding, highlight, or warning. A neutral confirmation only. |
 | AC5 | TC3 uncertainty | A neutral `insufficient_evidence` result, no overclaim warning, and no invented evidence or verdict on the study. |
 | AC6 | No rewriting | No replacement sentence, rewritten text, "apply fix", or one-click correction anywhere. |
-| AC7 | Error and editing states | Empty input can't be submitted, and failures are recoverable without losing text. Edits or section changes clear old results but keep the text, and a superseded response is never shown. |
+| AC7 | Error and editing states | Empty input can't be submitted, and failures are recoverable without losing text. Edits or section changes clear old results but keep the text. The section selector is disabled while analysing. A response whose text or section no longer matches the current state is never shown. |
 | AC8 | Scope transparency | The UI says analysis is limited to the supplied text. It never promises manuscript-wide or scientific validation, or peer review. |
 | AC9 | Source provenance | Any journal or article reference shown links to a verified publisher page or DOI and states the document type. |
 | AC10 | Evidence separation | Published sources never replace missing user evidence or force `overclaim_detected`. |

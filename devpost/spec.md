@@ -326,7 +326,7 @@ Hobby plan ($0, personal and non-commercial), only with Deployment Protection en
 - **The model invents or garbles a quote, skips paragraphs, truncates, or is blocked by safety filters** → deterministic Verify catches it. One retry for fabricated evidence, otherwise "Analysis incomplete". It never degrades into a clean outcome.
 - **A highlight can't be located unambiguously** → the finding is shown without a mark, with the note "Location could not be marked in the text."
 - **The API key is missing or invalid** → the route returns incomplete (`model_error`). The server console prints a configuration hint without any manuscript content.
-- **The user edits or changes section mid-analysis** → the request is aborted and any late response is dropped by the `analysisKey` check.
+- **The user edits the text mid-analysis** → the request is aborted and any late response is dropped by the `analysisKey` check. The section selector is disabled while analysing, so the section can't change mid-analysis. The same check would still drop a response whose section no longer matches.
 
 ## What Was Simplified and Why
 
