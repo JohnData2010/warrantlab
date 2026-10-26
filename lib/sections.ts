@@ -70,7 +70,8 @@ export const SECTIONS: SectionDefinition[] = [
     id: "discussion",
     label: "Discussion",
     priority: "P0",
-    supported: false,
+    // Amended academic gate passed on 27 Oct 2026 (AEDT): eval/GATE-SUMMARY.md. Short fictional passages only.
+    supported: true,
     devPreview: true,
     guidance:
       "A discussion interprets findings and relates them to theory. Check whether theoretical interpretations, proposed mechanisms or claims of theory validation go beyond the empirical findings presented. Evidence for a claim may legitimately appear earlier in the paper; when the supplied text does not contain it, abstain rather than flag.",

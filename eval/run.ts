@@ -165,10 +165,12 @@ function writeReport(section: string, runs: number, fixtures: Fixture[], results
     for (const [i, r] of (results.get(fixture.id) ?? []).entries()) {
       lines.push(`- Run ${i + 1}: ${r.notRun ? "not run (quota)" : signature(fixture.text, r.response)} — ${r.checks.map((c) => `${c.name}: ${c.pass ? "pass" : "FAIL"}${c.note ? ` (${c.note})` : ""}`).join("; ")} — ${Math.round(r.latencyMs / 1000)}s · judge HTTP ${r.judgeHttp} · extract HTTP ${r.extractHttp}${r.failureDetail ? ` · failure: ${r.failureDetail}` : ""}`);
     }
-    const first = results.get(fixture.id)?.find((r) => r.response.status === "complete");
+    const fixtureRuns = results.get(fixture.id) ?? [];
+    const firstIndex = fixtureRuns.findIndex((r) => r.response.status === "complete");
+    const first = firstIndex >= 0 ? fixtureRuns[firstIndex] : undefined;
     if (first?.response.status === "complete") {
       for (const f of first.response.findings) {
-        lines.push("", `> **Missing warrant (run 1):** ${f.missingWarrant}`, ">", `> **Questions:** ${f.questionsToExamine.join(" / ")}`);
+        lines.push("", `> **Missing warrant (run ${firstIndex + 1}, first completed run):** ${f.missingWarrant}`, ">", `> **Questions:** ${f.questionsToExamine.join(" / ")}`);
       }
     }
   }

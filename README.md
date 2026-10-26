@@ -6,7 +6,7 @@ WarrantLab is a proof of concept built for the Devpost *Build With AI: Basics* h
 
 It **never rewrites your text**, it is **not an AI detector**, and it does not grade grammar or style.
 
-> **Status:** Discussion analysis is implemented and runs as a *development preview*. It is not yet marked supported, because it has not yet passed its real-model validation gate (see [Tests and evaluation](#tests-and-evaluation)). Other manuscript sections are planned but disabled.
+> **Status:** Discussion analysis is enabled as a limited proof of concept. The original strict end-to-end gate (3 of 3 runs per fixture in one report) **did not pass**, because of Google free-tier 503/504 errors. Under a learner-approved, post hoc amendment that separates academic correctness from API availability, each of TC1–TC3 has 3 completed and correct evaluations, with no academic failures. 2 of 11 attempts in that window failed with provider 503s and were shown as "Analysis incomplete". Full record: [`eval/GATE-SUMMARY.md`](eval/GATE-SUMMARY.md). Validated on short fictional passages only. This is not evidence of production reliability or of validated 3,000-word analysis. Other manuscript sections are planned but disabled.
 
 **Planning documents:** [scope](devpost/scope.md) · [product requirements (PRD)](devpost/prd.md) · [technical spec](devpost/spec.md) · [build checklist](devpost/checklist.md)
 

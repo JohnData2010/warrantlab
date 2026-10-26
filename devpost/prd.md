@@ -220,6 +220,8 @@ A section becomes selectable (**Supported**) only when all four criteria pass:
 
 Passing the gate confirms that the smoke tests are stable on the chosen examples. It doesn't prove general accuracy. If a section contains no in-scope claim, the tool must not invent a problem to show that the section works.
 
+**Post hoc amendment (learner-approved during build, 27 Oct 2026 AEDT).** "At least 3 times through the real flow" means at least **three independently completed and correct evaluations** per golden case, under an unchanged model, prompt, schema and reasoning configuration. A completed evaluation with a wrong outcome, a missing required span, fabricated evidence or an unacceptable inference fails. A provider 503, 504 or timeout is recorded as an **operational failure** and excluded only from the denominator of completed academic evaluations. Attempts, completions, academic passes, provider failures and HTTP retries are reported separately. The original strict end-to-end gate (3 of 3 runs per fixture in one report) **did not pass**. Discussion passed the amended academic gate and is enabled for this limited proof-of-concept scope, with an availability disclosure (see `eval/GATE-SUMMARY.md`).
+
 ## Acceptance Criteria
 
 | ID | Requirement | Pass condition |

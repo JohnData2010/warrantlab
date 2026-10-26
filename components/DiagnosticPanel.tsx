@@ -193,6 +193,10 @@ export default function DiagnosticPanel(props: Props) {
       <Body {...props} />
       <footer className={styles.panelFooter}>
         <p>Assessment limited to the supplied text. No manuscript-wide verification.</p>
+        <p>
+          Proof of concept: Discussion analysis has been validated on short fictional passages only. The free AI service is sometimes busy; if an
+          analysis is incomplete, please try again.
+        </p>
         <p>{DISCLOSURE}</p>
       </footer>
     </div>
