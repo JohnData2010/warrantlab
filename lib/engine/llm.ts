@@ -16,6 +16,7 @@ export interface StructuredRequest {
   timeoutMs?: number;
   thinkingLevel?: "minimal" | "low" | "medium" | "high";
   // Only for calls whose quota is plentiful: a timed-out attempt is retried once.
+  retryOnServerError?: boolean;
   retryOnTimeout?: boolean;
 }
 

@@ -68,7 +68,7 @@ export function createGeminiGenerator(apiKey: string | undefined): GenerateStruc
         }
       } catch (error) {
         const { reason, retryable } = classifyError(error);
-        if ((retryable || (reason === "timeout" && request.retryOnTimeout)) && attempt === 0) continue;
+        if (((retryable && request.retryOnServerError !== false) || (reason === "timeout" && request.retryOnTimeout)) && attempt === 0) continue;
         const detail = error instanceof ApiError ? `status=${error.status}` : error instanceof Error ? error.name : "unknown";
         return { ok: false, reason, model: request.model, latencyMs: elapsed(), attempts: attempt + 1, detail };
       }

@@ -80,6 +80,8 @@ export async function analyse(
         system: JUDGE_SYSTEM,
         user: judgeUser(section.label, section.guidance, marked, extraction.extraction, unlocated),
         jsonSchema: JUDGEMENT_JSON_SCHEMA,
+        // Judge quota is 20 requests/day; a 5xx may still be counted, so never spend a second request automatically.
+        retryOnServerError: false,
       }),
     (json) => verifyJudgement(input.text, extraction, json),
     meta,

@@ -66,7 +66,8 @@ async function main() {
     }
     const records: RunRecord[] = [];
     for (let i = 0; i < runs; i++) {
-      if (judgeRequests + 1 > maxJudge) {
+      // Worst case per run: one Judge call plus one fabrication retry.
+      if (judgeRequests + 2 > maxJudge) {
         budgetHit = true;
         console.log(`${fixture.id} run ${i + 1}/${runs}: NOT RUN (Judge budget of ${maxJudge} reached)`);
         break;
