@@ -4,6 +4,7 @@ Decisions that shape the research programme, recorded with their reasons. Newest
 
 | Date (AEDT) | Decision | Decided by | Reason | Reference |
 |---|---|---|---|---|
+| 27 Oct 2026 | Accept ROADMAP v0.1 as a provisional planning baseline. The taxonomy, RQs and design principles stay subject to scientific review. No single foundational theory is chosen yet (Toulmin is treated as a possible representation, not an explanatory theory) | Researcher | Critical Inker's full text showed substantial overlap. Positioning must be revised before taxonomy, benchmark or V0.2 design | `literature/CRITICAL-INKER-ANALYSIS.md` |
 | 27 Oct 2026 | Move WarrantLab from a hackathon POC to a long-term IS research programme ("WarrantLab 2027"), and work on branch `development` | Researcher | The Devpost deadline passed. The problem is better pursued as design-science and behavioural research | `research/ROADMAP.md` |
 | 27 Oct 2026 | Prioritise the concept paper, taxonomy and annotation protocol over new features. Do not implement the Argument Provenance Graph or start participant studies yet | Researcher | The scientific direction must be evaluated first. Experts' ability to label inferential gaps is a prerequisite for evaluating any system | ROADMAP §6, §11 |
 | 27 Oct 2026 | Treat a 2–3-expert pilot as a feasibility check, not evidence of reliability | Researcher | A sample that small cannot support generalisable reliability claims | ROADMAP §6.2 |

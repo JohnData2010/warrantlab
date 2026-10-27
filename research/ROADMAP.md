@@ -61,7 +61,7 @@ The programme should not claim novelty until it has mapped existing work systema
 
 | System or work | What it does (as reported) | Status of our knowledge |
 |---|---|---|
-| **Critical Inker** (Hugenroth, Danry & Maes, arXiv preprint, April 2026) | Argument analysis, inline marking of logical problems in text, and Socratic questioning to scaffold critical thinking in AI-assisted writing. Reports a technical evaluation and a small pilot. | Existence verified by the researcher. **Preprint**: peer-review status unverified. The full paper has not yet been read for this roadmap. |
+| **Critical Inker** (Hugenroth, Danry & Maes, 2026, arXiv:2604.07167) | A multi-stage pipeline: atomic-quote argument graphs with independent and joined support, per-relation validity checking (assuming the evidence is true), visual feedback and a Socratic chatbot. Evaluated on essay and NLI data (n = 100 each), plus a pilot with n = 7. | Full text read. **Substantial overlap with WarrantLab.** See `literature/CRITICAL-INKER-ANALYSIS.md`. Preprint; no venue listed. |
 | **Thesify** | Commercial reviewer-style feedback on manuscripts across argument, methodology, evidence and structure, without rewriting. | Product claims only. Its method and evaluation are unknown. |
 | Academic writing assistants (e.g. Trinka, Writefull, Paperpal) | Mainly language-level editing, with some structural feedback. | Product claims only. They are not argument-level. |
 | General-purpose LLMs with a careful prompt | Can identify the TC1 overclaim. The POC itself shows a small model doing so. | **This must be treated as the strongest baseline.** |

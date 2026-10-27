@@ -8,6 +8,8 @@ This folder holds the research programme that follows the frozen hackathon proof
 | [`SOURCES.md`](SOURCES.md) | Register of external sources with their verification status | Living document |
 | [`DECISIONS.md`](DECISIONS.md) | Log of decisions with reasons | Living document |
 | [`annotation/PROTOCOL.md`](annotation/PROTOCOL.md) | Expert annotation protocol | Skeleton only |
+| [`literature/CRITICAL-INKER-ANALYSIS.md`](literature/CRITICAL-INKER-ANALYSIS.md) | Critical analysis of the closest known prior system, and its implications for Studies A and B | Draft 0.1 for review |
+| [`taxonomy/STRUCTURE-MEMO.md`](taxonomy/STRUCTURE-MEMO.md) | Taxonomy overlaps, the gap-versus-missing-context boundary, and a comparison of classification structures | Recommendation for review (not final) |
 
 ## Conventions
 

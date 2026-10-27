@@ -1,42 +1,64 @@
 # Source register
 
-Every external source cited in the research documents is listed here with its verification status. **Agent-recalled** references were supplied from the agent's general knowledge and must be checked against the primary source before they are cited in any paper or presentation.
+Every external source cited in the research documents is listed here. Each source has three separate statuses:
 
-| Status | Meaning |
+| Dimension | Values |
 |---|---|
-| **Verified (researcher)** | The researcher checked the primary source. |
-| **Verified (artefact)** | Checked against a committed project artefact or system output. |
-| **Agent-recalled** | Plausible citation details that have not yet been checked. **Verify before use.** |
-| **Claimed only** | Vendor or marketing claims, with no independent evidence. |
+| **Metadata** | *Verified (researcher)*, *Verified (agent)*, *Agent-recalled* (unchecked; **verify before use**), *Claimed only* (vendor claims) |
+| **Full text** | *Read (researcher)*, *Read (agent, tool-assisted)*, *Not read* |
+| **Synthesis** | *Synthesised* (with a document reference), *Not synthesised* |
+
+Verifying a source's metadata does **not** mean its arguments have been read or synthesised.
 
 ## Conferences and venues
 
-| Source | Detail used | Status | Notes |
+| Source | Detail used | Metadata | Notes |
 |---|---|---|---|
 | ECIS 2027, official website | Conference 24–26 May 2027; TREO deadline 17 Feb 2027 | Verified (researcher), 27 Oct 2026 | Re-check before submission |
 | PACIS 2027, official website | Conference 5–9 Jul 2027, Auckland; paper deadline 1 Mar 2027; TREO deadline 7 May 2027 | Verified (researcher), 27 Oct 2026 | Re-check before submission |
 
-## Related systems and work
+## Primary related work
 
-| Source | Detail used | Status | Notes |
+| Source | Metadata | Full text | Synthesis |
 |---|---|---|---|
-| Hugenroth, Danry & Maes (2026). *Critical Inker: Scaffolding Critical Thinking in AI-Assisted Writing Through Socratic Questioning.* arXiv preprint, April 2026. | Combines argument analysis, inline marking of logical problems and Socratic questions; reports a technical evaluation and a small pilot | Existence verified (researcher) | **Preprint.** Add the arXiv identifier. The full paper has not yet been read for the roadmap. |
-| Thesify (product website) | Reviewer-style manuscript feedback on argument, methodology, evidence and structure | Claimed only | Method and evaluation unknown |
-| Trinka, Writefull, Paperpal (product websites) | Academic language and editing assistance | Claimed only | Positioning context only |
+| Hugenroth, P., Danry, V., & Maes, P. (2026). *Critical Inker: Scaffolding critical thinking in AI-assisted writing through Socratic questioning* (arXiv:2604.07167v1 [cs.HC]). https://arxiv.org/abs/2604.07167. Submitted 8 Apr 2026; CC BY 4.0; preprint, with no venue listed. | Verified (researcher); verified (agent, arXiv record), 27 Oct 2026 | Read (researcher), including the Appendix A prompts; read (agent, tool-assisted, v1 HTML) | Synthesised: `literature/CRITICAL-INKER-ANALYSIS.md` (draft 0.1). Some details are marked "(check)" for confirmation against the PDF. |
+
+## Works cited within Critical Inker (not yet verified or read by this programme)
+
+These are listed only to scope the novelty matrix (`literature/CRITICAL-INKER-ANALYSIS.md` §9). Metadata for all of them is **Agent-recalled from Critical Inker's reference list**; none has been read or synthesised.
+
+| Short reference | Line of work |
+|---|---|
+| Stab & Gurevych (2017) | Argument mining; the Argument Annotated Essays corpus |
+| Ruiz-Dolz & Lawrence (2023) | Argument assessment and fallacies |
+| Miandoab et al. (2025); Jeong et al. (2025) | LLM fallacy detection |
+| Buçinca et al. (2021) | Cognitive forcing and overreliance in human–AI decision making |
+| Bowman et al. (2015) | The SNLI dataset |
+| Jakesch et al. (2023); Kosmyna et al. (2025) | Effects of LLM co-writing on opinions and cognitive engagement |
+| Paul & Elder; Chi et al.; Sweller (1988); Moreno (2004); Flower & Hayes (1981) | Socratic questioning, self-explanation, cognitive load, writing process theory |
+
+## Products (positioning context)
+
+| Source | Detail used | Metadata |
+|---|---|---|
+| Thesify (product website) | Reviewer-style manuscript feedback on argument, methodology, evidence and structure | Claimed only |
+| Trinka, Writefull, Paperpal (product websites) | Academic language and editing assistance | Claimed only |
 
 ## Methodological and theoretical foundations
 
-| Source | Detail used | Status |
-|---|---|---|
-| Hevner, A. R., March, S. T., Park, J., & Ram, S. (2004). Design science in information systems research. *MIS Quarterly, 28*(1), 75–105. | DSR as the established IS tradition for artefact research | Agent-recalled |
-| Peffers, K., Tuunanen, T., Rothenberger, M. A., & Chatterjee, S. (2007). A design science research methodology for information systems research. *Journal of Management Information Systems, 24*(3), 45–77. | DSR process model | Agent-recalled |
-| Gregor, S., & Hevner, A. R. (2013). Positioning and presenting design science research for maximum impact. *MIS Quarterly, 37*(2), 337–355. | Positioning DSR contributions | Agent-recalled |
-| Toulmin, S. (1958). *The uses of argument.* Cambridge University Press. | Data, claim and warrant as a starting lens | Agent-recalled |
-| Nissenbaum, H. (2004). Privacy as contextual integrity. *Washington Law Review, 79*(1), 119–157. | Domain content of the fictional fixtures only | Agent-recalled |
+| Source | Metadata | Full text | Synthesis |
+|---|---|---|---|
+| Hevner, A. R., March, S. T., Park, J., & Ram, S. (2004). Design science in information systems research. *MIS Quarterly, 28*(1), 75–105. https://doi.org/10.2307/25148625 | Verified (researcher, AIS eLibrary), 27 Oct 2026 | Not read | Not synthesised |
+| Peffers, K., Tuunanen, T., Rothenberger, M. A., & Chatterjee, S. (2007). A design science research methodology for information systems research. *Journal of Management Information Systems, 24*(3), 45–77. https://doi.org/10.2753/MIS0742-1222240302 | Verified (researcher, publisher), 27 Oct 2026 | Not read | Not synthesised |
+| Gregor, S., & Hevner, A. R. (2013). Positioning and presenting design science research for maximum impact. *MIS Quarterly, 37*(2), 337–355. https://doi.org/10.25300/MISQ/2013/37.2.01 | Verified (researcher, MIS Quarterly), 27 Oct 2026 | Not read | Not synthesised |
+| Toulmin, S. E. (1958). *The uses of argument.* Cambridge University Press. **An updated edition was published in 2003.** Record which edition is cited. | Verified (researcher, Cambridge University Press), 27 Oct 2026 | Not read | Not synthesised |
+| Nissenbaum, H. (2004). Privacy as contextual integrity. *Washington Law Review, 79*(1), 119–157. | Verified (researcher, journal repository), 27 Oct 2026 | Not read | Used only as the domain content of the fictional fixtures |
+| Krippendorff's α (e.g. Krippendorff, *Content analysis: An introduction to its methodology*) | Agent-recalled | Not read | Named in `taxonomy/STRUCTURE-MEMO.md` as a candidate measure |
+| Passonneau, R. (2006). MASI distance for set-valued annotation agreement (LREC). | Agent-recalled | Not read | Named in `taxonomy/STRUCTURE-MEMO.md` as a candidate measure |
 
 ## Institutional and infrastructure sources
 
-| Source | Detail used | Status |
+| Source | Detail used | Metadata |
 |---|---|---|
 | Deakin University intellectual property policy (student pages) | Students generally own IP they create, with exceptions for research collaborations or other agreements | Verified (researcher), 27 Oct 2026 |
 | Google Gemini API free-tier terms | Content may be used to improve products and may be read by human reviewers | Verified (researcher), Oct 2026 |
