@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { GenerateStructured, LlmResult } from "../lib/engine/llm";
+import type { GenerateStructured } from "../lib/engine/llm";
 import {
   CONTEXT_FIELDS,
   CONTEXT_FIELD_MAX_CHARS,
@@ -11,7 +11,8 @@ import {
 } from "../lib/v2/contract";
 import { type HandlerDeps, handleWorkspaceRequest } from "../lib/v2/handler";
 import { createRequestGate } from "../lib/v2/requestGate";
-import { TC1, TC1_CLAIM, assessment, tc1Extraction } from "./fixtures";
+import { TC1 } from "./fixtures";
+import { locateOutput, ok, relateOutput, scripted, traceInput } from "./traceFixtures";
 
 const RESULTS = "Treated teams scored higher on coded decision quality (d = 0.45, 95% CI [0.10, 0.80]).";
 const CONTEXT_MARKER = "Teams were allocated by drawing lots.";
@@ -20,22 +21,10 @@ function workspace(overrides: Partial<WorkspaceInput> = {}): WorkspaceInput {
   return { version: 2, results: RESULTS, discussion: TC1, context: { ...emptyContext(), assignment: CONTEXT_MARKER }, ...overrides };
 }
 
-const ok = (json: unknown): LlmResult => ({ ok: true, json, model: "test-model", latencyMs: 1 });
-
-// Records every prompt so tests can check exactly which source text reached the model.
-function capturing(...results: LlmResult[]) {
-  const prompts: string[] = [];
-  const generate: GenerateStructured = async (req) => {
-    prompts.push(`${req.system}\n${req.user}`);
-    return results[Math.min(prompts.length - 1, results.length - 1)];
-  };
-  return { generate, prompts };
-}
-
 function handlerDeps(generate: GenerateStructured, overrides: Partial<HandlerDeps["config"]> = {}): HandlerDeps {
   return {
     generate,
-    config: { maxWords: 3000, researchPreview: true, extractModel: "m1", judgeModel: "m2", causalEnabled: false, judgeRetryOnServerError: false, ...overrides },
+    config: { maxWords: 3000, researchPreview: true, extractModel: "m1", judgeModel: "m2", judgeRetryOnServerError: false, ...overrides },
   };
 }
 
@@ -96,48 +85,46 @@ describe("v2 staleness", () => {
 });
 
 describe("v2 handler (scripted model, integration)", () => {
-  it("analyses the Discussion exactly and returns spans into the original Discussion text", async () => {
-    const { generate, prompts } = capturing(ok(tc1Extraction()), ok({ assessments: [assessment()], all_claims_considered: true }));
-    const result = await handleWorkspaceRequest(workspace(), handlerDeps(generate));
+  it("runs Locate then Relate and returns source-linked claims and evidence", async () => {
+    const { generate, requests } = scripted(ok(locateOutput()), ok(relateOutput()));
+    const result = await handleWorkspaceRequest(traceInput(), handlerDeps(generate));
     expect(result.httpStatus).toBe(200);
     if (result.httpStatus !== 200 || result.body.status !== "complete") throw new Error("expected complete");
-    const span = result.body.discussion.findings[0].claimSpan!;
-    expect(TC1.slice(span.start, span.end)).toBe(TC1_CLAIM);
-    expect(result.body.traceability).toEqual({ status: "not_implemented" });
-    expect(result.body.received).toEqual({ results: true, context: ["assignment"] });
-    expect(prompts).toHaveLength(2);
+    expect(result.body.claims.map((c) => c.id)).toEqual(["C1", "C2", "C3"]);
+    expect(requests.map((r) => r.model)).toEqual(["m1", "m2"]);
   });
-  it("does not send Results or Study Context to the model in Slice A", async () => {
-    const { generate, prompts } = capturing(ok(tc1Extraction()), ok({ assessments: [assessment()], all_claims_considered: true }));
-    await handleWorkspaceRequest(workspace(), handlerDeps(generate));
-    for (const prompt of prompts) {
-      expect(prompt).not.toContain(RESULTS);
-      expect(prompt).not.toContain(CONTEXT_MARKER);
-    }
+  it("sends Results and Study Context to the model as separate, labelled sources", async () => {
+    const { generate, requests } = scripted(ok(locateOutput()), ok(relateOutput()));
+    await handleWorkspaceRequest(traceInput({ context: { ...emptyContext(), assignment: CONTEXT_MARKER } }), handlerDeps(generate));
+    const [locate, relate] = requests;
+    expect(locate.user).toContain("DISCUSSION:");
+    expect(locate.user).toContain("RESULTS:");
+    expect(locate.user).not.toContain(CONTEXT_MARKER);
+    expect(relate.user).toContain(CONTEXT_MARKER);
+    expect(relate.user).toContain("NOT verified");
   });
   it("keeps provider failures as incomplete, never as a judgement", async () => {
-    const { generate } = capturing({ ok: false, reason: "quota", model: "m", latencyMs: 1 });
-    const result = await handleWorkspaceRequest(workspace(), handlerDeps(generate));
+    const { generate } = scripted({ ok: false, reason: "quota", model: "m", latencyMs: 1 });
+    const result = await handleWorkspaceRequest(traceInput(), handlerDeps(generate));
     expect(result.body).toEqual({ status: "incomplete", version: 2, reason: "quota" });
   });
   it("rejects invalid input without calling the model", async () => {
-    const { generate, prompts } = capturing(ok({}));
+    const { generate, requests } = scripted(ok({}));
     expect((await handleWorkspaceRequest({ text: TC1, section: "discussion" }, handlerDeps(generate))).httpStatus).toBe(400);
     expect((await handleWorkspaceRequest(workspace({ discussion: "" }), handlerDeps(generate))).httpStatus).toBe(400);
-    expect(prompts).toHaveLength(0);
+    expect(requests).toHaveLength(0);
   });
   it("is unavailable when the Research Preview is disabled", async () => {
-    const { generate, prompts } = capturing(ok({}));
+    const { generate, requests } = scripted(ok({}));
     const result = await handleWorkspaceRequest(workspace(), handlerDeps(generate, { researchPreview: false }));
     expect(result.httpStatus).toBe(404);
-    expect(prompts).toHaveLength(0);
+    expect(requests).toHaveLength(0);
   });
-  it("logs metadata only, never source text", async () => {
-    const { generate } = capturing(ok(tc1Extraction()), ok({ assessments: [assessment()], all_claims_considered: true }));
-    const result = await handleWorkspaceRequest(workspace(), handlerDeps(generate));
+  it("logs metadata only, never source text, quotes or explanations", async () => {
+    const { generate } = scripted(ok(locateOutput()), ok(relateOutput()));
+    const result = await handleWorkspaceRequest(traceInput({ context: { ...emptyContext(), assignment: CONTEXT_MARKER } }), handlerDeps(generate));
     const log = JSON.stringify(result.log);
-    expect(log).not.toContain("privacy");
-    expect(log).not.toContain("lots");
-    expect(result.log).toMatchObject({ version: 2, contextFields: ["assignment"], status: "complete" });
+    for (const fragment of ["dashboard", "transparency", "lots", "turnover", "located result"]) expect(log).not.toContain(fragment);
+    expect(result.log).toMatchObject({ version: 2, contextFields: ["assignment"], status: "complete", claims: 3, linked: 2 });
   });
 });

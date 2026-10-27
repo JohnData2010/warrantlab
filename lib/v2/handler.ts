@@ -1,18 +1,17 @@
 import type { WarrantLabConfig } from "../config";
-import type { AnalyseMeta } from "../engine/analyse";
 import type { GenerateStructured } from "../engine/llm";
-import { CONTEXT_FIELDS, WorkspaceRequestSchema, filledContextFields, workspaceProblem, workspaceWordCounts } from "./contract";
-import { analyseWorkspace } from "./analyseWorkspace";
-import type { WorkspaceResponse } from "./types";
+import { WorkspaceRequestSchema, filledContextFields, workspaceProblem, workspaceWordCounts } from "./contract";
+import { type TraceMeta, analyseTrace } from "./trace/analyseTrace";
+import type { TraceResponse } from "./trace/types";
 
 export interface HandlerDeps {
-  config: Pick<WarrantLabConfig, "maxWords" | "researchPreview" | "extractModel" | "judgeModel" | "causalEnabled" | "judgeRetryOnServerError">;
+  config: Pick<WarrantLabConfig, "maxWords" | "researchPreview" | "extractModel" | "judgeModel" | "judgeRetryOnServerError">;
   generate: GenerateStructured;
 }
 
 export type HandlerResult =
   | { httpStatus: 400 | 404; body: { error: string }; log: Record<string, unknown> }
-  | { httpStatus: 200; body: WorkspaceResponse; log: Record<string, unknown> };
+  | { httpStatus: 200; body: TraceResponse; log: Record<string, unknown> };
 
 // Kept separate from the route so it can be integration-tested with a scripted model.
 export async function handleWorkspaceRequest(raw: unknown, deps: HandlerDeps): Promise<HandlerResult> {
@@ -26,31 +25,35 @@ export async function handleWorkspaceRequest(raw: unknown, deps: HandlerDeps): P
   const words = workspaceWordCounts(input);
   if (problem) return { httpStatus: 400, body: { error: problem }, log: { rejected: "input", words } };
 
-  const { response, meta } = await analyseWorkspace(input, {
+  // The v2 passes reuse the configured v0.1 models: Locate on the Extract model, Relate on the Judge model.
+  const { response, meta } = await analyseTrace(input, {
     generate: deps.generate,
-    extractModel: deps.config.extractModel,
-    judgeModel: deps.config.judgeModel,
-    causalEnabled: deps.config.causalEnabled,
-    judgeRetryOnServerError: deps.config.judgeRetryOnServerError,
+    locateModel: deps.config.extractModel,
+    relateModel: deps.config.judgeModel,
+    relateRetryOnServerError: deps.config.judgeRetryOnServerError,
   });
 
   return { httpStatus: 200, body: response, log: metadataLog(words, filledContextFields(input.context), response, meta) };
 }
 
-// Metadata only: never manuscript text, context text, quotes or diagnostics.
-function metadataLog(
-  words: ReturnType<typeof workspaceWordCounts>,
-  contextFields: string[],
-  response: WorkspaceResponse,
-  meta: AnalyseMeta,
-): Record<string, unknown> {
+// Metadata only: never manuscript text, context text, quotes, explanations or failure details that could echo text.
+function metadataLog(words: ReturnType<typeof workspaceWordCounts>, contextFields: string[], response: TraceResponse, meta: TraceMeta) {
+  const summary =
+    response.status === "complete"
+      ? {
+          claims: response.claims.length,
+          evidence: response.evidence.length,
+          linked: response.claims.filter((c) => c.linkStatus === "linked").length,
+          assessments: response.claims.map((c) => c.assessment),
+        }
+      : { reason: response.reason };
   return {
     version: 2,
     words,
-    contextFields: CONTEXT_FIELDS.filter((f) => contextFields.includes(f)),
+    contextFields,
     status: response.status,
-    result: response.status === "complete" ? response.discussion.outcome : response.reason,
+    ...summary,
     stage: meta.stage,
-    calls: meta.calls.map((c) => `${c.stage}:${c.model}:${c.ok ? "ok" : c.reason}:${c.latencyMs}ms`),
+    calls: meta.calls.map((c) => `${c.stage}:${c.model}:${c.ok ? "ok" : c.reason}:${c.attempts}x:${c.latencyMs}ms`),
   };
 }

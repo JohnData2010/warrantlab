@@ -1,7 +1,6 @@
 "use client";
 
-import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import type { AnalysisResponse } from "../../lib/types";
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   type ContextField,
   type WorkspaceInput,
@@ -11,12 +10,12 @@ import {
   workspaceWordCounts,
 } from "../../lib/v2/contract";
 import { createRequestGate } from "../../lib/v2/requestGate";
-import type { WorkspaceResponse } from "../../lib/v2/types";
-import AnnotatedText from "../AnnotatedText";
-import DiagnosticPanel from "../DiagnosticPanel";
+import type { TraceResponse } from "../../lib/v2/trace/types";
 import ws from "../Workspace.module.css";
+import SourceAnnotated, { type SourceMark, buildMarkSegments } from "./SourceAnnotated";
 import SourceEditor from "./SourceEditor";
 import StudyContextPanel from "./StudyContextPanel";
+import TracePanel, { ASSESSMENT_TEXT } from "./TracePanel";
 import styles from "./ResearchWorkspace.module.css";
 
 interface Props {
@@ -24,19 +23,29 @@ interface Props {
   modeSwitch: ReactNode;
 }
 
-const PREVIEW_LABEL = "Research Preview · Results + Discussion · not academically validated";
+type View = "editing" | "annotated";
 
 function initialInput(): WorkspaceInput {
   return { version: 2, results: "", discussion: "", context: emptyContext() };
 }
 
+function scrollToElement(id: string) {
+  requestAnimationFrame(() => {
+    const el = document.getElementById(id);
+    el?.scrollIntoView({ block: "center", behavior: "smooth" });
+    if (el instanceof HTMLElement && el.tabIndex >= 0) el.focus({ preventScroll: true });
+  });
+}
+
 export default function ResearchWorkspace({ maxWords, modeSwitch }: Props) {
   const [input, setInput] = useState<WorkspaceInput>(initialInput);
-  const [discussionView, setDiscussionView] = useState<"editing" | "annotated">("editing");
+  const [discussionView, setDiscussionView] = useState<View>("editing");
+  const [resultsView, setResultsView] = useState<View>("editing");
   const [analysing, setAnalysing] = useState(false);
-  const [result, setResult] = useState<WorkspaceResponse | null>(null);
+  const [result, setResult] = useState<TraceResponse | null>(null);
   const [requestError, setRequestError] = useState<string | null>(null);
-  const [activeFinding, setActiveFinding] = useState<string | null>(null);
+  const [selectedClaim, setSelectedClaim] = useState<string | null>(null);
+  const [activeEvidence, setActiveEvidence] = useState<string | null>(null);
 
   const controllerRef = useRef<AbortController | null>(null);
   const gateRef = useRef(createRequestGate<WorkspaceInput>(isWorkspaceCurrent));
@@ -55,13 +64,15 @@ export default function ResearchWorkspace({ maxWords, modeSwitch }: Props) {
     setAnalysing(false);
     setResult(null);
     setRequestError(null);
-    setActiveFinding(null);
+    setSelectedClaim(null);
+    setActiveEvidence(null);
     setDiscussionView("editing");
+    setResultsView("editing");
   }, []);
 
   useEffect(() => () => controllerRef.current?.abort(), []);
 
-  // Every source counts: editing Results, Discussion or any Study Context field makes diagnostics stale.
+  // Every source counts: editing Results, Discussion or any Study Context field clears all links and highlights.
   const update = (next: WorkspaceInput) => {
     setInput(next);
     if (result || requestError || analysing) clearResults();
@@ -78,7 +89,8 @@ export default function ResearchWorkspace({ maxWords, modeSwitch }: Props) {
     setAnalysing(true);
     setResult(null);
     setRequestError(null);
-    setActiveFinding(null);
+    setSelectedClaim(null);
+    setActiveEvidence(null);
 
     try {
       const response = await fetch("/api/v2/analyse", {
@@ -92,8 +104,12 @@ export default function ResearchWorkspace({ maxWords, modeSwitch }: Props) {
       if (!response.ok) {
         setRequestError(typeof body?.error === "string" ? body.error : "The request could not be processed.");
       } else {
-        setResult(body as WorkspaceResponse);
-        if ((body as WorkspaceResponse).status === "complete") setDiscussionView("annotated");
+        const trace = body as TraceResponse;
+        setResult(trace);
+        if (trace.status === "complete") {
+          setDiscussionView("annotated");
+          setResultsView(trace.resultsSupplied ? "annotated" : "editing");
+        }
       }
     } catch {
       if (controller.signal.aborted || !gateRef.current.accepts(token, sent, latestRef.current)) return;
@@ -106,32 +122,75 @@ export default function ResearchWorkspace({ maxWords, modeSwitch }: Props) {
     }
   };
 
-  const focusFinding = (id: string) => {
-    setActiveFinding(id);
-    setDiscussionView("annotated");
-    requestAnimationFrame(() => {
-      const mark = document.getElementById(`mark-${id}`);
-      mark?.scrollIntoView({ block: "center", behavior: "smooth" });
-      mark?.focus({ preventScroll: true });
-    });
-  };
+  const complete = result?.status === "complete" ? result : null;
 
-  const focusCard = (id: string) => {
-    setActiveFinding(id);
-    requestAnimationFrame(() => document.getElementById(`finding-${id}`)?.scrollIntoView({ block: "nearest", behavior: "smooth" }));
-  };
+  // Evidence linked to the selected claim is emphasised; other located evidence stays visible but dimmed.
+  const linkedToSelected = useMemo(() => {
+    const claim = complete?.claims.find((c) => c.id === selectedClaim);
+    return new Set(claim?.links.map((l) => l.evidenceId) ?? []);
+  }, [complete, selectedClaim]);
 
-  const panelResult: AnalysisResponse | null =
-    result === null ? null : result.status === "complete" ? result.discussion : { status: "incomplete", reason: result.reason };
-  const findings = result?.status === "complete" ? result.discussion.findings : [];
-
-  const notice = (
-    <div className={styles.scopeNotice} role="note">
-      <strong>What this preview does so far.</strong> The Discussion is assessed on its own text, using the v0.1 engine. Cross-section
-      evidence tracing is not available yet, so the Results and Study Context you supply are kept exactly as typed but are{" "}
-      <strong>not used</strong> in the analysis.
-    </div>
+  const claimMarks: SourceMark[] = useMemo(
+    () =>
+      (complete?.claims ?? []).flatMap((c) =>
+        c.location.status === "ambiguous"
+          ? []
+          : [{ id: c.id, start: c.location.start, end: c.location.end, tone: ASSESSMENT_TEXT[c.assessment].tone, active: c.id === selectedClaim, label: `Claim ${c.id}: show its evidence` }],
+      ),
+    [complete, selectedClaim],
   );
+  const evidenceMarks: SourceMark[] = useMemo(
+    () =>
+      (complete?.evidence ?? []).flatMap((e) =>
+        e.location.status === "ambiguous"
+          ? []
+          : [
+              {
+                id: e.id,
+                start: e.location.start,
+                end: e.location.end,
+                tone: "evidence" as const,
+                active: e.id === activeEvidence || linkedToSelected.has(e.id),
+                dim: selectedClaim !== null && !linkedToSelected.has(e.id),
+                label: `Results passage ${e.id}: show the claims it relates to`,
+              },
+            ],
+      ),
+    [complete, activeEvidence, linkedToSelected, selectedClaim],
+  );
+
+  const highlighted = useMemo(
+    () => ({
+      claims: buildMarkSegments(input.discussion, claimMarks).rendered,
+      evidence: buildMarkSegments(input.results, evidenceMarks).rendered,
+    }),
+    [input.discussion, input.results, claimMarks, evidenceMarks],
+  );
+
+  const showClaim = (id: string) => {
+    setSelectedClaim(id);
+    setActiveEvidence(null);
+    setDiscussionView("annotated");
+    scrollToElement(`d-${id}`);
+  };
+  const selectClaimMark = (id: string) => {
+    setSelectedClaim(id);
+    setActiveEvidence(null);
+    scrollToElement(`claim-card-${id}`);
+  };
+  const showEvidence = (id: string) => {
+    setActiveEvidence(id);
+    setResultsView("annotated");
+    scrollToElement(`r-${id}`);
+  };
+  const selectEvidenceMark = (id: string) => {
+    setActiveEvidence(id);
+    const firstClaim = complete?.claims.find((c) => c.links.some((l) => l.evidenceId === id));
+    if (firstClaim) {
+      setSelectedClaim(firstClaim.id);
+      scrollToElement(`claim-card-${firstClaim.id}`);
+    }
+  };
 
   return (
     <div className={ws.page}>
@@ -150,30 +209,41 @@ export default function ResearchWorkspace({ maxWords, modeSwitch }: Props) {
 
       <main className={ws.grid}>
         <section className={`${ws.manuscript} ${styles.sources}`} aria-label="Manuscript sources">
-          <SourceEditor
-            id="source-results"
-            label="Results"
-            hint="optional"
-            value={input.results}
-            onChange={(results) => update({ ...input, results })}
-            placeholder="Paste the Results that the Discussion draws on…"
-            words={counts.results}
-          />
+          {resultsView === "annotated" && complete ? (
+            <SourceAnnotated
+              label="Results"
+              text={input.results}
+              marks={evidenceMarks}
+              idPrefix="r"
+              onSelect={selectEvidenceMark}
+              onEdit={() => setResultsView("editing")}
+            />
+          ) : (
+            <SourceEditor
+              id="source-results"
+              label="Results"
+              hint="evidence source"
+              value={input.results}
+              onChange={(results) => update({ ...input, results })}
+              placeholder="Paste the Results that the Discussion draws on…"
+              words={counts.results}
+            />
+          )}
 
-          {discussionView === "annotated" && result?.status === "complete" ? (
-            <AnnotatedText
+          {discussionView === "annotated" && complete ? (
+            <SourceAnnotated
+              label="Discussion"
               text={input.discussion}
-              findings={findings}
-              activeFinding={activeFinding}
-              onSelect={focusCard}
+              marks={claimMarks}
+              idPrefix="d"
+              onSelect={selectClaimMark}
               onEdit={() => setDiscussionView("editing")}
-              label="Discussion · read-only"
             />
           ) : (
             <SourceEditor
               id="source-discussion"
               label="Discussion"
-              hint="required"
+              hint="required · claims are assessed here"
               value={input.discussion}
               onChange={(discussion) => update({ ...input, discussion })}
               placeholder="Paste the Discussion paragraphs to analyse…"
@@ -196,18 +266,17 @@ export default function ResearchWorkspace({ maxWords, modeSwitch }: Props) {
           </div>
         </section>
 
-        <aside className={ws.panel} aria-label="Diagnostics">
-          <DiagnosticPanel
+        <aside className={ws.panel} aria-label="Evidence trace">
+          <TracePanel
             analysing={analysing}
-            result={panelResult}
+            result={result}
             requestError={requestError}
-            devPreview={false}
-            noSectionAvailable={false}
-            activeFinding={activeFinding}
-            onShowInText={focusFinding}
+            selectedClaim={selectedClaim}
+            activeEvidence={activeEvidence}
+            highlighted={highlighted}
+            onShowClaim={showClaim}
+            onShowEvidence={showEvidence}
             onRetry={runAnalysis}
-            previewLabel={PREVIEW_LABEL}
-            notice={notice}
           />
         </aside>
       </main>
