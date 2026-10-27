@@ -1,6 +1,6 @@
 # Critical analysis: Critical Inker and its implications for WarrantLab
 
-*Phase 1 positioning document. Draft 0.2, 27 October 2026 (AEDT). Status: for researcher and supervisor review.*
+*Phase 1 positioning document. Draft 0.2, 27 October 2026 (AEDT). Status: for independent research review.*
 
 *Revision 0.2. Corrected after the researcher checked the PDF: §3 now attributes the 91.2% figure from Figure 3 and records a discrepancy, and §2, §5 and §7 now distinguish "no direct correction" from the optional `suggestion` output. The positioning against other closest work is in `NOVELTY-POSITIONING.md`.*
 
@@ -107,7 +107,7 @@ Recording researcher disputes, supplied evidence and final human decisions as fi
 | Method-situated standards (6.2) | **Hypothesis.** | Not described in CI. Barely implemented in the POC. |
 | Principled abstention (6.3) | **Hypothesis**, with POC smoke-test evidence only. | Not described in CI. Shown on 1 fixture (TC3) and 1 single-run check in the POC. |
 | Cross-section traceability (6.3) | **Hypothesis**, with no implementation. | Neither system. |
-| Formal contestability (6.4) | **Hypothesis**, with no implementation. | Not described in CI. Contestability as a principle is discussed in wider HCI and AI work, which has not yet been reviewed. |
+| Formal contestability (6.4) | **Hypothesis**, with no implementation. | Not described in CI. Contestability as a principle is discussed in wider HCI and AI work. An initial reading (Alfrink et al., 2023; Yurrita et al., 2025, abstract only; Buçinca et al., 2021) is in `NOVELTY-POSITIONING.md` §2.3. |
 | Grounded quotes and reflective prompting | **Already covered by CI**, at least in substance. | Documented in CI. |
 | Stricter author agency (never offering suggested wording) | **A difference of degree, not an independent contribution.** | CI has an optional `suggestion` output (Appendix A). Whether this matters for learning is a Study B question. |
 | Argument-structure extraction | **Already covered by CI**, more richly. | Documented in CI. |

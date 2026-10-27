@@ -1,118 +1,174 @@
 # Novelty positioning: WarrantLab against its closest prior work
 
-*Phase 1. Draft 0.1, 27 October 2026 (AEDT). Status: for researcher and supervisor review. **Novelty is not finalised.***
+*Phase 1. Draft 0.2, 27 October 2026 (AEDT). Status: for independent research review. **Novelty is not finalised.***
 
-This memo positions the frozen WarrantLab POC (tag `hackathon-poc-v0.1`) against four pieces of closest prior work, spanning three lines of research: **argument support**, **grounded scientific criticism** and **method-dependent evidential overreach**. For each candidate difference it separates what prior work already establishes, what WarrantLab might contribute, and what evidence would falsify the claimed difference.
+*Revision 0.2, after the project owner checked the primary sources:*
+- *Corrected the interpretations of Isch et al. (the "AI feedback" stimuli; the 84% figure) and CLAIMCHECK (a Table 1 versus prose discrepancy; pilot versus main data; the GPT-4o-judged "different" result).*
+- *Separated predictive, design-science and human-outcome contributions.*
+- *Added coverage-aware evaluation of abstention, controlled comparisons for evidence links, and ablations.*
+- *Narrowed C4 after reading the contestability and reliance literature.*
+- *Set research priorities: C1 is the core; C2 and C3 are supporting design mechanisms; C4 is a longer-term direction.*
+
+This memo positions the frozen WarrantLab POC (tag `hackathon-poc-v0.1`) against its closest prior work in four lines of research: **argument support**, **grounded scientific criticism**, **method-dependent evidential overreach** and **contestability and reliance in human–AI decision making**.
 
 **Sources** (full metadata and reading status in `../SOURCES.md`):
-- **CI:** Hugenroth, Danry & Maes (2026), *Critical Inker*, arXiv:2604.07167. Full text read (see `CRITICAL-INKER-ANALYSIS.md`).
-- **CC:** Ou et al. (2025), *CLAIMCHECK*, Findings of EMNLP 2025. Read by the agent from PDF text extraction (§1–4, §4.3, Limitations).
-- **IS26:** Isch et al. (2026), *Quantifying the prevalence and impact of overreaching causal claims in social science*, Nature Human Behaviour. Read by the agent through a tool-assisted summary of the main text and methods; the supplementary information was not read.
-- **CF:** Zhang et al. (2025), *A dataset for evaluating clinical research claims in large language models* (CliniFact), Scientific Data. Read by the agent through a tool-assisted summary.
 
-The researcher's full reading of CC and IS26 is still pending. **Figures quoted here should be checked against the papers before they are cited.**
+| Short name | Work | How it was read |
+|---|---|---|
+| **CI** | Hugenroth, Danry & Maes (2026), *Critical Inker*, arXiv:2604.07167 | Full text (project owner and agent). See `CRITICAL-INKER-ANALYSIS.md` |
+| **CC** | Ou et al. (2025), *CLAIMCHECK*, Findings of EMNLP 2025 | Agent: PDF text extraction (§1–4, §4.3, Limitations). Project owner: Table 1 and §4.3 checked |
+| **IS26** | Isch et al. (2026), *Quantifying the prevalence and impact of overreaching causal claims in social science*, Nature Human Behaviour | Agent: tool-assisted summary of the main text and methods. Project owner: experimental-stimulus details checked. Supplementary information not read |
+| **CF** | Zhang et al. (2025), *CliniFact*, Scientific Data | Agent: tool-assisted summary |
+| **AF** | Alfrink, Keller, Kortuem & Doorn (2023), *Contestable AI by Design: Towards a Framework*, Minds and Machines | Agent: full text (PDF extraction) |
+| **YU** | Yurrita et al. (2025), *Identifying Algorithmic Decision Subjects' Needs for Meaningful Contestability*, PACM HCI | **Abstract only**: the full text was not accessible to the agent |
+| **BU** | Buçinca, Malaya & Gajos (2021), *To Trust or to Think*, PACM HCI | Agent: abstract, plus study design from the arXiv version (2102.09692) |
 
 ---
 
-## 1. Comparison across eight dimensions
+## 1. Comparison across eight dimensions (closest scholarly-claim work)
 
 | Dimension | Critical Inker (CI) | CLAIMCHECK (CC) | Isch et al. (IS26) | CliniFact (CF) | WarrantLab POC |
 |---|---|---|---|---|---|
-| **Research problem** | AI writing assistants risk cognitive deskilling. Scaffold writers' critical reflection | LLM peer-review critiques are often not grounded in the claims a paper actually makes | How prevalent causal overreach is in cross-sectional social science, and what it does to readers and LLM summaries | Evaluating LLMs on verifying clinical research claims against evidence | Researchers do not see when their own claims exceed what their reported evidence licenses |
+| **Research problem** | AI writing assistants risk cognitive deskilling. Scaffold writers' critical reflection | LLM peer-review critiques are often not grounded in the claims a paper makes | How prevalent causal overreach is in cross-sectional social science, and what it does to readers and LLM summaries | Evaluating LLMs on verifying clinical research claims against evidence | Researchers do not see when their own claims exceed what their reported evidence licenses |
 | **Unit of analysis** | Argument relations in a short essay | A reviewer weakness linked to target claims in full ML papers (text, figures and related work) | Titles and abstracts (194,631 articles); claim level in a subsample of 100 articles | Constructed claim plus a linked abstract (1,970 pairs) | A claim in a supplied passage (≤ 3,000 words), with evidence quoted from the same passage |
-| **Epistemic judgement** | Whether the support relation is valid, **assuming the evidence is true** | Whether a weakness disputes a claim; multi-label weakness type (insufficient evidence, contradictory evidence, novelty, clarity, related work, other); ordinal agreement and subjectivity | Whether causal language is present in a design that cannot establish causation (cross-sectional), i.e. **design-conditioned overreach**; also distinguishes direct, implied and conditional claims | Whether evidence supports the claim, using labels largely derived from trial statistics (p < 0.05) and link type | Overclaim (a nameable inferential step beyond the evidence), calibrated, or insufficient evidence |
-| **Treatment of missing evidence** | Not described | 48 of 168 weaknesses had no groundable target claim. An "insufficient evidence" weakness type exists. No abstention by models is described | Not central. Prevalence counts language, not evidential gaps | An explicit **NEI** label, assigned from link type (background versus results abstract) rather than from a content judgement | An explicit `insufficient_evidence` outcome, judged from the content of the supplied text, with a "may need another section" note |
-| **Method awareness** | Not described | Not described as a design dimension | **Core.** Design (cross-sectional) is the conditioning variable for overreach, with design classification validated against experts | Only statistical test type (superiority, non-inferiority, equivalence) and a p-value threshold | Prompt-level rules for two cases only (randomisation versus mechanism; qualitative work not held to causal standards). No method-specific rubric |
-| **Human involvement** | Writer-facing. Socratic verbalisation. Pilot with n = 7 | Expert annotators (all authors, unpaid). The use case is reviewer and meta-reviewer assistance | Expert coding for validation (α = 0.86 on causal language). Preregistered reader experiment (N = 1,105) | Two reviewer groups revised test labels (κ = 0.85) | Writer-facing. Edit and re-analyse. No contestation. No user study |
-| **Evaluation** | Structure overlap and validity accuracy on essay and NLI data (n = 100 each) | Agreement between humans and with LLMs (span F1; Krippendorff's α from 0.00 (clarity) to 0.78 (novelty) among humans, depending on label); LLM benchmarks on three tasks | Classifier validation (e.g. causal-language F1 ≈ 0.81–0.83); prevalence trends; experimental effects of interventions; LLM summary experiments | Model accuracy and F1 (e.g. BioBERT 80.2%; best zero-shot generative 43.4%) | 3 fictional fixtures × 3 completed runs (smoke test) |
-| **Contribution type** | Interaction design plus an LLM pipeline | Dataset, task suite and benchmark | Meta-science evidence (prevalence, trends, effects) plus validated classifiers | Dataset plus a benchmark | Prototype only |
+| **Epistemic judgement** | Whether the support relation is valid, **assuming the evidence is true** | Whether a weakness disputes a claim; multi-label weakness type; ordinal agreement and subjectivity ratings | Causal language in a design that cannot establish causation (cross-sectional), i.e. **design-conditioned overreach**; distinguishes direct, implied and conditional claims | Whether evidence supports the claim, using labels largely derived from trial statistics (p < 0.05) and link type | Overclaim (a nameable inferential step beyond the evidence), calibrated, or insufficient evidence |
+| **Treatment of missing evidence** | Not described | 48 of 168 weaknesses had no groundable target claim. An "insufficient evidence" weakness type exists. No model abstention is described | Not central. Prevalence counts language, not evidential gaps | An explicit **NEI** label, assigned from link type rather than from a content judgement | An explicit `insufficient_evidence` outcome, judged from the content of the supplied text |
+| **Method awareness** | Not described | Not described as a design dimension | **Core.** Design is the conditioning variable, with design classification validated against expert coding | Statistical test type and a p-value threshold only | Prompt-level rules for two cases only. No method-specific rubric |
+| **Human involvement** | Writer-facing. Socratic verbalisation. Pilot with n = 7 | Expert annotators (all authors). The use case is reviewer and meta-reviewer assistance | Expert coding for validation. Preregistered reader experiment (N = 1,105) with **manually prepared** feedback stimuli (see §2.1) | Two reviewer groups revised test labels (κ = 0.85) | Writer-facing. Edit and re-analyse. No contestation. No user study |
+| **Evaluation** | Structure overlap and validity accuracy on essay and NLI data (n = 100 each) | Pilot agreement (span F1; Krippendorff's α by label; see §2.2); LLM benchmarks on three tasks | Classifier validation (causal-language F1 ≈ 0.81–0.83); prevalence trends; experimental effects; LLM summary experiments | Model accuracy and F1 (e.g. BioBERT 80.2%; best zero-shot generative 43.4%) | 3 fictional fixtures × 3 completed runs (smoke test) |
+| **Contribution type** | Interaction design plus an LLM pipeline | Dataset, task suite and benchmark | Meta-science evidence plus validated classifiers | Dataset plus a benchmark | Prototype only |
 
-## 2. What prior work already establishes
+## 2. Source corrections and careful readings
 
-1. **The problem is real and growing, at least in social science.** IS26 reports causal language in the titles or abstracts of about 46% of cross-sectional social-science articles (1980–2024), rising from about 20% to about 60% since 2000. Business was at 84% in 2024. At claim level, about 27% of claims in a 100-article subsample were overreaching. *This supports WarrantLab's problem statement for adjacent fields. It does not establish prevalence in IS, and not all causal language is erroneous.*
-2. **Design-conditioned overreach detection is feasible and has been validated at scale** for one rule: cross-sectional design plus causal language (IS26).
-3. **Interventions can change how readers interpret overreaching claims**, including a methodological note and an "AI feedback" condition (IS26). LLM summaries can amplify causal overstatement, and cautious prompting reduces this (IS26).
-4. **Grounding critiques in specific paper claims is an established research problem**, with an expert-annotated benchmark. LLMs struggle to produce specific, claim-grounded weaknesses: over 80% of model weaknesses were judged different from the reviewers' (CC).
-5. **Expert agreement on weakness types is limited and varies by label** (α from 0.00 for clarity to 0.78 for novelty; 0.18 for the ordinal agreement rating). Annotators confuse "insufficient" with "contradictory" evidence, and long, compounded critiques lower agreement (CC). *This directly warns that WarrantLab's taxonomy may face the same problems.*
-6. **A "not enough information" class is standard** in scientific claim verification (CF; also the earlier FEVER-style tradition cited by CC).
-7. **Argument-structure extraction, quote grounding and reflective, non-corrective feedback for writers** already exist (CI).
+### 2.1 Isch et al. (2026)
 
-**Implication:** the following are **not** contributions on their own: (a) detecting causal overreach, (b) grounding critiques in claims, (c) having an abstention or NEI class, (d) quote-anchored writer feedback, and (e) applying any of these to IS text. **Domain adaptation to IS is not a theoretical contribution.**
+- **The 84% figure** is the rate of causal language among the **cross-sectional articles classified as business in their corpus, in 2024**. It is not a rate for all business research, and says nothing about IS research. The overall figure (≈ 46%, 1980–2024) likewise concerns cross-sectional articles in the five ProQuest social-science databases they searched.
+- **The "AI feedback" condition** in the reader experiment consisted of methodological notes and highlights that the **researchers prepared manually** and **presented to participants as AI-generated**, to keep the stimuli consistent (verified by the project owner).
+  - What this supports: feedback of that *form* can shift readers' interpretations.
+  - What it does not establish: anything about how well an *automated* AI system performs on real manuscripts.
+- **Claim-level overreach** (≈ 27% of matched claims in a 100-article subsample) is lower than the abstract-level rate. The headline rate counts any causal language about a cross-sectional study's own results, including conditional phrasing, as overreach.
 
-## 3. Candidate unique contributions, and how each could be falsified
+### 2.2 CLAIMCHECK (Ou et al., 2025)
 
-Each candidate is a **[Hypothesis]**. A candidate survives only if the falsification test fails to falsify it.
+- **A discrepancy between Table 1 and the prose, recorded and not resolved:**
+  - Table 1 ("Humans Only") reports Agreement α = 0.131, Subjectivity α = 0.182, Clarity α = 0.0 and Novelty α = 0.776.
+  - The prose reverses the first two (Agreement 18.2, Subjectivity 13.1).
+  - This memo cites the **table values with that caveat**, and does not decide which is correct.
+- **Scope of the agreement figures:** they come from the **pilot** (5 paper–review pairs; 5–6 annotators). The main annotation was **singly annotated**. These coefficients must not be described as the reliability of the whole dataset.
+- **The "more than 80% different" result** came from a **GPT-4o judge** comparing model-written weaknesses with reviewer weaknesses distilled per claim. The authors note that "different" does not necessarily mean wrong.
+  - Correct reading: *model-generated critiques frequently differed from reviewer-identified critiques, indicating a substantial challenge in producing comparable, claim-specific criticism.*
+  - It is **not** evidence that more than 80% of the critiques were incorrect.
+  - **Lesson for WarrantLab:** similarity to an expert's critique is not the same as correctness when a claim admits several legitimate criticisms. Evaluation must allow for multiple valid diagnoses.
 
-### C1 Claim-level calibration conditioned on design and claim type
+### 2.3 Contestability and reliance (AF, YU, BU)
 
-- **Claim:** whether a claim's *type and strength* (association, causal effect, mechanism, theory validation, scope) is licensed by the *reported design and evidence*, judged per claim in context. This extends IS26's single, design-level rule (cross-sectional → causal language = overreach) to multiple overreach types and to designs that license some claims but not others. For example, an RCT supports a causal effect of the condition but not necessarily the proposed mechanism.
-- **Closest prior work:** IS26 (design-conditioned overreach), CI (validity assuming true evidence).
-- **What would falsify it:**
-  - An **IS26-style baseline** (design classifier plus claim-type or causal-language classifier, with a fixed licensing table) matches WarrantLab's calibration judgements on expert-labelled items.
-  - A **strong single-prompt LLM** matches it.
-  - Experts cannot agree on claim-level calibration beyond chance-corrected levels comparable to CC's weakest labels.
+- **AF** (Alfrink et al., 2023) synthesises, from a systematic literature review with reflexive thematic analysis, a design framework for **contestable AI in automated decision-making**:
+  - **five system features:** built-in safeguards against harmful behaviour; interactive control over automated decisions; explanations of system behaviour; human review and intervention requests; tools for scrutiny by subjects or third parties.
+  - **six development practices:** ex-ante safeguards; agonistic approaches to ML development; quality assurance during development; quality assurance after deployment; risk-mitigation strategies; third-party oversight.
 
-### C2 Excerpt-relative abstention as a judgement, distinct from flaw
+  Contestability is framed as a dialectical, procedural relationship between **decision subjects** and **human controllers**. The authors state the framework is based on a small sample of papers, is largely "context-free" and has **not been empirically validated**.
+- **YU** (Yurrita et al., 2025; abstract only) interviewed 21 citizens in a public-sector illegal holiday-rental detection scenario. Decision subjects asked for support with (1) **cooperation in sense-making**, (2) **contestation acts**, and (3) **appropriate responsibility attribution**.
+- **BU** (Buçinca et al., 2021) ran an online experiment (N = 199, Amazon Mechanical Turk) on a nutrition task with a **simulated** AI and controlled errors, across six conditions: no AI, explanation, uncertainty, and three cognitive-forcing designs (on demand, update, wait).
+  - Cognitive forcing reduced overreliance compared with simple explanation conditions.
+  - The designs that reduced overreliance most received the **least favourable subjective ratings**.
+  - The benefits were larger for people higher in **Need for Cognition**.
 
-- **Claim:** the system judges, from content, that the supplied text cannot support an assessment, and keeps this distinct from "flawed". Unlike CF, NEI is not inferred from document links.
-- **Closest prior work:** CF (NEI from link type); CC (weaknesses without target claims).
-- **What would falsify it:**
-  - Experts cannot reliably separate "unassessable from this excerpt" from "flawed" (low agreement on the assessability task, T3 in `../taxonomy/STRUCTURE-MEMO.md`).
-  - Abstention does not reduce false flags relative to baselines without it, at comparable recall.
+**What this means for C4.** "Letting users dispute AI output" is already well theorised (AF), with empirically grounded needs (YU) and evidence that interaction design shapes reliance at a cost to user experience (BU). WarrantLab's setting differs in one way that matters: the **researcher is both the expert controller and the author whose work is judged**. The AI's output is advisory, not a decision imposed on a subject. Whether this changes what contestability requires is open. It is the only defensible angle for C4 (§4.4).
 
-### C3 Cross-section evidential traceability in support of calibration
+## 3. Contribution framework: three kinds of claim
 
-- **Claim:** linking Discussion claims to the specific Results spans offered as evidence improves calibration judgements, and makes them inspectable.
-- **Closest prior work:** CC provides full papers and related work to models for verification, so whole-document grounding exists in a *verification* setting. CI grounds within a single essay.
-- **What would falsify it:**
-  - Explicit span linking does not improve calibration accuracy over giving the model the same sections unlinked.
-  - Experts do not find the links more useful for checking diagnostics.
+Being matched by a strong baseline challenges some contributions but not others. Each candidate below is assessed against the kind of contribution it would make.
 
-### C4 Contestability and accountable human decisions
+| Kind of contribution | What must be shown | What a strong-baseline match implies |
+|---|---|---|
+| **Predictive superiority** | WarrantLab outperforms baselines on the same benchmark, compared fairly (same model family, same inputs, tuned prompts) | **Falsifies** incremental predictive benefit |
+| **Design knowledge (design science)** | Specific design principles produce measurable, explainable benefits, such as faster and more accurate checking of diagnostics, clearer location of disagreement, or more reliable rejection of wrong diagnoses | Does **not** by itself falsify the contribution. Benefits may lie in inspectability, abstention behaviour or human outcomes rather than raw accuracy |
+| **Human decision outcomes** | Researchers using the system make better, more independent or less AI-reliant judgements, including on transfer tasks | Irrelevant to this contribution, which is assessed in user studies |
 
-- **Claim:** design knowledge about letting authors dispute a diagnostic, supply evidence and have the human decision recorded as final, and about whether this improves decision quality without increasing reliance.
-- **Closest prior work:** none of the four records author disputes. Contestability in wider AI and HCI work has **not yet been reviewed**, and must be before this candidate is asserted.
-- **What would falsify it:**
-  - Authors rarely use contestation.
-  - Contestation does not improve the correctness of final decisions, or worsens them (e.g. users dismiss correct diagnostics).
-  - Existing contestable-AI frameworks already specify these mechanisms for this kind of task.
+**Ablations (required for any design-knowledge claim).** Using the same model and the same inputs, compare variants with and without:
+- (a) method-conditioned assessment;
+- (b) explicit abstention;
+- (c) explicit evidence links;
+- (d) the two-pass extract-and-judge structure.
 
-### C5 Author-facing, pre-submission use context (not a theoretical contribution by itself)
+Otherwise it cannot be known which component produces any benefit. Comparing WarrantLab only with a weaker-prompted LLM would be uninformative.
 
-- CC is reviewer-facing, IS26 is reader- and corpus-facing, and CI is writer-facing but logic-generic. Combining author-facing use with scholarly calibration is a **use-context difference**. It matters for Study B, but it is not novelty on its own.
-- **What would falsify its relevance:** author-facing feedback produces the same outcomes as reader-facing methodological notes (cf. IS26's interventions).
+**Baselines for Study A:**
+- (b1) a strong single-prompt LLM;
+- (b2) an IS26-style design-rule baseline;
+- (b3) a CI-style support-validity pipeline;
+- (b4) a CC-style claim-grounded critique baseline.
 
-## 4. Implications
+## 4. Candidate contributions, priority and falsification
 
-**For the problem statement.**
-- Ground the problem in IS26's evidence for adjacent social sciences (including business), together with an explicit statement that IS-specific prevalence is unknown.
-- **[Plan, candidate]** A small replication of IS26's approach on an IS corpus could establish IS prevalence, subject to corpus licensing and supervisor approval. This would be a separate meta-science contribution.
+Every candidate is a **[Hypothesis]**. Research priority was set by the project owner.
 
-**For Study A.**
-- Required baselines are now:
-  - (b1) a strong single-prompt LLM;
-  - (b2) an **IS26-style design-rule baseline**;
-  - (b3) a **CI-style support-validity pipeline**;
-  - (b4) a **claim-grounded critique baseline** in the style of CC's claim-verification task.
-- The benchmark must include items where these baselines and calibration-focused judgement are expected to **diverge**, including controlled counterfactual variants that change only the design information (see the taxonomy memo §6).
-- CC's agreement results (α as low as 0.00 on clarity and 0.18 on agreement) mean the pilot should expect, and report, label-specific disagreement.
+### 4.1 C1 Method-conditioned evidential calibration *(priority: core)*
 
-**For Study B.**
-- IS26 already shows that a methodological note or AI feedback can reduce *readers'* causal interpretation.
-- Study B's distinctive questions must therefore concern *authors*:
-  - independent transfer to new passages;
-  - resistance to wrong AI diagnoses;
-  - whether contestability changes reliance.
-- IS26's finding that LLM summaries amplify overstatement also supports WarrantLab's no-rewriting principle as a safeguard. This should be tested, not assumed.
+- **Claim:** design knowledge for systems that judge, per claim, whether the *type and strength* of a scholarly claim (association, causal effect, mechanism, theory validation, scope) is licensed by the *reported design and evidence*. This extends IS26's single rule (cross-sectional plus causal language) to several overreach types and to designs that license some claims but not others.
+- **Closest work:** IS26, CI.
+- **Falsification:**
+  - *Predictive:* an IS26-style design-rule baseline, or a strong LLM, matches C1 judgements on expert-labelled items, including **counterfactual sets** where only the design information changes (§5).
+  - *Foundational:* experts cannot agree on claim-level calibration with usable reliability. That would undermine the construct itself, not only the system.
+  - *Design:* ablating method-conditioning produces no difference in accuracy, inspectability or human outcomes.
 
-## 5. Revised candidate positioning (for discussion)
+### 4.2 C2 Principled abstention *(priority: supporting design mechanism)*
 
-> WarrantLab investigates how author-facing information systems can support **claim-level, design-conditioned judgements about whether scholarly claims are warranted by the reported evidence**, with **principled abstention** when the supplied text is insufficient and **contestable, human-accountable decisions**. It builds on design-conditioned overreach detection (Isch et al., 2026), grounded scientific critique (Ou et al., 2025), claim–evidence verification with not-enough-information labels (Zhang et al., 2025) and argument-support feedback for writers (Hugenroth et al., 2026).
+- **Claim:** a content-based judgement that the supplied text cannot support an assessment, kept distinct from "flawed". Unlike CF, the NEI judgement is not inferred from document links.
+- **Evaluation requirement:** abstention must be assessed by **error rates together with decision coverage**, the proportion of cases where the system commits to a judgement, for example through risk–coverage curves. A system that always abstains would reduce false flags to zero while being useless, and **must not be rewarded**.
+- **Falsification:**
+  - Experts cannot reliably separate "unassessable from this excerpt" from "flawed" (low agreement on the assessability task).
+  - At matched coverage, abstention does not reduce errors relative to baselines.
 
-This is a **[Hypothesis]** about where a contribution might lie. Applying it to IS text is not itself the contribution.
+### 4.3 C3 Cross-section evidential traceability *(priority: supporting design mechanism; a design test, not an independent contribution)*
 
-## 6. Next reading priorities
+- **Claim:** linking Discussion claims to the specific Results spans offered as evidence improves calibration judgements and makes them inspectable.
+- **Controlled comparison:** **identical manuscript content** under two conditions:
+  - (i) sections supplied without explicit links;
+  - (ii) the same sections with explicit claim–evidence links, for the system and, separately, for human checkers.
+- **Falsification:** no difference in accuracy, coverage or human verification time and accuracy between (i) and (ii).
 
-1. **The researcher's full reading of CC and IS26**, including IS26's supplementary information on claim-level coding and the "AI feedback" condition.
-2. **Contestable AI and human–AI reliance**, before asserting C4.
-3. **Scientific claim verification surveys**, e.g. the overview cited by CC, to check for design-conditioned calibration beyond causal language.
+### 4.4 C4 Contestability in AI-assisted expert judgement *(priority: longer-term direction; not part of Study A)*
+
+- **Narrowed question:** *When should a researcher accept, dispute or ask for more evidence about an AI-generated inferential diagnosis of their own work, and how should a system support that process?*
+- **Constrained by:** AF (contestability features), YU (sense-making, contestation acts, responsibility attribution) and BU (forcing functions reduce overreliance at an experiential cost).
+- **Evaluation requirement:** the **correctness of final decisions**, including rejection of seeded wrong diagnoses and acceptance of correct ones, not the frequency of "disagree" actions.
+- **Falsification:**
+  - Contestation features do not improve final-decision accuracy over a plain accept-or-ignore interface.
+  - They increase wrongful dismissal of correct diagnoses.
+  - The benefits are fully explained by known cognitive-forcing effects (BU), with nothing specific to the expert-author setting.
+
+### 4.5 C5 Author-facing, pre-submission context *(not a contribution)*
+
+This is a use-context difference. It shapes Study B but is not claimed as theory.
+
+## 5. Benchmark design matrix (for later phases; nothing is constructed yet)
+
+| Evidence condition | Claim | Expected system behaviour |
+|---|---|---|
+| Sufficient and appropriate | Calibrated | No warning |
+| Sufficient, but it does not license the stated conclusion | Overclaim | Identify the specific inferential gap |
+| Necessary information missing from the excerpt | Not assessable from the excerpt | Abstain, stating what information is missing |
+| Evidence in Results, claim in Discussion | Assessable once linked | Trace the evidence before judging |
+| Keyword-only change (e.g. "randomised" mentioned without a randomised design, or vice versa) with no real change in method information | Unchanged | No change in diagnosis |
+
+Expected behaviours must be agreed by independent expert annotators before use. They must not be set by the system designers alone. See `../taxonomy/STRUCTURE-MEMO.md` §6 for the counterfactual item design.
+
+## 6. What prior work already establishes (summary)
+
+1. Causal overreach is common and has grown in cross-sectional social science (IS26). Prevalence in IS is unknown.
+2. Design-conditioned overreach detection is feasible at scale for one rule (IS26).
+3. Feedback of the form tested in IS26 (methodological notes and highlights, manually prepared) can shift readers' interpretations. LLM summaries can amplify causal overstatement (IS26).
+4. Claim-grounded critique is an established benchmark problem, and model critiques often differ from reviewers' (CC).
+5. Expert agreement on weakness types varies widely by label in a small pilot (CC). This is a warning for WarrantLab's taxonomy.
+6. NEI classes are standard in claim verification (CF).
+7. Argument-structure extraction, quote grounding and reflective, non-corrective writer feedback exist (CI).
+8. Contestability is theorised as a set of system features and practices (AF). Decision subjects need cooperative sense-making and responsibility attribution (YU). Forcing functions reduce overreliance at an experiential cost and unevenly across users (BU).
+
+**None of the following is a contribution on its own:** detecting causal overreach, grounding critiques in claims, an abstention or NEI class, quote-anchored writer feedback, contestation buttons, or applying any of these to IS text. **Domain adaptation to IS is not a theoretical contribution.**
+
+## 7. Candidate positioning (for independent review)
+
+> WarrantLab investigates how AI-assisted information systems can be designed to help researchers judge whether scholarly claims are warranted by the reported evidence and research design (**method-conditioned evidential calibration**), with principled abstention and explicit evidence tracing as candidate design mechanisms. It builds on design-conditioned overreach detection (Isch et al., 2026), grounded scientific critique (Ou et al., 2025), claim–evidence verification with not-enough-information labels (Zhang et al., 2025) and argument-support feedback for writers (Hugenroth et al., 2026). Contestability in AI-assisted expert judgement (cf. Alfrink et al., 2023; Yurrita et al., 2025; Buçinca et al., 2021) is a later research direction.
+
+This is a **[Hypothesis]**, not an established contribution.

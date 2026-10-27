@@ -2,7 +2,7 @@
 
 *Phase 2 preparation. Draft 0.2, 27 October 2026 (AEDT). Status: recommendation for review. **The taxonomy is not finalised and no annotation dataset is built.***
 
-*Revision 0.2, after researcher review:*
+*Revision 0.2, after review by the project owner:*
 - *Hierarchical classification (C) stays the leading candidate for the pilot.*
 - *The proposed primary-label tie-break order is **not enforced** until it has been tested with experts (§4).*
 - *A new §5 distinguishes an inference unsupported by the supplied excerpt from a demonstrated flaw in the underlying study.*
@@ -72,7 +72,7 @@ Disagreement can arise at different stages, so each should be a separately measu
 | Usefulness for system feedback | One message per claim | Can produce cluttered feedback | One primary message, with secondary issues available on demand |
 | Risk | Artificial disagreement; information loss | Inflated label counts; weak agreement on rare labels | Primary-label rules need careful decision guidance; still more complex than A |
 
-**Precedent.** CLAIMCHECK (Ou et al., 2025) used a **multi-label** weakness ontology (structure B), chosen by its annotation team after pilot rounds. It reported agreement ranging from α = 0.00 (clarity) to 0.78 (novelty), and frequent confusion between "insufficient" and "contradictory" evidence. Two lessons follow: label-specific agreement must be reported, and adjacent evidential categories are the hardest to separate. See `../literature/NOVELTY-POSITIONING.md`.
+**Precedent.** CLAIMCHECK (Ou et al., 2025) used a **multi-label** weakness ontology (structure B), chosen by its annotation team after pilot rounds. In its small **pilot** (the main data were singly annotated), label-specific agreement ranged from α = 0.0 (clarity) to 0.776 (novelty). For the agreement and subjectivity ratings, Table 1 and the prose report reversed values (recorded, not resolved: `../literature/NOVELTY-POSITIONING.md` §2.2). It also reported frequent confusion between "insufficient" and "contradictory" evidence. Two lessons follow: label-specific agreement must be reported, and adjacent evidential categories are the hardest to separate. See `../literature/NOVELTY-POSITIONING.md`.
 
 ## 4. Recommendation (for review, not final)
 
@@ -127,7 +127,7 @@ A system, or an annotator, is method-aware only if its judgement changes **becau
 
 Expected patterns must be agreed by experts before use. They are not to be set by the system designers alone.
 
-## 7. Open questions for the researcher and supervisor
+## 7. Open questions (research decisions by the project owner)
 
 1. Should G1 and G2 remain separate, or become levels of one "explanatory overreach" family?
 2. How should attributed or cited claims be treated (§1.4)?

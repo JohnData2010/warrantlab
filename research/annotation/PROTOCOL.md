@@ -27,7 +27,7 @@
 <!-- Descriptive agreement (e.g. Krippendorff's α, span overlap), plus qualitative disagreement analysis. Pilot results are not reliability claims. -->
 
 ## 9. Ethics and data handling
-<!-- Determination of whether expert annotation needs ethics approval; consent; storage; anonymisation of annotator identities. -->
+<!-- Assessment of whether expert annotation needs ethics review and, if so, which review pathway is available to this independent project (no institutional pathway is assumed); consent; storage; anonymisation of annotator identities. -->
 
 ## 10. Revision log
 <!-- Codebook changes after each round, with the disagreement that motivated each one. -->

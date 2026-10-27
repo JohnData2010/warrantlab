@@ -1,6 +1,12 @@
 # WarrantLab Research Roadmap (2026–2027)
 
-*Status: draft for researcher and supervisor review. Version 0.1, prepared 27 October 2026 (AEDT).*
+*Status: draft for independent research review. Version 0.1, prepared 27 October 2026 (AEDT). Governance wording revised on the same day (see "Project status" below).*
+
+**Project status.** WarrantLab is the project owner's **independent personal research project**:
+- It is not part of a university research programme. There are no supervisors, and the project is not institutionally governed or funded.
+- The project owner is responsible for its scientific direction and makes all final research decisions.
+- External IS scholars are treated as potential reviewers, advisers or future collaborators.
+- Ethics, participant protection, data governance and intellectual property are assessed when they become relevant. No existing institutional pathway is assumed.
 
 This document sets out a research programme, not a product plan. It records what the frozen proof of concept has and has not shown, the questions the programme should investigate, and the dependencies that must be resolved before those questions can be studied responsibly. Nothing here commits the programme to a feature, a theory, or a study design until the open decisions in §12 are resolved.
 
@@ -11,7 +17,7 @@ Every substantive statement carries one of these labels:
 - **[Verified]**: checked against a primary source or a committed project artefact (reference given).
 - **[Hypothesis]**: a claim the programme intends to test. It is not established.
 - **[Proposed principle]**: a candidate design principle, to be justified and evaluated.
-- **[Open question]**: unresolved and requiring a researcher or supervisor decision, or further investigation.
+- **[Open question]**: unresolved and requiring a research decision by the project owner, or further investigation.
 - **[Plan]**: an intended activity, which depends on the conditions stated.
 
 Bibliographic details for every external source are tracked in [`SOURCES.md`](SOURCES.md) together with their verification status. Decisions taken so far are logged in [`DECISIONS.md`](DECISIONS.md).
@@ -91,7 +97,14 @@ The programme distinguishes **design-science contributions** (artefacts, design 
 | **RQ3** | How does warrant-centred AI diagnosis compare with strong baselines (including a well-prompted general-purpose LLM) on expert-labelled cases? | Design science evaluation |
 | **RQ4** | Under what conditions does warrant-centred AI feedback improve researchers' independent argument evaluation, rather than encourage reliance on AI judgements? | Behavioural |
 
-All four are **[Open question]**: their wording, scope and order need supervisor review. RQ2 is a prerequisite for RQ3. Without an agreed and reasonably reliable labelling scheme, the system cannot be evaluated meaningfully.
+All four are **[Open question]**: their wording, scope and order are subject to independent research review. RQ2 is a prerequisite for RQ3.
+
+**Revision (27 Oct 2026).** The research priorities were set after the novelty review (`literature/NOVELTY-POSITIONING.md` §4):
+- Method-conditioned evidential calibration (C1) is the core.
+- Abstention (C2) and evidence traceability (C3) are supporting design mechanisms.
+- Contestability (C4) is a longer-term direction.
+
+A single central question for Study A is proposed in `CONCEPT-NOTE.md`. Without an agreed and reasonably reliable labelling scheme, the system cannot be evaluated meaningfully.
 
 ## 5. Provisional taxonomy of scholarly inferential gaps
 
@@ -153,7 +166,7 @@ The protocol skeleton is in [`annotation/PROTOCOL.md`](annotation/PROTOCOL.md).
 - Stratify items by research design (at least two designs first, e.g. experimental and observational quantitative), by section, by length, and by phrasing.
 - Keep the full distribution of expert judgements, not only an adjudicated gold label, so that contested cases can be analysed.
 - Record the licence status of every source excerpt. Synthetic variants are clearly marked and are never presented as errors by the original authors.
-- **[Open question]** Whether expert annotation counts as human research requiring ethics approval at the host institution. This must be resolved before recruitment.
+- **[Open question]** Whether expert annotation counts as human research requiring ethics review, and which review pathway is available to an independent project (for example through a future collaborating institution). This must be assessed before recruitment.
 
 ## 7. Study A: designing and evaluating traceable, contestable, method-aware reasoning support
 
@@ -163,19 +176,19 @@ The protocol skeleton is in [`annotation/PROTOCOL.md`](annotation/PROTOCOL.md).
 
 - **DP1 Traceability:** every diagnostic is grounded in exact, verifiable spans of the researcher's text.
 - **DP2 Calibrated abstention:** the system states when the supplied text cannot support a judgement, rather than guessing.
-- **DP3 Contestability:** researchers can dispute a diagnostic, supply evidence or reasoning, and have the human decision recorded as final.
+- **DP3 Contestability:** researchers can dispute a diagnostic, supply evidence or reasoning, and have the human decision recorded as final. *(Revised 27 Oct 2026: a longer-term direction, not evaluated in Study A. See `literature/NOVELTY-POSITIONING.md` §4.4.)*
 - **DP4 Method awareness:** criteria for adequate warrant are conditioned on the research design.
 - **DP5 Author agency:** the system diagnoses and asks; it never rewrites text or generates arguments.
 
 **Evaluation design [Plan, draft]:**
 
 - **Technical evaluation against expert labels:** precision and recall per gap type, the false-positive rate on calibrated claims, abstention accuracy on unassessable claims, span accuracy, and stability across repeated runs.
-- **Strong baselines (required):** (b1) a frontier general-purpose LLM with a careful single prompt; (b2) the same model with a Toulmin-structured prompt; (b3) existing tools where their terms permit and outputs can be compared fairly; (b4) the approach reported for Critical Inker, if it can be reproduced faithfully (an **[Open question]**).
+- **Strong baselines (required):** (b1) a frontier general-purpose LLM with a careful single prompt; (b2) the same model with a Toulmin-structured prompt; (b3) existing tools where their terms permit and outputs can be compared fairly; (b4) the approach reported for Critical Inker, if it can be reproduced faithfully (an **[Open question]**). *(Revised 27 Oct 2026: see `literature/NOVELTY-POSITIONING.md` §3 for the updated baselines, ablations, and the distinction between predictive, design-knowledge and human-outcome contributions.)*
 - **Expert usefulness evaluation:** whether diagnostics identify problems experts consider real and important, and whether contestability features are used and trusted.
 
 ## 8. Study B (future): independent reasoning, learning transfer and overreliance
 
-**Status: design only. No data collection can begin without ethics approval.**
+**Status: design only. No data collection can begin until an appropriate ethics review pathway has been identified and approval obtained.**
 
 **Candidate design [Plan, draft]:** three conditions:
 
@@ -190,7 +203,7 @@ The protocol skeleton is in [`annotation/PROTOCOL.md`](annotation/PROTOCOL.md).
 - **Reliance:** acceptance of deliberately incorrect AI diagnoses.
 - Willingness and ability to contest AI judgements.
 
-**Dependencies:** an ethics application, preregistration, a power analysis, participant recruitment, and a decision on the AI infrastructure suitable for participant data.
+**Dependencies:** an identified ethics review pathway and application, preregistration, a power analysis, participant recruitment, and a decision on the AI infrastructure suitable for participant data.
 
 ## 9. Technical research prototype V0.2
 
@@ -208,11 +221,11 @@ The protocol skeleton is in [`annotation/PROTOCOL.md`](annotation/PROTOCOL.md).
 |---|---|---|
 | **Inference provider** | Gemini API free tier. Google may use content and have it reviewed. Daily limits are tight and availability intermittent. **[Verified]** | Any real manuscript, expert annotation of non-public text, or participant study |
 | **Data governance** | No data is stored by the app. Fixtures are fictional. | A data management plan covering storage, retention and access for annotation and study data |
-| **Ethics** | No human-participant research has been conducted. | Expert pilot (pending a determination) and Study B (definitely required) |
-| **Intellectual property** | Deakin's policy is that students generally own the IP they create, with exceptions for research collaborations or other agreements. **[Verified by the researcher]** | Any collaboration, funded work, or co-supervised development; discuss with the supervisor |
+| **Ethics and participant protection** | No human-participant research has been conducted. No institutional ethics pathway is assumed. | Expert pilot (assess whether review is needed) and Study B (review certainly needed). Identify a suitable review pathway when relevant, for example through a collaborating institution **[Open question]** |
+| **Intellectual property** | Independent personal project. No institutional IP arrangement is assumed. | Any collaboration or contribution by others: agree ownership, authorship and licensing in writing. Assess when relevant whether any other agreement held by the project owner affects ownership **[Open question]** |
 | **Licensing** | The POC code is public under the MIT License; that version cannot be withdrawn. **[Verified]** | A decision on the licence for future research code and for the benchmark data |
-| **Funding** | $0 so far. | Paid or institutional inference, annotator honoraria, and any participant payments |
-| **Infrastructure** | Local Next.js app; free-tier API. | Options to evaluate include a paid API with no-training terms or institutionally hosted or local models **[Open question]** |
+| **Funding** | $0 so far. No institutional funding. | Paid inference, annotator honoraria, and any participant payments |
+| **Infrastructure** | Local Next.js app; free-tier API. | Options to evaluate include a paid API with no-training terms, local models, or infrastructure provided through a future collaboration **[Open question]** |
 
 ## 11. Research plan: November 2026 – March 2027
 
@@ -220,9 +233,9 @@ The protocol skeleton is in [`annotation/PROTOCOL.md`](annotation/PROTOCOL.md).
 
 | Month | Phase | Work | Measurable deliverable | Depends on |
 |---|---|---|---|---|
-| Nov 2026 | 1 | Positioning review: Critical Inker in full, argument mining, related products. Concept development and RQ refinement. | **D1** research concept paper draft (problem, positioning, RQs, intended IS contribution) | Supervisor input |
+| Nov 2026 | 1 | Positioning review: Critical Inker in full, argument mining, related products. Concept development and RQ refinement. | **D1** research concept paper draft (problem, positioning, RQs, intended IS contribution). A first concept note is in `CONCEPT-NOTE.md` | Optional critical feedback from external IS scholars |
 | Nov 2026 | 2 | Taxonomy v0.1 → v0.2 grounded in the literature. Codebook and annotation guide with counter-examples. | Taxonomy v0.2 and codebook draft | D1 positioning |
-| Dec 2026 | 2–3 | Item sourcing (licence-checked excerpts and marked synthetic variants). Ethics determination for the expert pilot. Pilot recruitment. | Pilot item set and an ethics decision | Ethics office, licence checks |
+| Dec 2026 | 2–3 | Item sourcing (licence-checked excerpts and marked synthetic variants). Ethics assessment for the expert pilot. Pilot recruitment. | Pilot item set and a recorded ethics assessment | An identified review pathway (if needed), licence checks |
 | Dec 2026 | 4 (design) | V0.2 design document for Results↔Discussion traceability. Infrastructure decision. | V0.2 design document and infrastructure choice | Taxonomy v0.2, budget |
 | Jan 2027 | 3 | Expert pilot annotation. Agreement and disagreement analysis. Codebook revision. | **D3** pilot report, including disagreements | Recruitment, ethics |
 | Jan 2027 | 4 | V0.2 build on licence-cleared or synthetic text. Baseline harness (b1, b2). | **D4** V0.2 demo with documented limits | Design document, infrastructure |
@@ -238,15 +251,15 @@ Conference deadlines were verified on the official ECIS 2027 and PACIS 2027 webs
 - **D3:** an expert pilot report, including the cases where experts disagreed.
 - **D4:** a V0.2 demo that traces reasoning between Results and Discussion, with its limits stated.
 
-## 12. Open scientific decisions requiring researcher and supervisor approval
+## 12. Open scientific decisions (research decisions by the project owner)
 
 1. **Theoretical lens:** Toulmin's argument model, argumentation schemes, epistemic calibration, or a combination.
 2. **Unit of analysis:** paragraph, claim–evidence pair, or section pair.
 3. **First research designs to support** (e.g. experimental and observational quantitative), and when qualitative or design science research enter scope.
 4. **Positioning relative to Critical Inker:** what WarrantLab claims to add, and how it will be evaluated.
-5. **Ethics pathway:** whether the expert pilot needs approval, and when to prepare the Study B application.
+5. **Ethics pathway:** whether the expert pilot needs review, which review pathway is available to an independent project, and when to prepare the Study B application.
 6. **Inference infrastructure and budget**, given that the free tier is unsuitable for real manuscripts.
-7. **IP and collaboration arrangements** under the host institution's policy.
+7. **IP and collaboration arrangements**, to be agreed with any future collaborators. No host institution is assumed.
 8. **Licensing** of future code and of the benchmark data.
 9. **Venue strategy:** ECIS TREO (February), the PACIS paper (March) or PACIS TREO (May), decided on the strength of the evidence rather than on the calendar.
 10. **Whether Study B belongs in this programme's first cycle** or follows Study A.
