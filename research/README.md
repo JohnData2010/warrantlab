@@ -10,7 +10,7 @@ This folder holds the research programme that follows the frozen hackathon proof
 | Document | Purpose | Status |
 |---|---|---|
 | [`CONCEPT-NOTE.md`](CONCEPT-NOTE.md) | Study A concept note (problem, closest work, working definition, central RQ, candidate contribution, uncertainties, evaluation) for critical feedback from IS scholars | Version 0.2 for feedback |
-| [`construct/C1-CONSTRUCT-SPEC.md`](construct/C1-CONSTRUCT-SPEC.md) | Construct specification for method-conditioned evidential calibration: components, decision procedure, matched sets, counterexamples and boundary cases | Draft 0.1 for review (not validated) |
+| [`construct/C1-CONSTRUCT-SPEC.md`](construct/C1-CONSTRUCT-SPEC.md) | Construct specification for method-conditioned evidential calibration: components, decision procedure, matched sets, counterexamples and boundary cases | Draft 0.2 for review (not validated) |
 | [`ROADMAP.md`](ROADMAP.md) | Research vision, evidence to date, positioning, research questions, provisional taxonomy, studies, V0.2 scope, governance and plan | Draft v0.1 for review |
 | [`SOURCES.md`](SOURCES.md) | Register of external sources with their verification status | Living document |
 | [`DECISIONS.md`](DECISIONS.md) | Log of decisions with reasons | Living document |

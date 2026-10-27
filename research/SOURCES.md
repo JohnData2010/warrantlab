@@ -15,6 +15,7 @@ Every external source cited in the research documents is listed here with four *
 - A correction supplied by the project owner is **not** evidence that the project owner personally verified it, unless they say so. Such corrections are labelled "supplied by project owner", together with any independent agent check.
 - An agent reading, even of a full PDF, is **not** researcher verification.
 - Statements in the research documents that rest only on agent-assisted reading must not be presented as checked by the researcher.
+- **Checks by other AI tools** (e.g. ChatGPT) on the project owner's behalf are **not** the project owner's personal verification. Details supplied by the project owner may come from such checks. Their researcher-verification field stays *Not recorded* unless the project owner explicitly confirms a personal check. This applies in particular to the DSR DOIs and the conference dates below.
 
 ## Conferences and venues
 
@@ -79,7 +80,10 @@ These are listed only to scope the novelty matrix (`literature/CRITICAL-INKER-AN
 
 ## Infrastructure and governance sources
 
-WarrantLab is an independent personal research project. No institutional policy governs it, so none is listed here. An institutional IP-policy row was removed on 27 Oct 2026 (see `DECISIONS.md`). Policies of future collaborators will be added when relevant.
+WarrantLab is an independent personal research project, and no institutional governance arrangement has been identified for it.
+- This does **not** mean it is exempt from every potentially relevant institutional, contractual or legal obligation. Examples include obligations arising from the project owner's other agreements, data-protection and research-ethics requirements, and publisher, platform or licence terms.
+- Any applicable obligations will be assessed if and when they become relevant.
+- An institutional IP-policy row was removed on 27 Oct 2026 (see `DECISIONS.md`). Relevant policies, including those of future collaborators, will be added when identified.
 
 | Source | Detail used | Metadata verification |
 |---|---|---|
