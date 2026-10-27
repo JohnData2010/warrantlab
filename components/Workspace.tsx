@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { isCurrent } from "../lib/analysisKey";
 import { countWords } from "../lib/text/wordCount";
 import type { AnalysisResponse, SectionId, SectionOption } from "../lib/types";
@@ -13,6 +13,7 @@ import styles from "./Workspace.module.css";
 interface Props {
   sections: SectionOption[];
   maxWords: number;
+  modeSwitch?: ReactNode;
 }
 
 function defaultSection(sections: SectionOption[]): SectionId {
@@ -20,7 +21,7 @@ function defaultSection(sections: SectionOption[]): SectionId {
   return (discussion ?? sections.find((s) => s.selectable) ?? sections.find((s) => s.id === "discussion") ?? sections[0]).id;
 }
 
-export default function Workspace({ sections, maxWords }: Props) {
+export default function Workspace({ sections, maxWords, modeSwitch }: Props) {
   const [section, setSection] = useState<SectionId>(() => defaultSection(sections));
   const [text, setText] = useState("");
   const [mode, setMode] = useState<"editing" | "annotated">("editing");
@@ -122,6 +123,7 @@ export default function Workspace({ sections, maxWords }: Props) {
           <span className={styles.descriptor}>Scholarly Argument Intelligence</span>
         </div>
         <div className={styles.controls}>
+          {modeSwitch}
           <SectionSelector sections={sections} value={section} onChange={handleSectionChange} disabled={analysing} />
           <button type="button" className={styles.primary} onClick={runAnalysis} disabled={!canAnalyse} aria-busy={analysing}>
             {analysing ? "Analysing…" : "Analyse Argument"}

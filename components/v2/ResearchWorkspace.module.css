@@ -1,0 +1,130 @@
+.modeSwitch {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.modeSwitch button {
+  min-height: 38px;
+  padding: 6px 12px;
+  border: 0;
+  background: var(--paper);
+  color: var(--ink-muted);
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.modeSwitch button + button {
+  border-left: 1px solid var(--line);
+}
+
+.modeSwitch button[aria-pressed="true"] {
+  background: var(--navy-soft);
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.previewTag {
+  margin-left: 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+
+.sources {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.source {
+  display: flex;
+  flex-direction: column;
+}
+
+.sourceLabel {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 8px;
+}
+
+.sourceHint {
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-muted);
+}
+
+.sourceEditor,
+.contextEditor {
+  width: 100%;
+  resize: vertical;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--paper);
+  font-family: var(--font-serif-stack);
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+
+.contextEditor {
+  font-family: var(--font-sans-stack);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.sourceMeta {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+
+.context {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 10px 14px;
+  background: var(--canvas);
+}
+
+.context summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.contextNote {
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+  margin: 10px 0;
+}
+
+.contextField {
+  margin-top: 10px;
+}
+
+.overLimit {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: var(--amber);
+  font-weight: 600;
+}
+
+.scopeNotice {
+  font-size: 0.86rem;
+  background: var(--navy-soft);
+  border-radius: 4px;
+  padding: 10px 12px;
+}

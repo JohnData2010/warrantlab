@@ -7,6 +7,7 @@ interface Props {
   activeFinding: string | null;
   onSelect: (id: string) => void;
   onEdit: () => void;
+  label?: string;
 }
 
 type Segment = { text: string; findingId?: string };
@@ -28,10 +29,10 @@ export function buildSegments(text: string, findings: Finding[]): Segment[] {
   return segments;
 }
 
-export default function AnnotatedText({ text, findings, activeFinding, onSelect, onEdit }: Props) {
+export default function AnnotatedText({ text, findings, activeFinding, onSelect, onEdit, label = "Manuscript · read-only" }: Props) {
   return (
     <div className={styles.annotatedWrap}>
-      <div className={styles.columnLabel}>Manuscript · read-only</div>
+      <div className={styles.columnLabel}>{label}</div>
       <div className={styles.annotated}>
         {buildSegments(text, findings).map((segment, i) =>
           segment.findingId ? (

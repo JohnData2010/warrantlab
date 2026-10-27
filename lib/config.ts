@@ -7,6 +7,7 @@ export interface WarrantLabConfig {
   causalEnabled: boolean;
   devPreview: boolean;
   judgeRetryOnServerError: boolean;
+  researchPreview: boolean;
 }
 
 function readBool(value: string | undefined): boolean {
@@ -24,5 +25,10 @@ export function getConfig(): WarrantLabConfig {
     devPreview: process.env.NODE_ENV !== "production" && readBool(process.env.WARRANTLAB_DEV_PREVIEW),
     // Set false when the Judge model has a tiny daily quota (e.g. 20 RPD), since a failed request may still count.
     judgeRetryOnServerError: process.env.WARRANTLAB_JUDGE_RETRY_5XX?.trim().toLowerCase() !== "false",
+    // V0.2 Research Preview: on by default in local development, off in production builds unless explicitly enabled.
+    researchPreview:
+      process.env.NODE_ENV !== "production"
+        ? process.env.WARRANTLAB_RESEARCH_PREVIEW?.trim().toLowerCase() !== "false"
+        : readBool(process.env.WARRANTLAB_RESEARCH_PREVIEW),
   };
 }

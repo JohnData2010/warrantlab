@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { AnalysisResponse, Finding, UnassessedClaim } from "../lib/types";
 import styles from "./Workspace.module.css";
 
@@ -10,6 +11,9 @@ interface Props {
   activeFinding: string | null;
   onShowInText: (id: string) => void;
   onRetry: () => void;
+  // Research Preview only: replaces the development-preview label and adds a notice above the result.
+  previewLabel?: string;
+  notice?: ReactNode;
 }
 
 const CATEGORY_LABEL: Record<Finding["category"], string> = {
@@ -189,7 +193,12 @@ export default function DiagnosticPanel(props: Props) {
   return (
     <div className={styles.panelInner}>
       <div className={styles.columnLabel}>Diagnostics</div>
-      {props.devPreview && <p className={styles.preview}>Development preview — not yet validated</p>}
+      {props.previewLabel ? (
+        <p className={styles.preview}>{props.previewLabel}</p>
+      ) : (
+        props.devPreview && <p className={styles.preview}>Development preview — not yet validated</p>
+      )}
+      {props.notice}
       <Body {...props} />
       <footer className={styles.panelFooter}>
         <p>Assessment limited to the supplied text. No manuscript-wide verification.</p>
