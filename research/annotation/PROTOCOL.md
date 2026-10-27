@@ -2,6 +2,8 @@
 
 *Status: structure only. Definitions, examples and procedures are to be written in Phase 2 (see `../ROADMAP.md` §5–6). Nothing here has been piloted.*
 
+*27 Oct 2026: the provisional definitions, fields, decision guidance, examples and disagreement codes for internal conceptual testing are in [`CODEBOOK-v0.1.md`](CODEBOOK-v0.1.md). Sections 3–6 below will draw on it once it has been tested.*
+
 ## 1. Purpose and scope
 <!-- Feasibility pilot vs. later benchmark; what the labels will and will not be used to claim. -->
 
