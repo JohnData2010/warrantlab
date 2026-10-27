@@ -28,7 +28,8 @@ function mark(text: string, paragraphs: Paragraph[], prefix: "D" | "R"): string 
   return paragraphs.map((p) => `[${prefix}${p.number}] ${text.slice(p.start, p.end)}`).join("\n\n");
 }
 
-// Calls the model and verifies; retries once only when verification found a fabricated or misplaced quote.
+// Calls the model and verifies; retries once when verification rejects the output (fabricated, inconsistent or
+// incomplete). Provider failures are never retried here: the generator has its own retry policy.
 async function runStage<T extends { ok: true }>(
   stage: "locate" | "relate",
   call: () => Promise<LlmResult>,
@@ -40,7 +41,7 @@ async function runStage<T extends { ok: true }>(
     meta.calls.push({ stage, model: result.model, ok: result.ok, latencyMs: result.latencyMs, attempts: result.attempts ?? 1, reason: result.ok ? undefined : result.reason });
     if (!result.ok) return { ok: false, reason: result.reason, detail: result.detail ?? result.reason };
     const verified = verify(result.json);
-    if (verified.ok || verified.reason !== "fabricated_span" || attempt === 1) return verified;
+    if (verified.ok || attempt === 1) return verified;
   }
   return { ok: false, reason: "model_error", detail: "unreachable" };
 }

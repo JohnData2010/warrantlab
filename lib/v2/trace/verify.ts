@@ -100,6 +100,17 @@ export function verifyLocate(discussion: SourceText, results: SourceText, raw: u
       links.push(link);
     }
   }
+  // The stated reference and the links must agree: a claim building on a located finding must point to it,
+  // and a claim whose findings are not in the supplied Results must not be given a stand-in link.
+  for (const c of located.claims) {
+    const linked = links.some((l) => l.claim_id === c.id);
+    if (c.results_reference === "builds_on_located_result" && !linked) {
+      return { ok: false, reason: "invalid_output", detail: `claim ${c.id} builds on a located result but has no link` };
+    }
+    if (c.results_reference === "refers_to_result_not_supplied" && linked) {
+      return { ok: false, reason: "invalid_output", detail: `claim ${c.id} says its results are not supplied but is linked` };
+    }
+  }
   return { ok: true, located, claims, evidence, links };
 }
 
@@ -139,6 +150,10 @@ export function verifyRelate(verified: VerifiedLocate, raw: unknown, input: Work
       if (!verified.evidence.has(l.evidence_id)) return { ok: false, reason: "invalid_output", detail: `unknown evidence id ${l.evidence_id}` };
       if (!links.some((x) => x.evidenceId === l.evidence_id)) links.push({ evidenceId: l.evidence_id, relevance: l.relevance, role: l.role });
     }
+
+    // Relevance is decided by Locate; Relate may add links but never drop one, so inadequate evidence cannot become "missing".
+    const dropped = verified.links.filter((l) => l.claim_id === claim.id && !links.some((x) => x.evidenceId === l.evidence_id));
+    if (dropped.length > 0) return { ok: false, reason: "invalid_output", detail: `${claim.id}: dropped located link(s) ${dropped.map((l) => l.evidence_id).join(",")}` };
 
     // Link status and assessment must agree: absence of located evidence can never ground a verdict.
     if (r.link_status === "linked" && links.length === 0) return { ok: false, reason: "invalid_output", detail: `${claim.id}: linked without evidence` };

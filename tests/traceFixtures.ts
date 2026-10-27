@@ -25,9 +25,9 @@ export function locateOutput(overrides: Partial<Locate> = {}): Locate {
     discussion_paragraphs_covered: [1, 2],
     results_paragraphs_covered: [1, 2],
     claims: [
-      { id: "C1", quote: D_C1, sentence: D_C1_SENTENCE, paragraph: 1, claim_kind: "causal" },
-      { id: "C2", quote: D_C2, sentence: D_C2_SENTENCE, paragraph: 1, claim_kind: "mechanism_or_theory" },
-      { id: "C3", quote: D_C3, sentence: D_C3_SENTENCE, paragraph: 2, claim_kind: "causal" },
+      { id: "C1", quote: D_C1, sentence: D_C1_SENTENCE, paragraph: 1, claim_kind: "causal", results_reference: "builds_on_located_result" as const },
+      { id: "C2", quote: D_C2, sentence: D_C2_SENTENCE, paragraph: 1, claim_kind: "mechanism_or_theory", results_reference: "builds_on_located_result" as const },
+      { id: "C3", quote: D_C3, sentence: D_C3_SENTENCE, paragraph: 2, claim_kind: "causal", results_reference: "no_reference" as const },
     ],
     evidence: [
       { id: "E1", quote: R_E1, sentence: `${R_E1}.`, paragraph: 1, evidence_kind: "group_comparison" },

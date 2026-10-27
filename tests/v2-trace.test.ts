@@ -68,6 +68,30 @@ describe("2 and 5: evidence present but insufficient for a mechanism claim", () 
     expect(c2.gapExplanation).toMatch(/do not report a measure/);
     expect(c2.missingInformation).toBe("");
   });
+  it("does not let the Relate stage drop a located link, so insufficient evidence cannot become 'missing'", () => {
+    const v = verifyLocate(D, R, locateOutput());
+    if (!v.ok) throw new Error();
+    const dropped = relateOutput([C1_SUPPORTED, relateClaim({ claim_id: "C2", missing_information: "A measure of transparency." }), C3_ABSENT]);
+    expect(verifyRelate(v, dropped, traceInput())).toMatchObject({ ok: false, reason: "invalid_output", detail: expect.stringContaining("dropped") });
+  });
+  it("requires links to agree with the stated results reference", () => {
+    expect(verifyLocate(D, R, locateOutput({ links: [{ claim_id: "C1", evidence_id: "E1" }] }))).toMatchObject({
+      ok: false,
+      reason: "invalid_output",
+      detail: expect.stringContaining("C2 builds on a located result"),
+    });
+    const notSupplied = locateOutput();
+    notSupplied.claims[2] = { ...notSupplied.claims[2], results_reference: "refers_to_result_not_supplied" };
+    notSupplied.links.push({ claim_id: "C3", evidence_id: "E2" });
+    expect(verifyLocate(D, R, notSupplied)).toMatchObject({ reason: "invalid_output", detail: expect.stringContaining("not supplied") });
+  });
+  it("retries once after a rejected Relate output and accepts a consistent second answer", async () => {
+    const dropped = relateOutput([C1_SUPPORTED, relateClaim({ claim_id: "C2", missing_information: "x" }), C3_ABSENT]);
+    const { generate, requests } = scripted(ok(locateOutput()), ok(dropped), ok(relateOutput()));
+    const c2 = claim((await analyseTrace(traceInput(), deps(generate))).response, "C2");
+    expect(requests).toHaveLength(3);
+    expect(c2).toMatchObject({ linkStatus: "linked", assessment: "goes_beyond_evidence" });
+  });
   it("rejects a 'goes beyond' assessment that does not name the gap", () => {
     const v = verifyLocate(D, R, locateOutput());
     if (!v.ok) throw new Error();
@@ -93,6 +117,7 @@ describe("4: necessary evidence absent from the supplied Results", () => {
   });
   it("marks every claim as 'Results not supplied' without a second model call", async () => {
     const located = locateOutput({ results_paragraphs_covered: [], evidence: [], links: [] });
+    located.claims = located.claims.map((c) => ({ ...c, results_reference: c.results_reference === "no_reference" ? c.results_reference : ("refers_to_result_not_supplied" as const) }));
     const { generate, requests } = scripted(ok(located));
     const { response } = await analyseTrace(traceInput({ results: "" }), deps(generate));
     expect(requests).toHaveLength(1);
@@ -118,7 +143,7 @@ describe("6: duplicate, fabricated, unknown and cross-source references", () => 
     expect(requests).toHaveLength(2);
   });
   it("rejects a claim quoted from Results or evidence quoted from Discussion", () => {
-    const claimFromResults = locateOutput({ claims: [{ id: "C1", quote: R_E2, sentence: `${R_E2}.`, paragraph: 1, claim_kind: "other" }], links: [] });
+    const claimFromResults = locateOutput({ claims: [{ id: "C1", quote: R_E2, sentence: `${R_E2}.`, paragraph: 1, claim_kind: "other", results_reference: "no_reference" as const }], links: [] });
     expect(verifyLocate(D, R, claimFromResults)).toMatchObject({ ok: false, reason: "fabricated_span", detail: expect.stringContaining("other source") });
     const evidenceFromDiscussion = locateOutput({ evidence: [{ id: "E1", quote: D_C1, sentence: "x", paragraph: 1, evidence_kind: "other" }], links: [] });
     expect(verifyLocate(D, R, evidenceFromDiscussion)).toMatchObject({ ok: false, reason: "fabricated_span" });
@@ -217,9 +242,12 @@ describe("Results and Study Context change the analysis, not just the UI state",
       const hasE1 = req.user.includes(R_E1);
       return ok(
         locateOutput({
+          claims: hasE1
+            ? locateOutput().claims
+            : locateOutput().claims.map((c) => ({ ...c, results_reference: c.results_reference === "no_reference" ? c.results_reference : ("refers_to_result_not_supplied" as const) })),
           evidence: hasE1 ? locateOutput().evidence : [{ ...locateOutput().evidence[1], paragraph: 1 }],
           results_paragraphs_covered: hasE1 ? [1, 2] : [1],
-          links: hasE1 ? [{ claim_id: "C1", evidence_id: "E1" }] : [],
+          links: hasE1 ? locateOutput().links : [],
         }),
       );
     }

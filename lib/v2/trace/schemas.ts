@@ -12,6 +12,9 @@ export const LocateSchema = z.object({
       sentence: z.string(),
       paragraph: z.number().int(),
       claim_kind: z.enum(["mechanism_or_theory", "causal", "generalisation", "interpretive", "other"]),
+      // Whether the claim presents itself as following from reported findings ("these findings prove ..."), and if so
+      // whether those findings are among the located Results evidence.
+      results_reference: z.enum(["builds_on_located_result", "refers_to_result_not_supplied", "no_reference"]),
     }),
   ),
   evidence: z.array(
