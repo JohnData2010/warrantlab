@@ -1,8 +1,12 @@
 # Novelty positioning: WarrantLab against its closest prior work
 
-*Phase 1. Draft 0.2, 27 October 2026 (AEDT). Status: for independent research review. **Novelty is not finalised.***
+*Phase 1. Draft 0.3, 27 October 2026 (AEDT). Status: for independent research review. **Novelty is not finalised.** This memo closes the novelty-mapping phase (see `../DECISIONS.md`).*
 
-*Revision 0.2, after the project owner checked the primary sources:*
+*Revision 0.3:*
+- *Provenance corrected. The source corrections in 0.2 were supplied by the project owner. Whether the project owner verified them personally is not recorded. They are now attributed accordingly and were independently re-checked by the agent where possible.*
+- *Yurrita et al. (2025) has now been read in full (agent) and synthesised (§2.3). C4 has been revised accordingly.*
+
+*Revision 0.2, following source corrections supplied by the project owner:*
 - *Corrected the interpretations of Isch et al. (the "AI feedback" stimuli; the 84% figure) and CLAIMCHECK (a Table 1 versus prose discrepancy; pilot versus main data; the GPT-4o-judged "different" result).*
 - *Separated predictive, design-science and human-outcome contributions.*
 - *Added coverage-aware evaluation of abstention, controlled comparisons for evidence links, and ablations.*
@@ -11,17 +15,17 @@
 
 This memo positions the frozen WarrantLab POC (tag `hackathon-poc-v0.1`) against its closest prior work in four lines of research: **argument support**, **grounded scientific criticism**, **method-dependent evidential overreach** and **contestability and reliance in human–AI decision making**.
 
-**Sources** (full metadata and reading status in `../SOURCES.md`):
+**Sources.** Full metadata and all four provenance fields are in `../SOURCES.md`. **None of the arguments synthesised below has been recorded as personally verified by the project owner**; every synthesis is agent-assisted.
 
-| Short name | Work | How it was read |
-|---|---|---|
-| **CI** | Hugenroth, Danry & Maes (2026), *Critical Inker*, arXiv:2604.07167 | Full text (project owner and agent). See `CRITICAL-INKER-ANALYSIS.md` |
-| **CC** | Ou et al. (2025), *CLAIMCHECK*, Findings of EMNLP 2025 | Agent: PDF text extraction (§1–4, §4.3, Limitations). Project owner: Table 1 and §4.3 checked |
-| **IS26** | Isch et al. (2026), *Quantifying the prevalence and impact of overreaching causal claims in social science*, Nature Human Behaviour | Agent: tool-assisted summary of the main text and methods. Project owner: experimental-stimulus details checked. Supplementary information not read |
-| **CF** | Zhang et al. (2025), *CliniFact*, Scientific Data | Agent: tool-assisted summary |
-| **AF** | Alfrink, Keller, Kortuem & Doorn (2023), *Contestable AI by Design: Towards a Framework*, Minds and Machines | Agent: full text (PDF extraction) |
-| **YU** | Yurrita et al. (2025), *Identifying Algorithmic Decision Subjects' Needs for Meaningful Contestability*, PACM HCI | **Abstract only**: the full text was not accessible to the agent |
-| **BU** | Buçinca, Malaya & Gajos (2021), *To Trust or to Think*, PACM HCI | Agent: abstract, plus study design from the arXiv version (2102.09692) |
+| Short name | Work | Text access (agent) | Researcher verification |
+|---|---|---|---|
+| **CI** | Hugenroth, Danry & Maes (2026), *Critical Inker*, arXiv:2604.07167 | Full HTML via a summarising web-reading tool. See `CRITICAL-INKER-ANALYSIS.md` | Not recorded. Corrections supplied by the project owner |
+| **CC** | Ou et al. (2025), *CLAIMCHECK*, Findings of EMNLP 2025 | Full PDF, text extraction | Not recorded. The Table 1 correction was supplied by the project owner and re-checked by the agent |
+| **IS26** | Isch et al. (2026), *Quantifying the prevalence and impact of overreaching causal claims in social science*, Nature Human Behaviour | Full HTML via a summarising web-reading tool (main text and Methods). Supplementary information not read | Not recorded. The stimulus and 84% corrections were supplied by the project owner and re-checked by the agent |
+| **CF** | Zhang et al. (2025), *CliniFact*, Scientific Data | Full HTML via a summarising web-reading tool | Not recorded |
+| **AF** | Alfrink, Keller, Kortuem & Doorn (2023), *Contestable AI by Design: Towards a Framework*, Minds and Machines | Full PDF, text extraction | Not recorded |
+| **YU** | Yurrita et al. (2025), *Identifying Algorithmic Decision Subjects' Needs for Meaningful Contestability*, PACM HCI 9(7), CSCW234 | Full publisher PDF (Utrecht University repository, located by the project owner), text extraction | Metadata only (project owner, first page) |
+| **BU** | Buçinca, Malaya & Gajos (2021), *To Trust or to Think*, PACM HCI | Partial: abstract and study design (arXiv 2102.09692) | Not recorded |
 
 ---
 
@@ -43,14 +47,14 @@ This memo positions the frozen WarrantLab POC (tag `hackathon-poc-v0.1`) against
 ### 2.1 Isch et al. (2026)
 
 - **The 84% figure** is the rate of causal language among the **cross-sectional articles classified as business in their corpus, in 2024**. It is not a rate for all business research, and says nothing about IS research. The overall figure (≈ 46%, 1980–2024) likewise concerns cross-sectional articles in the five ProQuest social-science databases they searched.
-- **The "AI feedback" condition** in the reader experiment consisted of methodological notes and highlights that the **researchers prepared manually** and **presented to participants as AI-generated**, to keep the stimuli consistent (verified by the project owner).
+- **The "AI feedback" condition** in the reader experiment consisted of methodological notes and highlights that the **researchers prepared manually** and **presented to participants as AI-generated**, to keep the stimuli consistent. This correction was supplied by the project owner. The agent re-checked it in the Methods: the label and highlights were created manually "to ensure consistency across articles".
   - What this supports: feedback of that *form* can shift readers' interpretations.
   - What it does not establish: anything about how well an *automated* AI system performs on real manuscripts.
 - **Claim-level overreach** (≈ 27% of matched claims in a 100-article subsample) is lower than the abstract-level rate. The headline rate counts any causal language about a cross-sectional study's own results, including conditional phrasing, as overreach.
 
 ### 2.2 CLAIMCHECK (Ou et al., 2025)
 
-- **A discrepancy between Table 1 and the prose, recorded and not resolved:**
+- **A discrepancy between Table 1 and the prose, recorded and not resolved.** It was identified by the project owner and re-checked by the agent in the PDF text extraction:
   - Table 1 ("Humans Only") reports Agreement α = 0.131, Subjectivity α = 0.182, Clarity α = 0.0 and Novelty α = 0.776.
   - The prose reverses the first two (Agreement 18.2, Subjectivity 13.1).
   - This memo cites the **table values with that caveat**, and does not decide which is correct.
@@ -67,7 +71,31 @@ This memo positions the frozen WarrantLab POC (tag `hackathon-poc-v0.1`) against
   - **six development practices:** ex-ante safeguards; agonistic approaches to ML development; quality assurance during development; quality assurance after deployment; risk-mitigation strategies; third-party oversight.
 
   Contestability is framed as a dialectical, procedural relationship between **decision subjects** and **human controllers**. The authors state the framework is based on a small sample of papers, is largely "context-free" and has **not been empirically validated**.
-- **YU** (Yurrita et al., 2025; abstract only) interviewed 21 citizens in a public-sector illegal holiday-rental detection scenario. Decision subjects asked for support with (1) **cooperation in sense-making**, (2) **contestation acts**, and (3) **appropriate responsibility attribution**.
+- **YU** (Yurrita et al., 2025; full text read by the agent). An empirical complement to AF from the decision subject's side.
+  - **Design.** A preregistered qualitative study. There were 21 vignette-prompted interviews with people who rent out homes short term, stratified by AI literacy (7 low, 7 medium, 7 high). The scenario was a hypothetical letter from a municipality whose (undeployed) random-forest risk-scoring system had flagged the participant for illegal holiday rental. Participants saw an information sheet including a simulated feature-based (SHAP-style) explanation. The analysis was reflexive thematic analysis.
+  - **Findings.** Three themes:
+    - **T1 cooperation in sense-making:** strategising information requests; dialogue with human controllers.
+    - **T2 social support in contestation acts:** organisational support (a preference for an empathetic human reviewer; a third party to offset power and knowledge differentials); peer and collective support.
+    - **T3 distributed responsibility:** algorithmic accountability; social transparency.
+  - **Detailed observations.**
+    - Participants unanimously prioritised knowing *why* they were flagged.
+    - They found the feature-based explanation unhelpful because it offered no actionable path. One participant asked for "concrete reasoning", not "numbers".
+    - Interest in *how* the system worked rose with AI literacy and experience with AI fairness.
+    - Participants did not want to "know everything". They were selective about information they could act on.
+    - Participants rejected the burden of correcting the system's false positives, which they saw as the controllers' responsibility.
+  - **Limits stated by the authors.** The sample was small, highly educated and concentrated in two countries. The materials came from a single case. Transfer beyond public-sector policy enforcement "should not be fully assumed".
+
+  **Why YU does not map directly onto WarrantLab.** In YU:
+  - the AI output is a **consequential, adversarial decision** imposed by an organisation on a citizen, with penalties;
+  - contesting it is a **procedural right**, exercised through human reviewers and institutions;
+  - the subject usually lacks domain expertise;
+  - the burden of contesting is itself experienced as unfair.
+
+  In WarrantLab, the AI output is **advisory**. The "subject" is an **expert author** who is also the **only decision-maker**. No institution enforces the diagnosis, and accepting or rejecting it is a matter of epistemic judgement, not procedural justice. YU's findings therefore cannot be transferred as requirements. At most they suggest **hypotheses** to test in the expert-author setting:
+  - *Diagnostic reasons over scores.* Diagnostics should state the inferential reason and the specific evidence relied on, not a confidence number. This parallels the preference for "concrete reasoning" in YU.
+  - *Selective, layered information.* Show the inferential gap first, then evidence and method details on demand.
+  - *Expertise-dependent use.* How much researchers interrogate a diagnosis may depend on their methodological expertise, as interest in system details depended on AI literacy in YU.
+  - *Responsibility.* Who is responsible for a wrong diagnosis, and whether the burden of rejecting one is acceptable to authors, is an open question in this setting.
 - **BU** (Buçinca et al., 2021) ran an online experiment (N = 199, Amazon Mechanical Turk) on a nutrition task with a **simulated** AI and controlled errors, across six conditions: no AI, explanation, uncertainty, and three cognitive-forcing designs (on demand, update, wait).
   - Cognitive forcing reduced overreliance compared with simple explanation conditions.
   - The designs that reduced overreliance most received the **least favourable subjective ratings**.
@@ -126,12 +154,19 @@ Every candidate is a **[Hypothesis]**. Research priority was set by the project 
 - **Controlled comparison:** **identical manuscript content** under two conditions:
   - (i) sections supplied without explicit links;
   - (ii) the same sections with explicit claim–evidence links, for the system and, separately, for human checkers.
-- **Falsification:** no difference in accuracy, coverage or human verification time and accuracy between (i) and (ii).
+- **Link quality must be controlled.** Machine-generated links can be wrong or misleading. Evaluation must:
+  - assess link accuracy against expert links;
+  - include conditions with deliberately **incorrect or misleading links**.
+
+  Whether wrong links degrade human judgement is a finding to measure. Cases with wrong links must **not** be removed from the data.
+- **Falsification:** no difference in accuracy, coverage or human verification time and accuracy between (i) and (ii), or net harm once link errors are taken into account.
 
 ### 4.4 C4 Contestability in AI-assisted expert judgement *(priority: longer-term direction; not part of Study A)*
 
 - **Narrowed question:** *When should a researcher accept, dispute or ask for more evidence about an AI-generated inferential diagnosis of their own work, and how should a system support that process?*
-- **Constrained by:** AF (contestability features), YU (sense-making, contestation acts, responsibility attribution) and BU (forcing functions reduce overreliance at an experiential cost).
+- **Constrained by:** AF (contestability features), YU and BU (forcing functions reduce overreliance at an experiential cost).
+  - YU's needs (cooperative sense-making, support in contestation acts, responsibility attribution) arose for **lay decision subjects facing an adverse public-sector decision**.
+  - They are **not** assumed to hold for expert authors receiving advisory diagnoses. Whether they do is part of what C4 would test (§2.3).
 - **Evaluation requirement:** the **correctness of final decisions**, including rejection of seeded wrong diagnoses and acceptance of correct ones, not the frequency of "disagree" actions.
 - **Falsification:**
   - Contestation features do not improve final-decision accuracy over a plain accept-or-ignore interface.
@@ -163,7 +198,7 @@ Expected behaviours must be agreed by independent expert annotators before use. 
 5. Expert agreement on weakness types varies widely by label in a small pilot (CC). This is a warning for WarrantLab's taxonomy.
 6. NEI classes are standard in claim verification (CF).
 7. Argument-structure extraction, quote grounding and reflective, non-corrective writer feedback exist (CI).
-8. Contestability is theorised as a set of system features and practices (AF). Decision subjects need cooperative sense-making and responsibility attribution (YU). Forcing functions reduce overreliance at an experiential cost and unevenly across users (BU).
+8. Contestability is theorised as a set of system features and practices (AF). In one public-sector enforcement scenario, lay decision subjects wanted reasons rather than feature scores, selective and layered information, human and peer support, and fair responsibility attribution (YU; qualitative, N = 21). Forcing functions reduce overreliance at an experiential cost and unevenly across users (BU).
 
 **None of the following is a contribution on its own:** detecting causal overreach, grounding critiques in claims, an abstention or NEI class, quote-anchored writer feedback, contestation buttons, or applying any of these to IS text. **Domain adaptation to IS is not a theoretical contribution.**
 

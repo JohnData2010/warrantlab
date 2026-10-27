@@ -9,17 +9,19 @@ This folder holds the research programme that follows the frozen hackathon proof
 
 | Document | Purpose | Status |
 |---|---|---|
-| [`CONCEPT-NOTE.md`](CONCEPT-NOTE.md) | Study A concept note (problem, closest work, central RQ, candidate contribution, uncertainties, falsifiable evaluation) for critical feedback from IS scholars | Version 0.1 for feedback |
+| [`CONCEPT-NOTE.md`](CONCEPT-NOTE.md) | Study A concept note (problem, closest work, working definition, central RQ, candidate contribution, uncertainties, evaluation) for critical feedback from IS scholars | Version 0.2 for feedback |
+| [`construct/C1-CONSTRUCT-SPEC.md`](construct/C1-CONSTRUCT-SPEC.md) | Construct specification for method-conditioned evidential calibration: components, decision procedure, matched sets, counterexamples and boundary cases | Draft 0.1 for review (not validated) |
 | [`ROADMAP.md`](ROADMAP.md) | Research vision, evidence to date, positioning, research questions, provisional taxonomy, studies, V0.2 scope, governance and plan | Draft v0.1 for review |
 | [`SOURCES.md`](SOURCES.md) | Register of external sources with their verification status | Living document |
 | [`DECISIONS.md`](DECISIONS.md) | Log of decisions with reasons | Living document |
 | [`annotation/PROTOCOL.md`](annotation/PROTOCOL.md) | Expert annotation protocol | Skeleton only |
 | [`literature/CRITICAL-INKER-ANALYSIS.md`](literature/CRITICAL-INKER-ANALYSIS.md) | Critical analysis of the closest known prior system, and its implications for Studies A and B | Draft 0.1 for review |
-| [`literature/NOVELTY-POSITIONING.md`](literature/NOVELTY-POSITIONING.md) | Positioning against Critical Inker, CLAIMCHECK, Isch et al. (2026), CliniFact and the contestability literature: what is established, the contribution framework, prioritised candidates, falsification tests and the benchmark matrix | Draft 0.2 for review (novelty not finalised) |
+| [`literature/NOVELTY-POSITIONING.md`](literature/NOVELTY-POSITIONING.md) | Positioning against Critical Inker, CLAIMCHECK, Isch et al. (2026), CliniFact and the contestability literature: what is established, the contribution framework, prioritised candidates, falsification tests and the benchmark matrix | Draft 0.3 for review (novelty not finalised; novelty mapping closed) |
 | [`taxonomy/STRUCTURE-MEMO.md`](taxonomy/STRUCTURE-MEMO.md) | Taxonomy overlaps, the gap-versus-missing-context boundary, and a comparison of classification structures | Recommendation for review (not final) |
 
 ## Conventions
 
+- Source provenance keeps four fields separate: metadata verification, full-text access, agent-assisted synthesis, and researcher verification (see `SOURCES.md`). Agent reading is never presented as researcher verification.
 - Statements are labelled **[Verified]**, **[Hypothesis]**, **[Proposed principle]**, **[Open question]** or **[Plan]**.
 - Novelty, accuracy and usefulness are not claimed until they have been evaluated against strong baselines.
 - No unpublished manuscript is processed with the current Gemini free-tier configuration.

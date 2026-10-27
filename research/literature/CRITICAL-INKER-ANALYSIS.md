@@ -2,11 +2,13 @@
 
 *Phase 1 positioning document. Draft 0.2, 27 October 2026 (AEDT). Status: for independent research review.*
 
-*Revision 0.2. Corrected after the researcher checked the PDF: §3 now attributes the 91.2% figure from Figure 3 and records a discrepancy, and §2, §5 and §7 now distinguish "no direct correction" from the optional `suggestion` output. The positioning against other closest work is in `NOVELTY-POSITIONING.md`.*
+*Provenance note (27 Oct 2026). The corrections in revision 0.2 were supplied by the project owner. Whether they came from the project owner's own reading of the PDF is not recorded (see `../SOURCES.md`).*
+
+*Revision 0.2, following corrections supplied by the project owner: §3 now attributes the 91.2% figure from Figure 3 and records a discrepancy, and §2, §5 and §7 now distinguish "no direct correction" from the optional `suggestion` output. The positioning against other closest work is in `NOVELTY-POSITIONING.md`.*
 
 **Primary source.** Hugenroth, P., Danry, V., & Maes, P. (2026). *Critical Inker: Scaffolding critical thinking in AI-assisted writing through Socratic questioning* (arXiv:2604.07167v1 [cs.HC]). https://arxiv.org/abs/2604.07167. Submitted 8 April 2026. CC BY 4.0. **Preprint**: no journal or conference publication is listed on the arXiv record as of 27 October 2026.
 
-**How this analysis was produced.** The researcher read the full text and the prompt appendix. The agent read the arXiv record and the v1 HTML full text through a web-reading tool, which summarises rather than displays the text verbatim. Details marked **(check)** should be confirmed against the PDF before they are cited.
+**How this analysis was produced.** This is an agent-assisted synthesis. Earlier drafts stated that the researcher had read the full text and the prompt appendix. That reading is not recorded as a personal verification of this synthesis. The agent read the arXiv record and the v1 HTML full text through a web-reading tool, which summarises rather than displays the text verbatim. Details marked **(check)** should be confirmed against the PDF before they are cited.
 
 **Reading rule applied throughout.** "Not described" means the paper does not describe the feature. It does **not** mean the feature is absent from the system.
 
@@ -107,7 +109,7 @@ Recording researcher disputes, supplied evidence and final human decisions as fi
 | Method-situated standards (6.2) | **Hypothesis.** | Not described in CI. Barely implemented in the POC. |
 | Principled abstention (6.3) | **Hypothesis**, with POC smoke-test evidence only. | Not described in CI. Shown on 1 fixture (TC3) and 1 single-run check in the POC. |
 | Cross-section traceability (6.3) | **Hypothesis**, with no implementation. | Neither system. |
-| Formal contestability (6.4) | **Hypothesis**, with no implementation. | Not described in CI. Contestability as a principle is discussed in wider HCI and AI work. An initial reading (Alfrink et al., 2023; Yurrita et al., 2025, abstract only; Buçinca et al., 2021) is in `NOVELTY-POSITIONING.md` §2.3. |
+| Formal contestability (6.4) | **Hypothesis**, with no implementation. | Not described in CI. Contestability as a principle is discussed in wider HCI and AI work. An initial reading (Alfrink et al., 2023; Yurrita et al., 2025; Buçinca et al., 2021) is in `NOVELTY-POSITIONING.md` §2.3. |
 | Grounded quotes and reflective prompting | **Already covered by CI**, at least in substance. | Documented in CI. |
 | Stricter author agency (never offering suggested wording) | **A difference of degree, not an independent contribution.** | CI has an optional `suggestion` output (Appendix A). Whether this matters for learning is a Study B question. |
 | Argument-structure extraction | **Already covered by CI**, more richly. | Documented in CI. |
