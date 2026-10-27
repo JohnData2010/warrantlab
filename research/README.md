@@ -9,6 +9,7 @@ This folder holds the research programme that follows the frozen hackathon proof
 | [`DECISIONS.md`](DECISIONS.md) | Log of decisions with reasons | Living document |
 | [`annotation/PROTOCOL.md`](annotation/PROTOCOL.md) | Expert annotation protocol | Skeleton only |
 | [`literature/CRITICAL-INKER-ANALYSIS.md`](literature/CRITICAL-INKER-ANALYSIS.md) | Critical analysis of the closest known prior system, and its implications for Studies A and B | Draft 0.1 for review |
+| [`literature/NOVELTY-POSITIONING.md`](literature/NOVELTY-POSITIONING.md) | Positioning against Critical Inker, CLAIMCHECK, Isch et al. (2026) and CliniFact: what is established, candidate contributions, and falsification tests | Draft 0.1 for review (novelty not finalised) |
 | [`taxonomy/STRUCTURE-MEMO.md`](taxonomy/STRUCTURE-MEMO.md) | Taxonomy overlaps, the gap-versus-missing-context boundary, and a comparison of classification structures | Recommendation for review (not final) |
 
 ## Conventions

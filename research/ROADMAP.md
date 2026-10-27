@@ -66,6 +66,9 @@ The programme should not claim novelty until it has mapped existing work systema
 | Academic writing assistants (e.g. Trinka, Writefull, Paperpal) | Mainly language-level editing, with some structural feedback. | Product claims only. They are not argument-level. |
 | General-purpose LLMs with a careful prompt | Can identify the TC1 overclaim. The POC itself shows a small model doing so. | **This must be treated as the strongest baseline.** |
 | Argument mining and argumentation-scheme research | Computational identification of claims, premises and argument structure. | Not yet reviewed for this roadmap. **[Plan]** to include in the positioning review. |
+| **CLAIMCHECK** (Ou et al., 2025, Findings of EMNLP) | An expert-annotated benchmark linking reviewer weaknesses to the paper claims they dispute (NeurIPS, 41 papers), with a multi-label weakness ontology. LLMs underperform humans at grounded critique. | Read. See `literature/NOVELTY-POSITIONING.md`. |
+| **Isch et al.** (2026, Nature Human Behaviour) | Design-conditioned causal overreach in 194,631 cross-sectional social-science articles (≈46% of titles and abstracts); a reader experiment (N = 1,105); LLM summaries amplify overstatement. | Read (main text). Strengthens the problem statement and is close to C1. See `NOVELTY-POSITIONING.md`. |
+| **CliniFact** (Zhang et al., 2025, Scientific Data) | 1,970 clinical claim–evidence pairs, including a not-enough-information label (derived from link type). | Read. Abstention has precedent. |
 
 **Candidate points of difference.** All are **[Hypothesis]**, to be tested against the systems above rather than asserted:
 

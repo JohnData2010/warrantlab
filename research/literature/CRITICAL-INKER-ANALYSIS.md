@@ -1,6 +1,8 @@
 # Critical analysis: Critical Inker and its implications for WarrantLab
 
-*Phase 1 positioning document. Draft 0.1, 27 October 2026 (AEDT). Status: for researcher and supervisor review.*
+*Phase 1 positioning document. Draft 0.2, 27 October 2026 (AEDT). Status: for researcher and supervisor review.*
+
+*Revision 0.2. Corrected after the researcher checked the PDF: §3 now attributes the 91.2% figure from Figure 3 and records a discrepancy, and §2, §5 and §7 now distinguish "no direct correction" from the optional `suggestion` output. The positioning against other closest work is in `NOVELTY-POSITIONING.md`.*
 
 **Primary source.** Hugenroth, P., Danry, V., & Maes, P. (2026). *Critical Inker: Scaffolding critical thinking in AI-assisted writing through Socratic questioning* (arXiv:2604.07167v1 [cs.HC]). https://arxiv.org/abs/2604.07167. Submitted 8 April 2026. CC BY 4.0. **Preprint**: no journal or conference publication is listed on the arXiv record as of 27 October 2026.
 
@@ -37,16 +39,16 @@
 - **Representation:** a main thesis plus *atomic quotes* (reasons, premises or evidence), connected by **support relations** only. Independent and joined reasons are encoded separately, and support is traced back to unsupported base claims ("axioms"). No attack or rebuttal relation is described. No separate node type for empirical evidence (data, statistics) is described **(check)**.
 - **Text grounding:** the model returns atomic quotes, which are located in the essay by **fuzzy string matching**.
 - **Logical evaluation:** each support relation is checked separately, because single-shot prompting degraded performance. The prompt asks for a rationale before a valid or invalid verdict and instructs the model to reason **assuming the evidence is true**. External citations are also assumed true.
-- **Socratic layer:** a generated plan sets the order of questions. The system prompt forbids direct correction and limits each turn to one flaw. Outputs are constrained by JSON schemas.
+- **Socratic layer:** a generated plan sets the order of questions. The system prompt forbids **direct, automatic correction** and limits each turn to one flaw. However, the Socratic assistant's output schema includes an optional **`suggestion`** field, and the chatbot may offer improvement suggestions after the user has identified the problem (Appendix A; verified by the researcher). So "no automatic correction" is not the same as "never offers suggested wording". Outputs are constrained by JSON schemas.
 - **Scope:** the whole essay is analysed as a single input. Multi-section documents and length limits are not described.
 
 ## 3. Technical evaluation: datasets, methods, metrics, limitations
 
 | Aspect | What the paper reports | Critical reading |
 |---|---|---|
-| Structure extraction | 100 essays sampled from the Argument Annotated Essays v2 corpus. Main-claim identification ≈ 90% for all models. Relation overlap **91.2%** against a top score of 92.9%. | The overlap metric is not defined (exact or fuzzy match, unit of comparison) **(check)**. Student persuasive essays differ substantially from empirical research manuscripts. |
-| Validity | 100 pairs adapted from SNLI. **87.0%** for Claude Sonnet 4.5 against 93% for GPT-4.1. | How SNLI labels (entailment, neutral, contradiction) map to valid or invalid is not stated **(check)**. SNLI tests short-sentence entailment, not inferential adequacy in scholarship. |
-| Model choice | Claude Sonnet 4.5 was apparently selected for latency (mean 6.58 s) and low variance (σ = 0.93 s), despite lower validity accuracy than GPT-4.1. Gemini Flash's mean latency was 37.12 s. | It is not explicit which model produced the 91.2% figure **(check)**. No repeated-run stability analysis of outputs is described. |
+| Structure extraction | 100 essays sampled from the Argument Annotated Essays v2 corpus. Main-claim identification ≈ 90% for all models. Relation overlap **91.2% for Claude Sonnet 4.5** (Figure 3; verified by the researcher against the PDF). | **Apparent discrepancy, recorded and not resolved:** Figure 3 shows 95.4% for GPT-5, while the narrative calls 92.9% the "top score". **Still unverified:** how relation overlap is defined (exact or fuzzy match, unit of comparison). The published description is not enough to reproduce the metric. Student persuasive essays differ substantially from empirical research manuscripts. |
+| Validity | 100 pairs adapted from SNLI. **87.0%** for Claude Sonnet 4.5 against 93% for GPT-4.1. | **Still unverified:** how SNLI labels (entailment, neutral, contradiction) map to valid or invalid; the published method does not explain it fully. SNLI tests short-sentence entailment, not inferential adequacy in scholarship. |
+| Model choice | Claude Sonnet 4.5 was apparently selected for latency (mean 6.58 s) and low variance (σ = 0.93 s), despite lower validity accuracy than GPT-4.1. Gemini Flash's mean latency was 37.12 s. | No repeated-run stability analysis of outputs is described. |
 | Statistics | No significance tests or confidence intervals are described. | n = 100 per task gives wide uncertainty around the point estimates. |
 
 **What this establishes:** a modern LLM pipeline can recover essay argument structure and judge short premise–hypothesis support with fairly high agreement against existing labels. **What it does not establish:** accuracy on scholarly inference, on research manuscripts, or on judgements that depend on research design; or that the feedback improves users' reasoning.
@@ -73,7 +75,7 @@ The POC reference is tag `hackathon-poc-v0.1` (commit `6e5448b`).
 | Cross-section evidence | Not described (single essay) | Not implemented (single passage, up to 3,000 words) | **Neither system has it.** Planned for V0.2. |
 | Feedback form | Visual highlights, or Socratic dialogue with verbalisation before a marker appears | Warrant Check card (evidence, missing warrant, claim) plus questions to examine. No dialogue | **CI's interaction design is richer and theory-grounded.** |
 | Contestability | Not described. Markers record revision intentions | Not implemented. Edit and re-analyse only | **Neither system has it.** Planned. |
-| Author agency / no rewriting | Yes: the chatbot withholds direct corrections | Yes: never rewrites | **Shared.** Not a differentiator. |
+| Author agency / rewriting | No automatic correction. The Socratic schema has an optional `suggestion` field, and suggestions may be offered after the user identifies the issue | Never rewrites and never offers replacement wording | **A difference of degree in author agency.** Not an independent novelty claim. |
 | Technical evaluation | 100 + 100 items from existing corpora | 3 fictional fixtures (smoke test) | **CI's evaluation is stronger.** |
 | Human evaluation | Pilot, n = 7 | None | **CI is ahead.** |
 
@@ -106,7 +108,8 @@ Recording researcher disputes, supplied evidence and final human decisions as fi
 | Principled abstention (6.3) | **Hypothesis**, with POC smoke-test evidence only. | Not described in CI. Shown on 1 fixture (TC3) and 1 single-run check in the POC. |
 | Cross-section traceability (6.3) | **Hypothesis**, with no implementation. | Neither system. |
 | Formal contestability (6.4) | **Hypothesis**, with no implementation. | Not described in CI. Contestability as a principle is discussed in wider HCI and AI work, which has not yet been reviewed. |
-| Grounded quotes, author agency, reflective prompting | **Already covered by CI**, at least in substance. | Documented in CI. |
+| Grounded quotes and reflective prompting | **Already covered by CI**, at least in substance. | Documented in CI. |
+| Stricter author agency (never offering suggested wording) | **A difference of degree, not an independent contribution.** | CI has an optional `suggestion` output (Appendix A). Whether this matters for learning is a Study B question. |
 | Argument-structure extraction | **Already covered by CI**, more richly. | Documented in CI. |
 
 ## 8. Implications for Study A and Study B
@@ -133,13 +136,13 @@ Status: **scoping only**. Entries name lines of work to review. They are not cla
 | Reliance and cognitive forcing in human–AI decisions | Buçinca et al. (2021): cited in CI, not yet verified | Which designs reduce overreliance, and how is it measured? | Not reviewed |
 | Explainable AI and contestable AI | To be identified | What does contestability require in practice? | Not reviewed |
 | Epistemic agency and responsibility in AI-assisted research | To be identified | How should accountability for inferences be allocated? | Not reviewed |
-| Scientific claim verification and research-quality assessment | To be identified | Are there systems that check claims against study design (e.g. causal language in health research)? | Not reviewed. **Potentially closest work outside HCI.** |
+| Scientific claim verification and research-quality assessment | CLAIMCHECK (Ou et al., 2025); Isch et al. (2026); CliniFact (Zhang et al., 2025) | Do existing systems check claims against study design, ground critiques in paper claims, or abstain when evidence is lacking? | **Read and analysed in `NOVELTY-POSITIONING.md`.** Closer to WarrantLab than Critical Inker on several dimensions. |
 | Design science on knowledge-work support in IS | Hevner et al. (2004); Gregor & Hevner (2013) | How to frame design principles as an IS contribution | Metadata verified |
 
 ## 10. Conclusion for Phase 1
 
 - **Strongest candidate contribution [Hypothesis].** Design knowledge for *evidentially calibrated, method-situated and contestable* support for scholarly inference. This means systems that judge whether the strength and type of a scholarly claim is licensed by the reported evidence and research design, abstain when that evidence lies outside the supplied text, and record the researcher's accountable decision.
-- **Closest prior work:** Critical Inker (argument-graph-grounded validity checking with Socratic feedback). The scientific claim-verification line in §9 may be closer still, and must be reviewed before the positioning is finalised.
+- **Closest prior work:** Critical Inker, for argument support and reflective feedback. **Update in draft 0.2:** the claim-verification and overreach line (CLAIMCHECK, Isch et al., CliniFact) is closer on grounded critique, design-based overreach and abstention. See `NOVELTY-POSITIONING.md`, which supersedes this paragraph for positioning.
 - **Evidence still required:**
   1. Experts can reliably distinguish evidential-calibration gaps from logical-support failures and from missing context (RQ2).
   2. On expert-labelled scholarly items, a calibration-focused system detects gaps that a CI-style validity pipeline and a strong single-prompt LLM miss, without more false positives (RQ3).

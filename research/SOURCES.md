@@ -23,6 +23,14 @@ Verifying a source's metadata does **not** mean its arguments have been read or 
 |---|---|---|---|
 | Hugenroth, P., Danry, V., & Maes, P. (2026). *Critical Inker: Scaffolding critical thinking in AI-assisted writing through Socratic questioning* (arXiv:2604.07167v1 [cs.HC]). https://arxiv.org/abs/2604.07167. Submitted 8 Apr 2026; CC BY 4.0; preprint, with no venue listed. | Verified (researcher); verified (agent, arXiv record), 27 Oct 2026 | Read (researcher), including the Appendix A prompts; read (agent, tool-assisted, v1 HTML) | Synthesised: `literature/CRITICAL-INKER-ANALYSIS.md` (draft 0.1). Some details are marked "(check)" for confirmation against the PDF. |
 
+## Closest work: scientific claim verification, grounded critique and causal overreach
+
+| Source | Metadata | Full text | Synthesis |
+|---|---|---|---|
+| Ou, J., Walden, W., Sanders, K., Jiang, Z., Sun, K., Cheng, J., Jurayj, W., Wanner, M., Liang, S., Morgan, C., Han, S., Wang, W., May, C., Recknor, H., Khashabi, D., & Van Durme, B. (2025). CLAIMCHECK: How grounded are LLM critiques of scientific papers? In *Findings of the Association for Computational Linguistics: EMNLP 2025* (pp. 21712–21735). https://doi.org/10.18653/v1/2025.findings-emnlp.1185 | Verified (researcher); verified (agent, ACL Anthology PDF header) | Read (agent, PDF text extraction of §1–4, §4.3 and Limitations); researcher reading pending | Synthesised: `literature/NOVELTY-POSITIONING.md` |
+| Isch, C., Dörr, T., Fasching, N., Jennings, G., … Watts, D. J. (2026). Quantifying the prevalence and impact of overreaching causal claims in social science. *Nature Human Behaviour.* Published 24 Aug 2026. https://doi.org/10.1038/s41562-026-02553-x. Open access. | Verified (researcher). The agent confirmed title, date and journal; the full author list was truncated on the page | Read (agent, tool-assisted summary of the main text and methods; the supplementary information was not read); researcher reading pending | Synthesised: `literature/NOVELTY-POSITIONING.md` |
+| Zhang, B., Bornet, A., Yazdani, A., Khlebnikov, P., Milutinovic, M., Rouhizadeh, H., Amini, P., & Teodoro, D. (2025). A dataset for evaluating clinical research claims in large language models. *Scientific Data, 12*, 86. https://doi.org/10.1038/s41597-025-04417-x. Open access (CC BY 4.0). | Verified (researcher); verified (agent, article page); the author list may be truncated | Read (agent, tool-assisted summary) | Synthesised: `literature/NOVELTY-POSITIONING.md` |
+
 ## Works cited within Critical Inker (not yet verified or read by this programme)
 
 These are listed only to scope the novelty matrix (`literature/CRITICAL-INKER-ANALYSIS.md` §9). Metadata for all of them is **Agent-recalled from Critical Inker's reference list**; none has been read or synthesised.

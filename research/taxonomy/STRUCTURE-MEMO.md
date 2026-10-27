@@ -1,6 +1,13 @@
 # Memo: structure of the inferential-gap taxonomy
 
-*Phase 2 preparation. Draft 0.1, 27 October 2026 (AEDT). Status: recommendation for review. **The taxonomy is not finalised and no annotation dataset is built.***
+*Phase 2 preparation. Draft 0.2, 27 October 2026 (AEDT). Status: recommendation for review. **The taxonomy is not finalised and no annotation dataset is built.***
+
+*Revision 0.2, after researcher review:*
+- *Hierarchical classification (C) stays the leading candidate for the pilot.*
+- *The proposed primary-label tie-break order is **not enforced** until it has been tested with experts (§4).*
+- *A new §5 distinguishes an inference unsupported by the supplied excerpt from a demonstrated flaw in the underlying study.*
+- *A new §6 adds controlled counterfactual items for testing method awareness.*
+- *A precedent from CLAIMCHECK is noted in §3.*
 
 This memo addresses the provisional taxonomy in `../ROADMAP.md` §5 (G1–G7, N1–N4). It identifies conceptual overlaps, proposes how to separate substantive gaps from missing context, compares three classification structures, and recommends one. All definitions remain provisional.
 
@@ -65,6 +72,8 @@ Disagreement can arise at different stages, so each should be a separately measu
 | Usefulness for system feedback | One message per claim | Can produce cluttered feedback | One primary message, with secondary issues available on demand |
 | Risk | Artificial disagreement; information loss | Inflated label counts; weak agreement on rare labels | Primary-label rules need careful decision guidance; still more complex than A |
 
+**Precedent.** CLAIMCHECK (Ou et al., 2025) used a **multi-label** weakness ontology (structure B), chosen by its annotation team after pilot rounds. It reported agreement ranging from α = 0.00 (clarity) to 0.78 (novelty), and frequent confusion between "insufficient" and "contradictory" evidence. Two lessons follow: label-specific agreement must be reported, and adjacent evidential categories are the hardest to separate. See `../literature/NOVELTY-POSITIONING.md`.
+
 ## 4. Recommendation (for review, not final)
 
 **Adopt structure C (hierarchical), for these reasons:**
@@ -74,15 +83,51 @@ Disagreement can arise at different stages, so each should be a separately measu
 3. It matches how feedback should be presented: one main inferential problem per claim, with further issues available.
 4. It keeps *disagreement* analysable. Disagreement at the assessability level, at the primary-gap level and at the secondary-gap level carries different meanings, and contested inferences can be recorded as findings rather than treated as noise.
 
-**Decision rules to draft for the primary label:**
-- The primary label is the gap that, if resolved, would most change whether the claim as stated is warranted (the *load-bearing* gap).
-- Ties are resolved by locus order: construct (G4) → relation (G3, G6) → explanation (G1) → theory or scope (G2, G5) → contribution (G7). This ordering is a proposal to test in the pilot.
+**Candidate decision rules for the primary label. These are not enforced, and are to be tested in the pilot:**
+- *Candidate:* the primary label is the gap that, if resolved, would most change whether the claim as stated is warranted (the *load-bearing* gap).
+- *Candidate tie-break (untested):* locus order, construct (G4) → relation (G3, G6) → explanation (G1) → theory or scope (G2, G5) → contribution (G7). **Do not instruct annotators to apply this order in the first pilot round.** It risks forcing an artificial choice when experts judge two problems equally important.
+- **For the pilot instead:** annotators choose a primary label by their own judgement, may mark "two or more equally load-bearing" explicitly, and record why. The pilot then examines whether any ordering rule would reproduce their choices.
 
 **What would change this recommendation:**
 - If the pilot shows that annotators cannot agree on a primary label even when the set of gaps is shared, consider flat multi-label (B) with a set-based agreement measure.
 - If co-occurrence turns out to be rare, simplify to A plus the assessability gate.
 
-## 5. Open questions for the researcher and supervisor
+## 5. Scope of judgement: excerpt-relative versus study-level
+
+A label of *overreach* in this programme always means:
+
+> **The inference stated in the supplied excerpt is not warranted by the evidence and design information presented in that excerpt.**
+
+It does **not** mean:
+
+> The underlying study has a methodological flaw, or its conclusion is false.
+
+The two can come apart. A study may have measured the mechanism in a section not supplied, or an excerpt may describe the design accurately while the study itself is poorly executed.
+
+**For the protocol:**
+- Every judgement is explicitly **excerpt-relative**. The annotation interface states which text was supplied.
+- Annotators record whether their judgement would plausibly change if more of the paper were available. This links to the assessability task (T3) and the N2 label.
+- Annotators are told **not** to infer study-level validity, and the guidelines include counter-examples where a well-run study is described in an overreaching way, and vice versa.
+- Any later study-level assessment (e.g. full-paper review) is a separate task with a separate label set. It is not merged into the gap taxonomy.
+
+## 6. Controlled counterfactual items for testing method awareness
+
+A system, or an annotator, is method-aware only if its judgement changes **because the design information changes**, and not because a keyword such as "randomised" appears.
+
+**Proposed item design** (benchmark, not the first pilot):
+- Hold the claim constant (e.g. "X increases Y through mechanism M").
+- Vary only the evidence and design description:
+  1. a cross-sectional association;
+  2. a randomised manipulation of X with an outcome measure of Y;
+  3. a randomised manipulation **with** a measured and tested mediator M;
+  4. a qualitative account of how participants describe M.
+- The expected judgement pattern differs across variants: overreach of causation and mechanism; causal effect licensed but mechanism not; mechanism evidence present; a different warrant standard.
+- **Keyword controls:** include variants where "randomised" appears but the described design is not randomised (e.g. "randomised survey order"), and variants that describe randomisation without the word.
+- **Analysis:** consistency of judgements across matched sets, sensitivity to the substantive design change, and insensitivity to keyword-only changes.
+
+Expected patterns must be agreed by experts before use. They are not to be set by the system designers alone.
+
+## 7. Open questions for the researcher and supervisor
 
 1. Should G1 and G2 remain separate, or become levels of one "explanatory overreach" family?
 2. How should attributed or cited claims be treated (§1.4)?
